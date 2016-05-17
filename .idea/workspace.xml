@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="41dbc18a-2835-41b1-b373-33a567a7a75f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/huitparfait-design/data/README.adoc" afterPath="$PROJECT_DIR$/huitparfait-design/data/README.adoc" />
-    </list>
+    <list default="true" id="41dbc18a-2835-41b1-b373-33a567a7a75f" name="Default" comment="" />
     <ignored path="huitparfait.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +34,8 @@
       <file leaf-file-name="README.adoc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/huitparfait-design/data/README.adoc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+            <state relative-caret-position="756">
+              <caret line="36" column="24" selection-start-line="36" selection-start-column="24" selection-end-line="36" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -215,12 +213,12 @@
       <updated>1463440195891</updated>
       <workItem from="1463440197254" duration="1640000" />
       <workItem from="1463490333119" duration="22000" />
-      <workItem from="1463522846264" duration="5116000" />
+      <workItem from="1463522846264" duration="5518000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6778000" />
+    <option name="totallyTimeSpent" value="7180000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="52" width="960" height="1148" extended-state="4" />
@@ -295,8 +293,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/huitparfait-design/data/README.adoc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+        <state relative-caret-position="756">
+          <caret line="36" column="24" selection-start-line="36" selection-start-column="24" selection-end-line="36" selection-end-column="24" />
           <folding />
         </state>
       </provider>
