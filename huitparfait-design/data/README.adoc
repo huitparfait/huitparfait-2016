@@ -1,4 +1,4 @@
-:imagedir: ./
+:imagesdir: .
 
 # Data design
 
