@@ -1,0 +1,25 @@
+digraph G {
+    graph [pad="1,1"];
+    {
+        User [shape=rect, fillcolor=beige style=filled, margin="0.2,0.2", fontsize="30", fontname=sansserif]
+        Group [shape=rect, fillcolor=beige style=filled, margin="0.2,0.2", fontsize="30", fontname=sansserif]
+        Pronostic [shape=rect, fillcolor=beige style=filled, margin="0.2,0.2", fontsize="30", fontname=sansserif]
+        Risk [shape=rect, fillcolor=beige style=filled, margin="0.2,0.2", fontsize="30", fontname=sansserif]
+        Game [shape=rect, fillcolor=beige style=filled, margin="0.2,0.2", fontsize="30", fontname=sansserif]
+        Team [shape=rect, fillcolor=beige style=filled, margin="0.2,0.2", fontsize="30", fontname=sansserif]
+        IS_MEMBER_OF_GROUP [shape=ellipse, fontname=sansserif]
+        CREATED_BY_USER [shape=ellipse, fontname=sansserif]
+        PREDICT_RISK [shape=ellipse, fontname=sansserif]
+        USED_FOR_GAME [shape=ellipse, fontname=sansserif]
+        IS_ABOUT_GAME [shape=ellipse, fontname=sansserif]
+        PREDICT_SCORE [shape=ellipse, fontname=sansserif]
+        PLAYS_IN_GAME [shape=ellipse, fontname=sansserif]
+    }
+    User -> IS_MEMBER_OF_GROUP -> Group;
+    Pronostic -> CREATED_BY_USER -> User;
+    Pronostic -> PREDICT_RISK -> Risk;
+    Pronostic -> IS_ABOUT_GAME -> Game;
+    Pronostic -> PREDICT_SCORE -> Team;
+    Risk -> USED_FOR_GAME -> Game;
+    Team -> PLAYS_IN_GAME -> Game;
+}
