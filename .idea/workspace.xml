@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41dbc18a-2835-41b1-b373-33a567a7a75f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/huitparfait-design/data/nodes-and-relationships.svg" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/huitparfait-design/data/nodes-and-relationships.png" afterPath="$PROJECT_DIR$/huitparfait-design/data/nodes-and-relationships.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/huitparfait-design/data/README.adoc" afterPath="$PROJECT_DIR$/huitparfait-design/data/README.adoc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/huitparfait-design/data/nodes-and-relationships.dot" afterPath="$PROJECT_DIR$/huitparfait-design/data/nodes-and-relationships.dot" />
     </list>
     <ignored path="huitparfait.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,8 +36,8 @@
       <file leaf-file-name="README.adoc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/huitparfait-design/data/README.adoc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="925">
-              <caret line="128" column="4" selection-start-line="128" selection-start-column="4" selection-end-line="128" selection-end-column="4" />
+            <state relative-caret-position="904">
+              <caret line="127" column="27" selection-start-line="127" selection-start-column="27" selection-end-line="127" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -219,12 +215,12 @@
       <updated>1463440195891</updated>
       <workItem from="1463440197254" duration="1640000" />
       <workItem from="1463490333119" duration="22000" />
-      <workItem from="1463522846264" duration="4485000" />
+      <workItem from="1463522846264" duration="4540000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6147000" />
+    <option name="totallyTimeSpent" value="6202000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="52" width="960" height="1148" extended-state="4" />
@@ -299,8 +295,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/huitparfait-design/data/README.adoc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="925">
-          <caret line="128" column="4" selection-start-line="128" selection-start-column="4" selection-end-line="128" selection-end-column="4" />
+        <state relative-caret-position="904">
+          <caret line="127" column="27" selection-start-line="127" selection-start-column="27" selection-end-line="127" selection-end-column="27" />
           <folding />
         </state>
       </provider>
