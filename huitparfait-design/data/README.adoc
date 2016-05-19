@@ -65,9 +65,10 @@ city              (string)
 ```
 createdAt         (date)
 updatedAt         (date)
-uuid*              (string)
+uuid*             (string)
 countryName       (string)
 countryCode       (string)
+group             (string)
 ```
 
 === IS_MEMBER_OF_GROUP
