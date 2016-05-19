@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+    neo4j:
+        image: 'neo4j:2.3.3'
+        volumes:
+            - './huitparfait-data/data:/data'
+        ports:
+            - '7474:7474'
+        container_name: 'huitparfait-data'
