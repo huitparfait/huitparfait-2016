@@ -1,0 +1,14 @@
+FROM node:6
+
+RUN mkdir /app
+WORKDIR /app
+
+# Install app dependencies
+COPY ./bar/package.json /app/
+RUN npm install
+
+# Bundle app source
+COPY ./bar/ /app/
+
+EXPOSE 8080
+CMD [ "npm", "start" ]
