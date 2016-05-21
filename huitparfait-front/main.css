@@ -1,0 +1,61 @@
+html,
+body {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
+    font-size: 30px;
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.homeContainer {
+    background-color: #4db788;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.homeLogo {
+    animation: heartbeat 1300ms ease 0s infinite normal;
+    border: 5px solid #fff;
+    border-radius: 15px;
+    display: block;
+    margin: 20px auto;
+    width: 100px;
+}
+
+.homeTitle {
+    margin: 20px auto 10px auto;
+}
+
+.homeSubtitle {
+    font-style: italic;
+    margin: 0 auto 10px auto;
+}
+
+.twitterLink {
+    color: #fff;
+    display: block;
+    margin-top: 30px;
+    font-size: 20px;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.1);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
