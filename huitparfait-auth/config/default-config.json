@@ -1,0 +1,79 @@
+{
+  "env": {
+    "doc": "The applicaton environment.",
+    "format": [
+      "production",
+      "development",
+      "test"
+    ],
+    "default": "development",
+    "env": "NODE_ENV"
+  },
+
+  "server": {
+    "url": {
+      "doc": "Server url",
+      "format": "url",
+      "default": "http://localhost:3000",
+      "env": "SERVER_URL"
+    },
+    "port": {
+      "doc": "Port to bind",
+      "format": "port",
+      "default": 3000,
+      "env": "SERVER_PORT"
+    }
+  },
+
+  "cookie": {
+    "secret": {
+      "default": "81b02282-e5d5-464c-9d1b-b11eb8276bb2",
+      "env": "COOKIE_SECRET"
+    },
+    "isSecure": {
+      "default": false,
+      "env": "COOKIE_IS_SECURE"
+    },
+    "ttl": {
+      "format": "duration",
+      "default": "30 days"
+    }
+  },
+
+  "jwt": {
+    "secret": {
+      "format": String,
+      "default": "foobar",
+      "env": "JWT_SECRET",
+    },
+  },
+
+  "proxy": {
+    "url": {
+      "default": "http://localhost:3100",
+      "env": "PROXY_URL"
+    }
+  },
+
+  "google": {
+    "clientId": {
+      "default": "foobar",
+      "env": "GOOGLE_CLIENT_ID"
+    },
+    "clientSecret": {
+      "default": "foobar",
+      "env": "GOOGLE_CLIENT_SECRET"
+    }
+  },
+
+  "facebook": {
+    "clientId": {
+      "default": "foobar",
+      "env": "FACEBOOK_CLIENT_ID"
+    },
+    "clientSecret": {
+      "default": "foobar",
+      "env": "FACEBOOK_CLIENT_SECRET"
+    }
+  }
+}

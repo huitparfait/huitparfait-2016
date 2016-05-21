@@ -9,4 +9,7 @@ node_modules
 # Data
 huitparfait-data/data
 
+# Node build
+dist
+
 *.log

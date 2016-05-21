@@ -9,13 +9,12 @@
     "url": "git@github.com:huitparfait/huitparfait.git"
   },
   "scripts": {
-    "start": "node src/cli/index.js",
-    "dev": "nodemon --watch src --watch config src/cli/index.js",
-    "lint": "$(npm bin)/eslint *.js src config"
+    "dev": "nodemon --exec babel-node --watch src --watch config src/server.js",
+    "lint": "eslint *.js src config",
+    "build": "babel src -d dist",
+    "start": "node dist/server.js"
   },
   "dependencies": {
-    "babel-core": "6.9.0",
-    "babel-preset-es2015": "6.9.0",
     "bell": "7.7.0",
     "bluebird": "3.4.0",
     "convict": "1.3.0",
@@ -27,6 +26,8 @@
     "lodash": "4.12.0"
   },
   "devDependencies": {
+    "babel-cli": "6.9.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.8.0",
     "eslint": "~2.10.0",
     "nodemon": "~1.9.0"
   }
