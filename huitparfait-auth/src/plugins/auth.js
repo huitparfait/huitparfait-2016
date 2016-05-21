@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
 const schema = Joi.object({
-    jwtSecret: Joi.string().required()
+    jwtSecret: Joi.string().required(),
 }).required()
 
 exports.register = function (server, options = {}, next) {
@@ -11,7 +11,7 @@ exports.register = function (server, options = {}, next) {
     server.auth.strategy('jwt', 'jwt', {
         key: options.jwtSecret,
         validateFunc: validate,
-        verifyOptions: { algorithms: ['HS256'] }
+        verifyOptions: { algorithms: ['HS256'] },
     })
 
     server.auth.default('jwt')
@@ -21,7 +21,7 @@ exports.register = function (server, options = {}, next) {
 
 
 exports.register.attributes = {
-    name: 'auth'
+    name: 'auth',
 }
 
 

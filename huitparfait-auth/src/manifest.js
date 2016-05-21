@@ -4,18 +4,18 @@ export default {
     server: {
         connections: {
             router: {
-                stripTrailingSlash: true
+                stripTrailingSlash: true,
             },
             routes: {
                 security: {
                     hsts: {
-                        includeSubdomains: true
+                        includeSubdomains: true,
                     },
-                    xframe: true
-                }
-            }
+                    xframe: true,
+                },
+            },
         },
-        debug: { request: ['error', 'uncaught'] }
+        debug: { request: ['error', 'uncaught'] },
     },
 
     connection: {
@@ -25,8 +25,8 @@ export default {
             password: Config.get('cookie.secret'),
             ttl: Config.get('cookie.ttl'),
             isSecure: Config.get('cookie.isSecure'),
-            isHttpOnly: true
-        }
+            isHttpOnly: true,
+        },
     },
 
     plugins: [
@@ -37,21 +37,21 @@ export default {
         {
             register: require('./plugins/auth'),
             options: {
-                jwtSecret: Config.get('jwt.secret')
-            }
+                jwtSecret: Config.get('jwt.secret'),
+            },
 
         },
         {
             register: require('./providers/google'),
-            options: Config.get('google')
+            options: Config.get('google'),
 
         },
         {
             register: require('./providers/facebook'),
-            options: Config.get('facebook')
+            options: Config.get('facebook'),
 
         },
 
-        require('./router')
-    ]
+        require('./router'),
+    ],
 }

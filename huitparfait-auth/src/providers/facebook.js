@@ -4,7 +4,7 @@ import { findOrCreateUserByProfile } from '../user-service'
 
 const schema = Joi.object({
     clientId: Joi.string().required(),
-    clientSecret: Joi.string().required()
+    clientSecret: Joi.string().required(),
 }).required()
 
 exports.register = function (server, options, next) {
@@ -19,7 +19,7 @@ exports.register = function (server, options, next) {
         clientSecret: options.clientSecret,
         location: server.info.uri,
         isSecure: cookieConfig.isSecure,
-        password: cookieConfig.password
+        password: cookieConfig.password,
     })
 
     server.route({
@@ -27,8 +27,8 @@ exports.register = function (server, options, next) {
         path: '/auth/facebook',
         config: {
             auth: 'facebook',
-            handler: authFacebook
-        }
+            handler: authFacebook,
+        },
     })
 
     next()
@@ -36,7 +36,7 @@ exports.register = function (server, options, next) {
 
 
 exports.register.attributes = {
-    name: 'facebook'
+    name: 'facebook',
 }
 
 
@@ -47,7 +47,7 @@ function authFacebook(req, reply) {
     const profile = {
         id: creds.id,
         name: creds.displayName,
-        createdAt: new Date()
+        createdAt: new Date(),
     }
 
     findOrCreateUserByProfile(profile)

@@ -4,7 +4,7 @@ import { findOrCreateUserByProfile } from '../user-service'
 
 const schema = Joi.object({
     clientId: Joi.string().required(),
-    clientSecret: Joi.string().required()
+    clientSecret: Joi.string().required(),
 }).required()
 
 exports.register = function (server, options, next) {
@@ -19,7 +19,7 @@ exports.register = function (server, options, next) {
         clientSecret: options.clientSecret,
         location: server.info.uri,
         isSecure: cookieConfig.isSecure,
-        password: cookieConfig.password
+        password: cookieConfig.password,
     })
 
     server.route({
@@ -27,8 +27,8 @@ exports.register = function (server, options, next) {
         path: '/auth/google',
         config: {
             auth: 'google',
-            handler: authGoogle
-        }
+            handler: authGoogle,
+        },
     })
 
     next()
@@ -36,7 +36,7 @@ exports.register = function (server, options, next) {
 
 
 exports.register.attributes = {
-    name: 'google'
+    name: 'google',
 }
 
 
@@ -47,7 +47,7 @@ function authGoogle(req, reply) {
         id: creds.id,
         name: creds.displayName,
         email: _.get(creds.emails, '[0].value'),
-        createdAt: new Date()
+        createdAt: new Date(),
     }
 
     findOrCreateUserByProfile(profile)

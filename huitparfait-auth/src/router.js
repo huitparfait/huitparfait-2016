@@ -11,7 +11,7 @@ exports.register = function (server, options, next) {
             req.auth.artifacts = null
             reply.unstate('token', { path: '/' })
             reply()
-        }
+        },
 
     }, {
         method: '*',
@@ -24,9 +24,9 @@ exports.register = function (server, options, next) {
                     const { auth: { token } } = req
 
                     callback(null, url, { authorization: `Bearer ${token}` })
-                }
-            }
-        }
+                },
+            },
+        },
     }])
 
     next()
@@ -34,5 +34,5 @@ exports.register = function (server, options, next) {
 
 
 exports.register.attributes = {
-    name: 'router'
+    name: 'router',
 }

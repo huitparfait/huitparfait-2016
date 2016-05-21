@@ -2,13 +2,17 @@ module.exports = {
     extends: 'eslint:recommended',
     env: {
         node: true,
-        es6: true
+        es6: true,
     },
     parserOptions: {
         ecmaVersion: 6,
-        sourceType: 'module'
+        sourceType: 'module',
     },
     rules: {
+
+        // Possible Errors
+        'comma-dangle': [2, 'always-multiline'],
+
         // Best Practices
         'accessor-pairs': 2,
         'block-scoped-var': 2,
@@ -133,6 +137,6 @@ module.exports = {
         'max-params': [2, 3],
         'max-nested-callbacks': [2, 2],
         'max-statements': [2, 10],
-        'complexity': [2, 6]
-    }
+        'complexity': [2, 6],
+    },
 };
