@@ -52,6 +52,10 @@ export default {
             register: require('./providers/facebook'),
             options: Config.get('facebook'),
         },
+        {
+            register: require('./providers/yahoo'),
+            options: Config.get('yahoo'),
+        },
 
         require('./router'),
     ],

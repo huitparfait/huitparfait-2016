@@ -78,5 +78,16 @@
       "default": "foobar",
       "env": "FACEBOOK_CLIENT_SECRET"
     }
+  },
+
+  "yahoo": {
+    "clientId": {
+      "default": "foobar",
+      "env": "YAHOO_CLIENT_ID"
+    },
+    "clientSecret": {
+      "default": "foobar",
+      "env": "YAHOO_CLIENT_SECRET"
+    }
   }
 }
