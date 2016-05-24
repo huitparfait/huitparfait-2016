@@ -3,57 +3,57 @@ import Joi from 'joi'
 import { findOrCreateUserByProfile } from '../user-service'
 
 const schema = Joi.object({
-  clientId: Joi.string().required(),
-  clientSecret: Joi.string().required()
+    clientId: Joi.string().required(),
+    clientSecret: Joi.string().required()
 }).required()
 
 exports.register = function (server, options, next) {
 
-  Joi.assert(options, schema)
+    Joi.assert(options, schema)
 
-  const cookieConfig = _.get(server, 'connections[0].states.settings')
+    const cookieConfig = _.get(server, 'connections[0].states.settings')
 
-  server.auth.strategy('google', 'bell', {
-    provider: 'google',
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
-    location: server.info.uri,
-    isSecure: cookieConfig.isSecure,
-    password: cookieConfig.password
-  })
+    server.auth.strategy('google', 'bell', {
+        provider: 'google',
+        clientId: options.clientId,
+        clientSecret: options.clientSecret,
+        location: server.info.uri,
+        isSecure: cookieConfig.isSecure,
+        password: cookieConfig.password
+    })
 
-  server.route({
-    method: 'GET',
-    path: '/auth/google',
-    config: {
-      auth: 'google',
-      handler: authGoogle
-    }
-  })
+    server.route({
+        method: 'GET',
+        path: '/auth/google',
+        config: {
+            auth: 'google',
+            handler: authGoogle
+        }
+    })
 
-  next()
+    next()
 }
 
 
 exports.register.attributes = {
-  name: 'google'
+    name: 'google'
 }
 
 
 function authGoogle(req, reply) {
-  const creds = req.auth.credentials.profile
+    const creds = req.auth.credentials.profile
 
-  const profile = {
-    id: creds.id,
-    name: creds.displayName,
-    email: _.get(creds.emails, '[0].value'),
-    createdAt: new Date()
-  }
+    const profile = {
+        id: creds.id,
+        name: creds.displayName,
+        email: _.get(creds.emails, '[0].value'),
+        createdAt: new Date()
+    }
 
-  findOrCreateUserByProfile(profile)
-    .then((token) => {
-      reply()
-        .state('token', token, { path: '/' })
-        .redirect('/')
-    })
+    findOrCreateUserByProfile(profile)
+        .then((token) => {
+            reply()
+                .state('token', token, { path: '/' })
+                .redirect('/')
+        })
 }
