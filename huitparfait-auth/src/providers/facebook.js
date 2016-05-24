@@ -41,19 +41,19 @@ exports.register.attributes = {
 
 
 function authFacebook(req, reply) {
+
     const creds = req.auth.credentials.profile
 
-    // TODO check facebook creds
     const profile = {
-        id: creds.id,
         name: creds.displayName,
-        createdAt: new Date(),
+        email: creds.email,
+        // TODO redirect
+        avatarUrl: `https://graph.facebook.com/${creds.id}/picture?width=250&height=250`,
     }
 
-    findOrCreateUserByProfile(profile)
-        .then((token) => {
-            reply()
-                .state('token', token, { path: '/' })
-                .redirect('/')
-        })
+    findOrCreateUserByProfile(profile).then((token) => {
+        reply()
+            .state('token', token, { path: '/' })
+            .redirect('/')
+    })
 }

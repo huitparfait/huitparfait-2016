@@ -44,16 +44,14 @@ function authGoogle(req, reply) {
     const creds = req.auth.credentials.profile
 
     const profile = {
-        id: creds.id,
         name: creds.displayName,
-        email: _.get(creds.emails, '[0].value'),
-        createdAt: new Date(),
+        email: _.get(creds, 'emails[0].value'),
+        avatarUrl: _.get(creds, 'raw.image.url').replace(/sz=50$/, 'sz=250'),
     }
 
-    findOrCreateUserByProfile(profile)
-        .then((token) => {
-            reply()
-                .state('token', token, { path: '/' })
-                .redirect('/')
-        })
+    findOrCreateUserByProfile(profile).then((token) => {
+        reply()
+            .state('token', token, { path: '/' })
+            .redirect('/')
+    })
 }
