@@ -1,0 +1,56 @@
+{
+  "env": {
+    "doc": "The applicaton environment.",
+    "format": [
+      "production",
+      "development",
+      "test"
+    ],
+    "default": "development",
+    "env": "NODE_ENV"
+  },
+
+  "server": {
+    "url": {
+      "doc": "Server url",
+      "format": "url",
+      "default": "http://localhost:3100",
+      "env": "SERVER_URL"
+    },
+    "port": {
+      "doc": "Port to bind",
+      "format": "port",
+      "default": 3100,
+      "env": "SERVER_PORT"
+    }
+  },
+
+  "cookie": {
+    "secret": {
+      "default": "7b8a8b90-a83b-4ac3-ae90-97e644b06d06",
+      "env": "COOKIE_SECRET"
+    },
+    "isSecure": {
+      "default": false,
+      "env": "COOKIE_IS_SECURE"
+    },
+    "ttl": {
+      "format": "duration",
+      "default": "30 days"
+    }
+  },
+
+  "jwt": {
+    "publicKeyPath": {
+      "default": "../keys/jwt-public.pem",
+      "env": "JWT_PUBLIC_KEY_PATH"
+    }
+  },
+
+  "neo4j": {
+    "url": {
+      "default": "http://neo4j:neo@localhost:7474",
+      "env": "NEO4J_URL"
+    }
+  }
+}
