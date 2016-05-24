@@ -1,10 +1,31 @@
 version: '2'
 
 services:
-    neo4j:
+
+    traefik:
+        image: containous/traefik
+        command: --web --docker --docker.domain=huitparfait.fr --logLevel=DEBUG
+        ports:
+            - "80:80"
+            - "443:443"
+            - "127.0.0.1:8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.toml:/etc/traefik/traefik.toml
+            - ./acme:/acme
+
+    huitparfait_front:
+        build: ./huitparfait-front
+        image: huitparfait/huitparfait-front
+        labels:
+            - "traefik.backend=huitparfait_front"
+            - "traefik.protocol=http"
+            - "traefik.port=80"
+            - "traefik.frontend.rule=Host:huitparfait.fr"
+
+    huitparfait_data:
         image: 'neo4j:2.3.3'
         volumes:
             - './huitparfait-data/data:/data'
         ports:
             - '7474:7474'
-        container_name: 'huitparfait-data'
