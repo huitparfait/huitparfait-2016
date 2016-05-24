@@ -41,11 +41,14 @@
   },
 
   "jwt": {
-    "secret": {
-      "format": String,
-      "default": "foobar",
-      "env": "JWT_SECRET",
+    "publicKeyPath": {
+      "default": "../keys/jwt-public.pem",
+      "env": "JWT_PUBLIC_KEY_PATH"
     },
+    "privateKeyPath": {
+      "default": "../keys/jwt-private.pem",
+      "env": "JWT_PRIVATE_KEY_PATH"
+    }
   },
 
   "proxy": {

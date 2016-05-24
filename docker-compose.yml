@@ -35,7 +35,8 @@ services:
             SERVER_URL: http://localhost:3000
             SERVER_PORT: 3000
             PROXY_URL: http://huitparfait-api
-            JWT_SECRET: s3cr3t
+            JWT_PUBLIC_KEY_PATH: /jwt-keys/jwt-public.pem
+            JWT_PRIVATE_KEY_PATH: /jwt-keys/jwt-private.pem
             FACEBOOK_CLIENT_ID: FACEBOOK_CLIENT_ID
             FACEBOOK_CLIENT_SECRET: FACEBOOK_CLIENT_SECRET
             GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID

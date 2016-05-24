@@ -1,4 +1,8 @@
 import Config from './infra/config'
+import fs from 'fs'
+
+const JWT_PUBLIC_KEY_PATH = Config.get('jwt.publicKeyPath')
+const JWT_PUBLIC_KEY = fs.readFileSync(JWT_PUBLIC_KEY_PATH, 'utf8')
 
 export default {
     server: {
@@ -37,19 +41,16 @@ export default {
         {
             register: require('./plugins/auth'),
             options: {
-                jwtSecret: Config.get('jwt.secret'),
+                jwtPublicKey: JWT_PUBLIC_KEY,
             },
-
         },
         {
             register: require('./providers/google'),
             options: Config.get('google'),
-
         },
         {
             register: require('./providers/facebook'),
             options: Config.get('facebook'),
-
         },
 
         require('./router'),
