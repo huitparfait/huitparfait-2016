@@ -125,7 +125,7 @@ module.exports = {
         // Custom
         'no-underscore-dangle': 0,
         'no-console': 0,
-        'semi': 0,
+        'semi': [2, 'never'],
         'no-new': 0,
 
         // Complexity
