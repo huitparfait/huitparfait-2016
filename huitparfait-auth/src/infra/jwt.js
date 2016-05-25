@@ -5,9 +5,9 @@ import fs from 'fs'
 const JWT_PRIVATE_KEY_PATH = Config.get('jwt.privateKeyPath')
 const JWT_PRIVATE_KEY = fs.readFileSync(JWT_PRIVATE_KEY_PATH, 'utf8')
 
-export function sign(object) {
+export function sign(object, expiresIn = '1d') {
     return JWT.sign(object, JWT_PRIVATE_KEY, {
-        expiresIn: '1d',
+        expiresIn,
         algorithm: 'RS256',
     })
 }

@@ -49,6 +49,21 @@ services:
             - "traefik.port=3000"
             - "traefik.frontend.rule=Host:huitparfait.fr"
 
+    huitparfait-api:
+        build: ./huitparfait-api
+        image: huitparfait/huitparfait-api
+        ports:
+            - "3100:3000"
+        volumes:
+            - ./keys:/jwt-keys
+        environment:
+            NODE_ENV: production
+            SERVER_URL: http://localhost
+            SERVER_PORT: 3000
+            NEO4J_URL: http://neo4j:neo@huitparfait_data:7474
+            JWT_PUBLIC_KEY_PATH: /jwt-keys/jwt-public.pem
+            JWT_PRIVATE_KEY_PATH: /jwt-keys/jwt-private.pem
+
     huitparfait_data:
         image: 'neo4j:2.3.3'
         volumes:

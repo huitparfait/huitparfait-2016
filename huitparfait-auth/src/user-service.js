@@ -6,8 +6,21 @@ const apiClient = request.defaults({ baseUrl: Config.get('proxy.url') })
 
 export function findOrCreateUserByProfile(profile) {
 
-    return apiClient.post('/api/users/me', { json: profile }).then((result) => {
-        profile.id = result.id
-        return sign(profile)
+    const anonymousJwt = sign({ anonymous: true }, '5s')
+
+    const options = {
+        json: profile,
+        headers: {
+            Authorization: `Bearer ${anonymousJwt}`,
+        },
+    }
+
+    return apiClient.post('/api/users/me', options).then((result) => {
+        return sign({
+            id: result.id,
+            name: profile.name,
+            avatarUrl: profile.avatarUrl,
+            isAnonymous: result.isAnonymous,
+        })
     })
 }
