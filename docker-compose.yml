@@ -23,6 +23,32 @@ services:
             - "traefik.port=80"
             - "traefik.frontend.rule=Host:huitparfait.fr"
 
+    huitparfait-auth:
+        build: ./huitparfait-auth
+        image: huitparfait/huitparfait-auth
+        volumes:
+            - ./keys:/jwt-keys
+        ports:
+            - "127.0.0.1:3000:3000"
+        environment:
+            NODE_ENV: production
+            SERVER_URL: http://localhost:3000
+            SERVER_PORT: 3000
+            PROXY_URL: http://huitparfait-api
+            JWT_PUBLIC_KEY_PATH: /jwt-keys/jwt-public.pem
+            JWT_PRIVATE_KEY_PATH: /jwt-keys/jwt-private.pem
+            FACEBOOK_CLIENT_ID: FACEBOOK_CLIENT_ID
+            FACEBOOK_CLIENT_SECRET: FACEBOOK_CLIENT_SECRET
+            GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET: GOOGLE_CLIENT_SECRET
+            YAHOO_CLIENT_ID: YAHOO_CLIENT_ID
+            YAHOO_CLIENT_SECRET: YAHOO_CLIENT_SECRET
+        labels:
+            - "traefik.backend=huitparfait_front"
+            - "traefik.protocol=http"
+            - "traefik.port=3000"
+            - "traefik.frontend.rule=Host:huitparfait.fr"
+
     huitparfait_data:
         image: 'neo4j:2.3.3'
         volumes:
