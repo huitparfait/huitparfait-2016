@@ -51,9 +51,12 @@ function authFacebook(req, reply) {
         avatarUrl: `https://graph.facebook.com/${creds.id}/picture?width=250&height=250`,
     }
 
-    findOrCreateUserByProfile(profile).then((token) => {
-        reply()
-            .state('token', token, { path: '/' })
-            .redirect('/')
-    })
+    findOrCreateUserByProfile(profile)
+        .then((token) => {
+            reply()
+                .state('token', token, { path: '/' })
+                .redirect('/')
+        })
+        .catch(reply)
+
 }

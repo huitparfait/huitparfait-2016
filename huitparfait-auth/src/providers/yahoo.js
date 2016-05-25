@@ -59,10 +59,12 @@ function authYahoo(req, reply) {
             avatarUrl: _.get(fullProfile, 'profile.image.imageUrl'),
         }
 
-        findOrCreateUserByProfile(profile).then((token) => {
-            reply()
-                .state('token', token, { path: '/' })
-                .redirect('/')
-        })
+        findOrCreateUserByProfile(profile)
+            .then((token) => {
+                reply()
+                    .state('token', token, { path: '/' })
+                    .redirect('/')
+            })
+            .catch(reply)
     })
 }
