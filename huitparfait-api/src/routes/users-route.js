@@ -47,29 +47,35 @@ exports.register = function (server, options, next) {
         {
             method: 'GET',
             path: '/api/users/me',
-            handler(req, reply) {
-                cypherOne(`
+            config: {
+                description: 'Read user infos',
+                tags: ['api'],
+                handler(req, reply) {
+                    cypherOne(`
                     MATCH (u:User { id: {id} })
                     RETURN u.id          AS id,
                            u.name        AS name,
                            u.avatarUrl   AS avatarUrl,
                            u.isAnonymous AS isAnonymous`,
-                    {
-                        id: req.auth.credentials.id,
-                    })
-                    .then(reply)
-                    .catch(reply)
-            },
+                        {
+                            id: req.auth.credentials.id,
+                        })
+                        .then(reply)
+                        .catch(reply)
+                },
+            }
         },
 
         {
             method: 'GET',
             path: '/api/users/me/groups',
             config: {
+                description: 'Read user\'s groups',
+                tags: ['api'],
                 handler(req, reply) {
                     cypher(`
                         MATCH    (:User { id:{id} })-[imog:IS_MEMBER_OF_GROUP]->(g:Group)
-                        MATCH    (u:User)-->g
+                        MATCH    (u:User)-->(g)
                         WHERE    imog.isActive = true
                         RETURN   g.name      AS name, 
                                  g.avatar    AS avatar, 

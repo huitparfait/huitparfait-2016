@@ -30,6 +30,9 @@
     "babel-cli": "6.9.0",
     "babel-plugin-transform-es2015-modules-commonjs": "6.8.0",
     "eslint": "2.10.2",
-    "nodemon": "1.9.2"
+    "hapi-swagger": "5.1.0",
+    "inert": "4.0.0",
+    "nodemon": "1.9.2",
+    "vision": "4.1.0"
   }
 }

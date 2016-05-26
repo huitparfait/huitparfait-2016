@@ -1,10 +1,11 @@
 import Config from './infra/config'
 import fs from 'fs'
+import url from 'url'
 
 const JWT_PUBLIC_KEY_PATH = Config.get('jwt.publicKeyPath')
 const JWT_PUBLIC_KEY = fs.readFileSync(JWT_PUBLIC_KEY_PATH, 'utf8')
 
-export default {
+const manifest = {
     server: {
         connections: {
             router: {
@@ -47,3 +48,25 @@ export default {
         require('./routes/groupes-route'),
     ],
 }
+
+
+if (Config.get('env') === 'development') {
+    manifest.plugins.push(
+        require('inert'),
+        require('vision'),
+        {
+            register: require('hapi-swagger'),
+            options: {
+                host: url.parse(Config.get('server.url')).host,
+                basePath: '/api',
+                documentationPath: '/console',
+                pathPrefixSize: 2,
+                info: {
+                    title: 'Huit Parfait API Documentation'
+                }
+            }
+        }
+    )
+}
+
+export default manifest
