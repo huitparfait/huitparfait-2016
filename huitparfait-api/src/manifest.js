@@ -43,6 +43,7 @@ export default {
             },
         },
 
-        require('./router'),
+        require('./routes/users-route'),
+        require('./routes/groupes-route'),
     ],
 }

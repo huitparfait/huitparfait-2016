@@ -49,9 +49,11 @@ function authGoogle(req, reply) {
         avatarUrl: _.get(creds, 'raw.image.url').replace(/sz=50$/, 'sz=250'),
     }
 
-    findOrCreateUserByProfile(profile).then((token) => {
-        reply()
-            .state('token', token, { path: '/' })
-            .redirect('/')
-    })
+    findOrCreateUserByProfile(profile)
+        .then((token) => {
+            reply()
+                .state('token', token, { path: '/' })
+                .redirect('/')
+        })
+        .catch(reply)
 }
