@@ -195,7 +195,7 @@ exports.register = function (server, options, next) {
         },
 
         {
-            method: 'POST',
+            method: 'PUT',
             path: '/api/groups/{groupId}/users/{userId}',
             config: {
                 description: 'Update a user\'s active in a group',

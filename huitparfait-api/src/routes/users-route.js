@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
+import { sendEmpty } from '../infra/replyUtils'
 
 exports.register = function (server, options, next) {
 
@@ -61,6 +62,39 @@ exports.register = function (server, options, next) {
                             id: req.auth.credentials.id,
                         })
                         .then(reply)
+                        .catch(reply)
+                },
+            },
+        },
+        {
+            method: 'PUT',
+            path: '/api/users/me',
+            config: {
+                description: 'Update user\'s infos',
+                tags: ['api'],
+                validate: {
+                    payload: {
+                        name: Joi.string(),
+                        avatarUrl: Joi.string(),
+                        isAnonymous: Joi.boolean(),
+                    },
+                },
+                handler(req, reply) {
+                    cypherOne(`
+                        MATCH (u:User { id: {userId} })
+                        SET u.updatedAt   = timestamp(),
+                            u.name        = {userName}, 
+                            u.avatarUrl   = {userAvatarUrl}, 
+                            u.isAnonymous = {userIsAnonymous}
+                        RETURN u AS user`,
+                        {
+                            userId: req.auth.credentials.id,
+                            userName: req.payload.name,
+                            userAvatarUrl: req.payload.avatarUrl,
+                            userIsAnonymous: req.payload.isAnonymous,
+                        })
+
+                        .then(sendEmpty(reply))
                         .catch(reply)
                 },
             },
