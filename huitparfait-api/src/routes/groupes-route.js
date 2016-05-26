@@ -12,6 +12,9 @@ exports.register = function (server, options, next) {
             method: 'POST',
             path: '/api/groups',
             config: {
+                description: 'Create group',
+                notes: 'Create group and link the user to it as active and admin',
+                tags: ['api'],
                 validate: {
                     payload: Joi.object({
                         name: Joi.string().required(),
@@ -51,6 +54,8 @@ exports.register = function (server, options, next) {
             method: 'GET',
             path: '/api/groups/{groupId}',
             config: {
+                description: 'Read group',
+                tags: ['api'],
                 validate: {
                     params: {
                         groupId: shortIdSchema,
@@ -59,7 +64,7 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypherOne(`
                         MATCH  (:User { id: {userId} })-->(g:Group { id: {groupId} })
-                        MATCH  (u:User)-->g
+                        MATCH  (u:User)-->(g)
                         RETURN g.id        AS id, 
                                g.name      AS name, 
                                g.avatarUrl AS avatarUrl, 
@@ -77,6 +82,8 @@ exports.register = function (server, options, next) {
             method: 'PUT',
             path: '/api/groups/{groupId}',
             config: {
+                description: 'Update group',
+                tags: ['api'],
                 validate: {
                     params: {
                         groupId: shortIdSchema,
@@ -106,6 +113,8 @@ exports.register = function (server, options, next) {
             method: 'DELETE',
             path: '/api/groups/{groupId}',
             config: {
+                description: 'Delete group',
+                tags: ['api'],
                 validate: {
                     params: {
                         groupId: shortIdSchema,
@@ -114,7 +123,7 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypherOne(`
                         MATCH  (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isAdmin: true }]->(g:Group { id: {groupId} })
-                        MATCH  (u:User)-[m:IS_MEMBER_OF_GROUP]->g
+                        MATCH  (u:User)-[m:IS_MEMBER_OF_GROUP]->(g)
                         DELETE g, m
                         RETURN count(g) AS deleteCount`,
                         {
