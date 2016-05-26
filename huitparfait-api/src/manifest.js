@@ -62,9 +62,9 @@ if (Config.get('env') === 'development') {
                 documentationPath: '/console',
                 pathPrefixSize: 2,
                 info: {
-                    title: 'Huit Parfait API Documentation'
-                }
-            }
+                    title: 'Huit Parfait API Documentation',
+                },
+            },
         }
     )
 }
