@@ -52,20 +52,19 @@ exports.register = function (server, options, next) {
                 tags: ['api'],
                 handler(req, reply) {
                     cypherOne(`
-                    MATCH (u:User { id: {id} })
-                    RETURN u.id          AS id,
-                           u.name        AS name,
-                           u.avatarUrl   AS avatarUrl,
-                           u.isAnonymous AS isAnonymous`,
+                        MATCH (u:User { id: {id} })
+                        RETURN u.id          AS id,
+                               u.name        AS name,
+                               u.avatarUrl   AS avatarUrl,
+                               u.isAnonymous AS isAnonymous`,
                         {
                             id: req.auth.credentials.id,
                         })
                         .then(reply)
                         .catch(reply)
                 },
-            }
+            },
         },
-
         {
             method: 'GET',
             path: '/api/users/me/groups',
@@ -78,7 +77,7 @@ exports.register = function (server, options, next) {
                         MATCH    (u:User)-->(g)
                         WHERE    imog.isActive = true
                         RETURN   g.name      AS name, 
-                                 g.avatar    AS avatar, 
+                                 g.avatarUrl AS avatarUrl, 
                                  g.id        AS id, 
                                  count(u.id) AS userCount
                         ORDER BY g.name`,
