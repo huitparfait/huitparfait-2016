@@ -3,43 +3,15 @@
 
         <div class="groupList">
             <a class="card group"
-                    v-link="{ name: 'group', params: { groupId: 28478249, groupName: 'mes-potes-du-boulot' } }">
+               v-for="group in groups"
+               v-link="{ name: 'group', params: { groupId: group.id, groupName: group.name } }">
                 <div class="group-avatar--wrapper">
-                    <img class="group-avatar" src="http://placekitten.com/g/200/100" alt="">
+                    <img class="group-avatar" src="../assets/unknown-group.svg" v-if="group.avatarUrl" :src="group.avatarUrl">
+                    <img class="group-avatar" src="../assets/unknown-group.svg" v-else>
                 </div>
                 <div class="group-infos">
-                    <div class="group-name">Mes potes du boulot</div>
-                    <div class="group-size"><strong>12</strong> joueurs</div>
-                </div>
-            </a>
-
-            <a class="card group" v-link="{ name: 'group', params: { groupId: 24984294, groupName: 'la-famille' } }">
-                <div class="group-avatar--wrapper">
-                    <img class="group-avatar" src="http://placekitten.com/g/300/100" alt="">
-                </div>
-                <div class="group-infos">
-                    <div class="group-name">La famille</div>
-                    <div class="group-size"><strong>2</strong> joueurs</div>
-                </div>
-            </a>
-
-            <a class="card group" v-link="{ name: 'group', params: { groupId: 53985395, groupName: 'le-club-de-foot' } }">
-                <div class="group-avatar--wrapper">
-                    <img class="group-avatar" src="http://placekitten.com/g/100/200" alt="">
-                </div>
-                <div class="group-infos">
-                    <div class="group-name">Le club de foot que j'aime bcp et qui sont sympas</div>
-                    <div class="group-size"><strong>17</strong> joueurs</div>
-                </div>
-            </a>
-
-            <a class="card group" v-link="{ name: 'group', params: { groupId: 24984294, groupName: 'le-groupe-des-gens-forts-en-foot' } }">
-                <div class="group-avatar--wrapper">
-                    <img class="group-avatar" src="http://placekitten.com/g/350/100" alt="">
-                </div>
-                <div class="group-infos">
-                    <div class="group-name">Le groupe des gens forts en foot</div>
-                    <div class="group-size"><strong>2</strong> joueurs</div>
+                    <div class="group-name">{{group.name}}</div>
+                    <div class="group-size"><strong>{{group.userCount}}</strong> joueurs</div>
                 </div>
             </a>
 
@@ -52,15 +24,18 @@
             <div class="newGroup-label">Créer un nouveau groupe :</div>
 
             <div class="card card--newGroup">
-                <label class="group-nameInput--wrapper">
-                    Nom du nouveau groupe :
-                    <input v-model="name" type="text" class="group-nameInput" placeholder="Mes collègues">
-                </label>
-                <label class="group-avatarInput--wrapper">
-                    Image du groupe (HTTPS uniquement) :
-                    <input v-model="avatarUrl" type="text" class="group-avatarInput" placeholder="https://placekitten.com/g/100/200">
-                </label>
-                <button class="group-createBtn" @click="createGroup()">Créer</button>
+                <form @submit.prevent="createGroup()">
+                    <label class="group-nameInput--wrapper">
+                        Nom du nouveau groupe :
+                        <input v-model="newGroup.name" type="text" class="group-nameInput" placeholder="Mes collègues">
+                    </label>
+                    <label class="group-avatarInput--wrapper">
+                        Image du groupe (HTTPS uniquement) :
+                        <input v-model="newGroup.avatarUrl" type="text" class="group-avatarInput"
+                               placeholder="https://placekitten.com/g/100/200">
+                    </label>
+                    <button type="submit" class="group-createBtn">Créer</button>
+                </form>
             </div>
         </div>
 
@@ -69,11 +44,23 @@
 
 <script>
 
-    export default {
+    import * as WebApi from '../WebApi'
 
+    export default {
+        data() {
+            return {
+                groups: undefined,
+                newGroup: {}
+            }
+        },
+        ready() {
+            WebApi.fetchGroups().then((groups) => {
+                this.groups = groups
+            })
+        },
         methods: {
             createGroup: function () {
-                alert('bar')
+                WebApi.createGroup(this.newGroup)
             }
         }
     }
@@ -196,7 +183,6 @@
     }
 
     .group-createBtn {
-        background-color: #4db788;
         background-color: #4d88b7;
         border: 1px solid #496f99;
         border-bottom-width: 2px;
@@ -207,6 +193,7 @@
         padding: 8px 15px;
         margin: 10px;
         align-self: flex-end;
+        cursor: pointer;
     }
 
 </style>

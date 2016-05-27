@@ -1,0 +1,38 @@
+const baseUrl = 'http://localhost:3000/api' // TODO
+
+export function fetchGroups() {
+    return execute('/users/me/groups')
+}
+
+export function createGroup(newGroup) {
+    return execute('/groups', { method: 'POST', body: newGroup })
+}
+
+
+function execute(url, opts = {}) {
+    if (opts.body) {
+        opts.body = JSON.stringify(opts.body)
+    }
+    const config = Object.assign({}, opts, {
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+
+    return fetch(baseUrl + url, config)
+        .then(status)
+        .then(function json(response) {
+            return response.json()
+        })
+}
+
+function status(response) {
+    if (response.status >= 200 && response.status < 300) {
+        return Promise.resolve(response)
+    }
+
+    return Promise.reject(new Error(response.statusText))
+}

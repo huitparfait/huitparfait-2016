@@ -43,7 +43,7 @@ exports.register = function (server, options, next) {
                             userId: req.auth.credentials.id,
                             groupId: shortid(),
                             groupName: req.payload.name,
-                            groupAvatarUrl: req.payload.avatarUrl || '',
+                            groupAvatarUrl: req.payload.avatarUrl || null,
                         })
                         .then(sendCreated(reply, '/api/groups/'))
                         .catch(reply)
@@ -87,8 +87,11 @@ exports.register = function (server, options, next) {
                 validate: {
                     params: {
                         groupId: shortIdSchema,
-                        avatarUrl: Joi.string(),
                     },
+                    payload: Joi.object({
+                        name: Joi.string().required(),
+                        avatarUrl: Joi.string(),
+                    }).required(),
                 },
                 handler(req, reply) {
                     cypherOne(`

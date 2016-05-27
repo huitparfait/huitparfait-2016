@@ -25,6 +25,12 @@ export default {
     connection: {
         port: Config.get('server.port'),
         uri: Config.get('server.url'),
+        routes: {
+            cors: {
+                credentials: true,
+                origin: ['*'],
+            },
+        },
         state: {
             password: Config.get('cookie.secret'),
             ttl: Config.get('cookie.ttl'),
