@@ -1,5 +1,3 @@
-const baseUrl = 'http://localhost:3000/api' // TODO
-
 export function fetchGroups() {
     return execute('/users/me/groups')
 }
@@ -22,7 +20,7 @@ function execute(url, opts = {}) {
         }
     })
 
-    return fetch(baseUrl + url, config)
+    return fetch(process.env.API_URL + url, config)
         .then(status)
         .then(function json(response) {
             return response.json()
