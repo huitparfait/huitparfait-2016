@@ -23,9 +23,9 @@
                     Pour vous éviter de créer un n-ième mot de passe, la connexion se fait avec un site externe.
                 </p>
                 <p class="card--login-allBtn">
-                    <a class="loginBtn" href="#">avec Facebook</a>
-                    <a class="loginBtn" href="#">avec Google</a>
-                    <a class="loginBtn" href="#">avec Yahoo</a>
+                    <a class="loginBtn" href="/auth/facebook">avec Facebook</a>
+                    <a class="loginBtn" href="/auth/google">avec Google</a>
+                    <a class="loginBtn" href="/auth/yahoo">avec Yahoo</a>
                 </p>
             </div>
         </div>

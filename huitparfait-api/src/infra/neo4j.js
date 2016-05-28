@@ -5,6 +5,7 @@ import Config from './config'
 import { notFound } from 'boom'
 
 const db = new neo4j.GraphDatabase(Config.get('neo4j.url'))
+const dbCypherAsync = B.promisify(db.cypher, { context: db })
 
 export function cypher(fatQuery, params) {
 
@@ -12,9 +13,7 @@ export function cypher(fatQuery, params) {
     // To simplify errors messages from neo, we send it one-line queries ;-)
     const query = fatQuery.replace(/\s+/g, ' ')
 
-    return B
-        .promisify(db.cypher, { context: db })({ query, params })
-        .map(omitNull)
+    return dbCypherAsync({ query, params }).map(omitNull)
 }
 
 export function cypherOne(fatQuery, params) {

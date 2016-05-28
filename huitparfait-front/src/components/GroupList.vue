@@ -43,7 +43,6 @@
 </template>
 
 <script>
-
     import * as WebApi from '../WebApi'
 
     export default {
@@ -59,8 +58,10 @@
             })
         },
         methods: {
-            createGroup: function () {
-                WebApi.createGroup(this.newGroup)
+            createGroup() {
+                WebApi.createGroup(this.newGroup).then((group) => {
+                    this.$router.go({name: 'group', params: {groupId: group.id, groupName: this.newGroup.name }})
+                })
             }
         }
     }
