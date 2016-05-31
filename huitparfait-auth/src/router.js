@@ -15,15 +15,30 @@ exports.register = function (server, options, next) {
 
     }, {
         method: '*',
-        path: '/{path*}',
+        path: '/api/{apiPath*}',
         handler: {
             proxy: {
                 passThrough: true,
                 mapUri(req, callback) {
-                    const url = `${PROXY_CONFIG.url}${req.path}`
+                    const url = `${PROXY_CONFIG.apiUrl}${req.path}`
                     const { auth: { token } } = req
 
                     callback(null, url, { authorization: `Bearer ${token}` })
+                },
+            },
+        },
+    }, {
+        method: '*',
+        path: '/{frontPath*}',
+        config: {
+            auth: false,
+        },
+        handler: {
+            proxy: {
+                passThrough: true,
+                mapUri(req, callback) {
+                    const url = `${PROXY_CONFIG.frontUrl}${req.path}`
+                    callback(null, url)
                 },
             },
         },
