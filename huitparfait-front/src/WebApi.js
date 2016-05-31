@@ -21,7 +21,6 @@ function execute(url, opts = {}) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'x-huitparfait': 'api',
         }
     })
 
