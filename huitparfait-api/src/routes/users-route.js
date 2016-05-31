@@ -16,7 +16,7 @@ exports.register = function (server, options, next) {
                     payload: Joi.object({
                         email: Joi.string().email().required(),
                         name: Joi.string(),
-                        avatarUrl: Joi.string(),
+                        avatarUrl: Joi.string().uri({ scheme: 'https' }),
                     }).required(),
                 },
                 handler(req, reply) {
@@ -75,7 +75,7 @@ exports.register = function (server, options, next) {
                 validate: {
                     payload: {
                         name: Joi.string(),
-                        avatarUrl: Joi.string(),
+                        avatarUrl: Joi.string().uri({ scheme: 'https' }),
                         isAnonymous: Joi.boolean(),
                     },
                 },
@@ -90,7 +90,7 @@ exports.register = function (server, options, next) {
                         {
                             userId: req.auth.credentials.id,
                             userName: req.payload.name,
-                            userAvatarUrl: req.payload.avatarUrl,
+                            userAvatarUrl: req.payload.avatarUrl || null,
                             userIsAnonymous: req.payload.isAnonymous,
                         })
 
