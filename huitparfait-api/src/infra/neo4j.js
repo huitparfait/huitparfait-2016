@@ -1,8 +1,11 @@
+import B from 'bluebird'
 import neo4j from 'neo4j'
+import _ from 'lodash'
 import Config from './config'
 import { notFound } from 'boom'
 
 const db = new neo4j.GraphDatabase(Config.get('neo4j.url'))
+const dbCypherAsync = B.promisify(db.cypher, { context: db })
 
 export function cypher(fatQuery, params) {
 
@@ -10,17 +13,7 @@ export function cypher(fatQuery, params) {
     // To simplify errors messages from neo, we send it one-line queries ;-)
     const query = fatQuery.replace(/\s+/g, ' ')
 
-    return new Promise((resolve, reject) => {
-
-        db.cypher({ query, params }, function (err, results) {
-
-            if (err) {
-                return reject(err)
-            }
-
-            return resolve(results)
-        })
-    })
+    return dbCypherAsync({ query, params }).map(omitNull)
 }
 
 export function cypherOne(fatQuery, params) {
@@ -31,4 +24,9 @@ export function cypherOne(fatQuery, params) {
 
         throw new notFound('Not unique result')
     })
+}
+
+
+function omitNull(item) {
+    return _.omitBy(item, _.isNil)
 }

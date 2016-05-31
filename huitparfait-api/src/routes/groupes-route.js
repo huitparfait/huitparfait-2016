@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
-import { sendCreated, sendEmpty, sendEmptyIfPositiveDeleteCount } from '../infra/replyUtils'
+import { sendEmpty, sendEmptyIfPositiveDeleteCount } from '../infra/replyUtils'
 
 const shortIdSchema = Joi.string().required().regex(/^[a-zA-Z0-9-_]{7,14}$/)
 
@@ -43,9 +43,9 @@ exports.register = function (server, options, next) {
                             userId: req.auth.credentials.id,
                             groupId: shortid(),
                             groupName: req.payload.name,
-                            groupAvatarUrl: req.payload.avatarUrl || '',
+                            groupAvatarUrl: req.payload.avatarUrl || null,
                         })
-                        .then(sendCreated(reply, '/api/groups/'))
+                        .then(reply)
                         .catch(reply)
                 },
             },
@@ -87,8 +87,11 @@ exports.register = function (server, options, next) {
                 validate: {
                     params: {
                         groupId: shortIdSchema,
-                        avatarUrl: Joi.string(),
                     },
+                    payload: Joi.object({
+                        name: Joi.string().required(),
+                        avatarUrl: Joi.string(),
+                    }).required(),
                 },
                 handler(req, reply) {
                     cypherOne(`
