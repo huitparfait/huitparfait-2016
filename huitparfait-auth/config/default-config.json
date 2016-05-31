@@ -52,9 +52,13 @@
   },
 
   "proxy": {
-    "url": {
+    "apiUrl": {
       "default": "http://localhost:3100",
-      "env": "PROXY_URL"
+      "env": "PROXY_API_URL"
+    },
+    "frontUrl": {
+      "default": "http://localhost:8081",
+      "env": "PROXY_FRONT_URL"
     }
   },
 
