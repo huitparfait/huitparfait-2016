@@ -2,7 +2,7 @@ import Config from './infra/config'
 import { sign } from './infra/jwt'
 import request from 'request-promise'
 
-const apiClient = request.defaults({ baseUrl: Config.get('proxy.url') })
+const apiClient = request.defaults({ baseUrl: Config.get('proxy.apiUrl') })
 
 export function findOrCreateUserByProfile(profile) {
 
