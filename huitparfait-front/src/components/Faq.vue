@@ -93,22 +93,17 @@
 
         <div class="cardGroup">
             <div class="card">
-                <h2 class="card-title">Mais c'est quoi une risquette ?</h2>
+                <h2 class="card-title">Mais au fait, c'est quoi une risquette ?</h2>
                 <p>
-                    TODO
-                    <!--<h3>Risquettes</h3>-->
-                    <!--<div>Il vous faudra également déterminer si la "risquette" sera VRAIE ou FAUSSE.-->
-                    <!--Une risquette décrit un événement par exemple : <em>"Un joueur avec un nombre impair marque un-->
-                    <!--but"</em>. Vous pouvez risquer jusqu'à 3 points. Si vous avez raison, vous les gagnez ; si vous-->
-                    <!--avez tort, vous les perdez.-->
-                    <!--</div>-->
-                    <!--<div>Une risquette mentionnant un but comme <strong>"Au moins un but de la-->
-                    <!--tête"</strong> ne tient pas compte de la séance éventuelle de tirs au buts.-->
-                    <!--</div>-->
-                    <!--<div>Une risquette mentionnant un vainqueur ou un perdant comme <strong>"Le-->
-                    <!--joueur du match est dans l'équipe vainqueur"</strong> ne tient pas compte de la séance éventuelle de-->
-                    <!--tirs au buts.-->
-                    <!--</div>-->
+                    Une risquette vous permet de "risquer" des points sur un fait de match prédéfini.
+                </p>
+                <p>
+                    Par exemple, pour le match "France - Roumanie", on vous propose une affirmation telle que <strong>Les prolongations sont jouées</strong>.
+                    À vous de pronostiquer si cette risquette sera VRAIE ou FAUSSE. Vous pouvez risquer de 1 à 3 points.
+                    Si à la fin du match vous aviez raison, vous gagnez les points risqués, dans le cas contraire vous perdez les points (et votre honneur).
+                </p>
+                <p>
+                    Si vous ne vous sentez pas l'âme d'un aventurier vous pouvez choisir de ne rien risquer.
                 </p>
             </div>
         </div>
