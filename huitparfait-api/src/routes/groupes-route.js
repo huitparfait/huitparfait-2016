@@ -18,7 +18,7 @@ exports.register = function (server, options, next) {
                 validate: {
                     payload: Joi.object({
                         name: Joi.string().required(),
-                        avatarUrl: Joi.string(),
+                        avatarUrl: Joi.string().uri({ scheme: 'https' }),
                     }).required(),
                 },
                 handler(req, reply) {
@@ -90,7 +90,7 @@ exports.register = function (server, options, next) {
                     },
                     payload: Joi.object({
                         name: Joi.string().required(),
-                        avatarUrl: Joi.string(),
+                        avatarUrl: Joi.string().uri({ scheme: 'https' }),
                     }).required(),
                 },
                 handler(req, reply) {
@@ -196,7 +196,6 @@ exports.register = function (server, options, next) {
                 },
             },
         },
-
         {
             method: 'PUT',
             path: '/api/groups/{groupId}/users/{userId}',
