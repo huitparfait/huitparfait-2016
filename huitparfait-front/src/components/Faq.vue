@@ -152,6 +152,7 @@
                 <p>
                     <a target="_self" href="mailto:huitparfait@gmail.com">huitparfait@gmail.com</a>
                     <a target="_self" href="https://twitter.com/huitparfait">@huitparfait</a>
+                    <a target="_self" href="https://github.com/huitparfait/huitparfait/">Github</a>
                 </p>
             </div>
         </div>
