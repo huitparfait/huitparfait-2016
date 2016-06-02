@@ -40,6 +40,10 @@ export function joinGroup(groupId) {
     return execute(`/groups/${groupId}/users`, { method: 'POST' })
 }
 
+export function fetchGames() {
+    return execute('/games')
+}
+
 function execute(url, opts = {}) {
     if (opts.body) {
         opts.body = JSON.stringify(opts.body)
