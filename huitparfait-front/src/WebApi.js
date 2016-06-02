@@ -1,3 +1,7 @@
+export function fetchGames() {
+  return execute('/games')
+}
+
 export function fetchGroups() {
     return execute('/users/me/groups')
 }

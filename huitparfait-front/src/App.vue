@@ -24,7 +24,7 @@
     .main {
         box-sizing: border-box;
         margin: 30px auto 70px auto;
-        max-width: 1200px;
+        max-width: 1400px;
         width: 100%;
     }
 
