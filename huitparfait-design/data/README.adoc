@@ -39,6 +39,8 @@ avatarUrl         (string)
 createdAt         (number/timestamp)
 updatedAt         (number/timestamp)
 id*               (string)
+classicPoints     (number)
+riskPoints        (number)
 ----
 
 === Risk
@@ -87,8 +89,6 @@ isActive          (boolean)
 ----
 createdAt         (number/timestamp)
 updatedAt         (number/timestamp)
-classicPoints     (number)
-riskPoints        (number)
 ----
 
 === PREDICT_RISK
