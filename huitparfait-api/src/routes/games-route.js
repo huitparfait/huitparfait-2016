@@ -37,6 +37,21 @@ exports.register = function (server, options, next) {
                 },
             },
         },
+        {
+            method: 'PUT',
+            path: '/api/predictions',
+            config: {
+                description: 'List games',
+                tags: ['api'],
+                handler(req, reply) {
+                    // cypher(`
+                    //     `,
+                    //     {})
+                    //     .then(reply)
+                    //     .catch(reply)
+                },
+            },
+        },
     ])
 
     next()

@@ -1,5 +1,9 @@
 export function fetchGames() {
-  return execute('/games')
+    return execute('/games')
+}
+
+export function savePrediction(newPrediction) {
+    return execute('/predictions', { method: 'POST', body: newPrediction })
 }
 
 export function fetchGroups() {

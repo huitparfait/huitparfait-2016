@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="prediction-submitZone">
-                    <button class="prediction-submitZone-button">Enregistrer</button>
+                    <button class="prediction-submitZone-button" @click="savePrediction(prediction)">Enregistrer</button>
                 </div>
 
             </div>
@@ -76,12 +76,18 @@
         this.predictions = games
       })
     },
-    methods: {}
+    methods: {
+        savePrediction: function(prediction) {
+            WebApi.savePrediction(prediction)
+            .then(() => {
+                console.log('Done.');
+            })
+            .catch(() => {
+                console.log('Failed!');
+            });
+        }
+    }
   }
-
-
-
-
 </script>
 
 <style scoped>
