@@ -45,8 +45,12 @@ export function joinGroup(groupId) {
     return execute(`/groups/${groupId}/users`, { method: 'POST' })
 }
 
-export function fetchGames() {
-    return execute('/games')
+export function fetchPredictions() {
+    return execute('/users/me/predictions')
+}
+
+export function savePrediction(newPrediction) {
+    return execute('/users/me/predictions', { method: 'POST', body: newPrediction })
 }
 
 function execute(url, opts = {}) {
