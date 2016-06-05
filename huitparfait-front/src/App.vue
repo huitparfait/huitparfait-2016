@@ -55,6 +55,9 @@
     }
 
     .titlebar {
+        background-color: #4db788;
+        border-bottom: 2px solid #49996f;
+        box-sizing: border-box;
         height: 30px;
         line-height: 30px;
         font-size: 20px;

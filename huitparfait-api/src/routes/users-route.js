@@ -156,8 +156,8 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypher(`
                         MATCH		        (g:Game)
-                        MATCH               (ta:Team)-[:PLAYS_IN_GAME {order: 1}]->(g)
-                        MATCH		        (tb:Team)-[:PLAYS_IN_GAME {order: 2}]->(g)
+                        MATCH               (ta:Team)-[piga:PLAYS_IN_GAME {order: 1}]->(g)
+                        MATCH		        (tb:Team)-[pigb:PLAYS_IN_GAME {order: 2}]->(g)
                         MATCH		        (r:Risk)-[:USED_FOR_GAME]->(g)
                         OPTIONAL MATCH      (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u:User { id: {userId} })
                         OPTIONAL MATCH      (p)-[sa:PREDICT_SCORE]->(ta)
@@ -176,6 +176,8 @@ exports.register = function (server, options, next) {
                                     tb.id               AS idTeamB,
                                     tb.countryCode      AS countryCodeTeamB,
                                     tb.countryName      AS countryNameTeamB,
+                                    piga.goals          AS goalsTeamA,
+                                    pigb.goals          AS goalsTeamB,
 									r.id				AS riskId,
 									r.text				AS riskTitle,
 									sa.goals            AS predictionScoreTeamA,
