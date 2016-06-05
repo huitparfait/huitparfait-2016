@@ -200,6 +200,15 @@ exports.register = function (server, options, next) {
             config: {
                 description: 'Save a user\'s prediction about a game',
                 tags: ['api'],
+                validate: {
+                    payload: {
+                        gameId: Joi.string(),
+                        predictionScoreTeamA: Joi.number().integer().min(0),
+                        predictionScoreTeamB: Joi.number().integer().min(0),
+                        predictionRiskAnswer: Joi.boolean(),
+                        predictionRiskAmount: Joi.number().integer().min(0).max(3),
+                    },
+                },
                 handler(req, reply) {
                     cypher(`
                         MATCH (u:User { id: {userId} })
