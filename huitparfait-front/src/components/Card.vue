@@ -1,5 +1,5 @@
 <template>
-    <div class="card" :class="{ 'card--invisible': invisible }">
+    <div class="card" :class="{ 'card--invisible': invisible, 'card--wide': wide }">
         <slot></slot>
     </div>
 </template>
@@ -9,6 +9,7 @@
     export default {
         props: {
             invisible: Boolean,
+            wide: Boolean,
         },
     }
 
@@ -45,6 +46,10 @@
         margin-top: 0;
         padding-bottom: 0;
         padding-top: 0;
+    }
+
+    .card--wide {
+        flex-basis: 500px;
     }
 
 </style>
