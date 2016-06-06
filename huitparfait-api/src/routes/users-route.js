@@ -1,12 +1,10 @@
 import Joi from 'joi'
 import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
-import betterGroup from '../utils/groupUtils'
-import initAnimalAdj from '../infra/animal-adj/animal-adj'
+import { betterGroup } from '../services/groupService'
+import { generateName } from '../services/userService'
 import _ from 'lodash'
 import moment from 'moment'
-
-const animalAdj = initAnimalAdj('fr')
 
 exports.register = function (server, options, next) {
 
@@ -28,7 +26,7 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
 
                     const id = shortid()
-                    const anonymousName = animalAdj(id)
+                    const anonymousName = generateName(id)
 
                     cypherOne(`
                         MERGE         (u:User { email: {email} })

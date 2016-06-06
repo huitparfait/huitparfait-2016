@@ -1,64 +1,72 @@
 import { cypher } from '../infra/neo4j'
-import betterGroup, { shortIdSchema } from '../utils/groupUtils'
+import { shortIdSchema } from '../services/groupService'
+import { calculateRank, formatRanking } from '../services/rankingService'
+import { calculatePronostic } from '../services/pronosticService'
 
 exports.register = function (server, options, next) {
 
     server.route([
         {
             method: 'GET',
-            path: '/api/ranking',
+            path: '/api/ranking/{groupId?}',
             config: {
                 description: 'Fetch ranking',
                 tags: ['api'],
                 handler(req, reply) {
+                    let matchUserQuery = 'MATCH (u:User)'
+
+                    if (req.params.groupId) {
+                        matchUserQuery = `
+                        MATCH (:User { id: {userId} })-[IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
+                        MATCH (u:User)-[IS_MEMBER_OF_GROUP { isActive: true }]->(g)`
+                    }
+
                     cypher(`
-                        MATCH    (:User { id:{userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group)
-                        MATCH    (u:User)-[:IS_MEMBER_OF_GROUP]->(g)
-                        RETURN   g.name      AS name, 
-                                 g.avatarUrl AS avatarUrl, 
-                                 g.id        AS id,
-                                 count(DISTINCT u.id) AS userCount
-                        ORDER BY lower(g.name)`,
+                        ${matchUserQuery}
+                        MATCH   (u)<-[:CREATED_BY_USER]-(p:Pronostic)
+                        OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(pperf:Pronostic)
+                        WHERE   p.classicPoints IS NOT NULL
+                                AND pperf.classicPoints = 8
+                        WITH    u,
+                                SUM(p.classicPoints + p.riskPoints) as totalScore,
+                                COUNT(DISTINCT p.createdAt) as nbPredictions,
+                                COUNT(DISTINCT pperf.createdAt) as nbPerfects
+                        RETURN
+                                u.id            AS userId,
+                                u.name          AS userName,
+                                u.anonymousName AS anonymousName,
+                                u.avatarUrl     AS avatarUrl,
+                                u.isAnonymous   AS isAnonymous,
+                                totalScore,
+                                nbPredictions,
+                                nbPerfects
+                        ORDER BY totalScore DESC, nbPredictions DESC, nbPerfects DESC`,
                         {
                             userId: req.auth.credentials.id,
+                            groupId: req.params.groupId,
                         })
-                        .map(betterGroup)
+                        .map(formatRanking)
+                        .then(calculateRank)
                         .then(reply)
                         .catch(reply)
+
+
                 },
             },
         },
         {
             method: 'GET',
-            path: '/api/groups/{groupId}/ranking',
+            path: '/api/ranking/calculate',
             config: {
-                description: 'Read group\'s users',
-                tags: ['api'],
-                validate: {
-                    params: {
-                        groupId: shortIdSchema,
-                    },
-                },
                 handler(req, reply) {
-                    cypher(`
-                        MATCH (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP]->(g:Group { id: {groupId} })
-                        MATCH    (u:User)-[m:IS_MEMBER_OF_GROUP {isActive: true}]->(g)
-                        RETURN   u.id        AS id, 
-                                 u.name      AS name, 
-                                 u.avatarUrl AS avatarUrl, 
-                                 m.isActive  AS isActive,
-                                 m.createdAt AS memberSince
-                        ORDER BY memberSince DESC`,
-                        {
-                            userId: req.auth.credentials.id,
-                            groupId: req.params.groupId,
-                        })
+                    calculatePronostic()
                         .then(reply)
                         .catch(reply)
                 },
             },
         },
     ])
+
     next()
 }
 

@@ -1,4 +1,4 @@
-/* eslint max-params:[2, 4] */
+/* eslint max-params: [2, 4] */
 import Joi from 'joi'
 import shortid from 'shortid'
 

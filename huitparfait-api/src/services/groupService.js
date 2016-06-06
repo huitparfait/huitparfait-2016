@@ -4,7 +4,7 @@ import { generateSVGDataURIString } from 'identicons'
 
 export const shortIdSchema = Joi.string().required().regex(/^[a-zA-Z0-9-_]{7,14}$/)
 
-export default function (group) {
+export function betterGroup(group) {
 
     const betterGroup = _.clone(group)
 
