@@ -48,21 +48,49 @@
                         <div class="game-risk-input">
                             <div class="game-risk-answer game-risk-trueOrFalse">
                                 <div class="game-risk-answerHeader">Réponse</div>
-                                <input v-model="game.value.predictionRiskAnswer" type="radio" :value="1" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="yes{{game.value.gameId}}" /><label for="yes{{game.value.gameId}}">Vrai</label>
-                                <input v-model="game.value.predictionRiskAnswer" type="radio" :value="-1" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="no{{game.value.gameId}}" /><label for="no{{game.value.gameId}}">Faux</label>
-                                <input v-model="game.value.predictionRiskAnswer" type="radio" :value="0" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="dunno{{game.value.gameId}}" /><label for="dunno{{game.value.gameId}}">NSPP</label>
+
+                                <div class="game-risk-answerChoiceGroup">
+                                    <div class="game-risk-answerChoice">
+                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="1" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="yes{{game.value.gameId}}" />
+                                        <label for="yes{{game.value.gameId}}">VRAI</label>
+                                    </div>
+
+                                    <div class="game-risk-answerChoice">
+                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="-1" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="no{{game.value.gameId}}" />
+                                        <label for="no{{game.value.gameId}}">FAUX</label>
+                                    </div>
+
+                                    <div class="game-risk-answerChoice noAnswer">
+                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="0" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="dunno{{game.value.gameId}}" />
+                                        <label for="dunno{{game.value.gameId}}">Je ne sais pas</label>
+                                    </div>
+                                </div>
                             </div>
                             <div class="game-risk-answer game-risk-riskedPoints" :class="{ active: game.value.predictionRiskAnswer === 1 || game.value.predictionRiskAnswer === -1 }">
                                 <div class="game-risk-answerHeader">Risquer</div>
-                                <input v-model="game.value.predictionRiskAmount" type="radio" :value="1" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount1{{game.value.gameId}}" /><label for="riskAmount1{{game.value.gameId}}">1 point</label>
-                                <input v-model="game.value.predictionRiskAmount" type="radio" :value="2" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount2{{game.value.gameId}}" /><label for="riskAmount2{{game.value.gameId}}">2 points</label>
-                                <input v-model="game.value.predictionRiskAmount" type="radio" :value="3" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount3{{game.value.gameId}}" /><label for="riskAmount3{{game.value.gameId}}">3 points</label>
+
+                                <div class="game-risk-answerChoiceGroup">
+                                    <div class="game-risk-answerChoice">
+                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="1" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount1{{game.value.gameId}}" />
+                                        <label for="riskAmount1{{game.value.gameId}}">1 point</label>
+                                    </div>
+
+                                    <div class="game-risk-answerChoice">
+                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="2" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount2{{game.value.gameId}}" />
+                                        <label for="riskAmount2{{game.value.gameId}}">2 points</label>
+                                    </div>
+
+                                    <div class="game-risk-answerChoice">
+                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="3" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount3{{game.value.gameId}}" />
+                                        <label for="riskAmount3{{game.value.gameId}}">3 points</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="game-submitZone">
-                        <button class="game-submitZone-button" :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }" @click="savePrediction(game)">{{ game.state.saved ? 'Enregistré' : 'Enregistrer' }}</button>
+                        <button class="game-submitZone-button" :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }" @click="savePrediction(game)">Enregistrer</button>
                     </div>
 
                 </div>
@@ -163,46 +191,26 @@
 <style scoped>
 
     .gameDate {
-        color: #49996f;
-        font-size: 18px;
-        font-style: italic;
-        margin-top: 15px;
-        padding: 5px 15px;
-        text-align: center;
         text-transform: capitalize;
     }
 
-    @media (min-width: 500px) {
-        .gameDate {
-            margin-bottom: 30px;
-            margin-top: 40px;
-        }
-    }
-
-    .games {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .game {
-        flex: 1 1 500px;
-    }
-
-    .card {
+    .card.game {
         background-color: #fff;
-        border-radius: 5px;
+        border-bottom: 2px solid #ddd;
         box-sizing: border-box;
         margin-bottom: 15px;
         max-width: 500px;
-        padding-bottom: 50px;
+        overflow: hidden;
+        padding: 0;
+        padding-bottom: 60px;
         position: relative;
     }
 
     @media (min-width: 500px) {
-        .card {
+        .game {
             border: 1px solid #ddd;
             border-bottom-width: 2px;
+            border-radius: 5px;
             margin: 0 8px 15px 8px;
         }
     }
@@ -214,12 +222,12 @@
     }
 
     .game-name {
-        font-size: 13px;
+        font-size: 15px;
         font-weight: bold;
     }
 
     .game-location {
-        font-size: 13px;
+        font-size: 15px;
         font-style: italic;
     }
 
@@ -262,8 +270,6 @@
 
     .game-time,
     .game-score {
-        background: #F5F5F5;
-        border: 1px solid #EEE;
         display: inline-block;
         font-weight: bold;
         margin-top: 25px;
@@ -320,8 +326,7 @@
     }
 
     .game-risk-answer {
-        line-height: 30px;
-        margin-top: 5px;
+        padding: 10px;
         text-align: center;
     }
 
@@ -338,6 +343,28 @@
 
     .game-risk-answerHeader {
         font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .game-risk-answerNoRisk {
+        padding: 0 15px;
+    }
+
+    .game-risk-answerChoiceGroup {
+        display: flex;
+    }
+
+    .game-risk-answerChoice {
+        flex: 1 1 0;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+        margin: 0;
+        padding: 0;
+    }
+
+    .game-risk-answerChoice.noAnswer {
+        flex: 2 1 0;
     }
 
     .game-risk-answer input[type="radio"] {
@@ -346,68 +373,49 @@
 
     .game-risk-answer label {
         background: #eee;
+        box-sizing: border-box;
         border: 1px solid #ddd;
         border-bottom-width: 2px;
-        border-radius: 3px;
         cursor: pointer;
-        display: inline-block;
         font-size: 13px;
         font-weight: bold;
-        height: 25px;
-        line-height: 25px;
-        margin: 0 5px;
-        min-width: 40px;
-        overflow: hidden;
-        padding: 5px;
-        position: relative;
-        text-align: center;
-    }
-
-    .game-risk-riskedPoints {
-        opacity: 0.3;
-    }
-
-    .game-risk-riskedPoints.active {
-        opacity: 1;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        user-select: none;
+        width: 100%;
+        display: inline-block;
     }
 
     .game-risk-answer input[type="radio"]:checked + label {
-        background: #4db788;
-        border-color: #49996f;
+        background: #AAA;
+        border-color: #999;
         color: #fff;
     }
 
     .game-submitZone {
-        background: #EEE;
-        border-top: 1px solid #ddd;
+        border-top: 1px dashed #ddd;
         bottom: 0;
-        height: 40px;
+        height: 35px;
         left: 0;
         padding: 10px;
         position: absolute;
         right: 0;
     }
 
-    .game-submitZone-button {
+    @media (min-width: 500px) {
+        .game-submitZone {
+            background: #EEE;
+            border-top-style: solid;
+        }
+    }
+
+    .btn.game-submitZone-button {
         background: #4db788;
-        border: 1px solid #49996f;
-        border-bottom-width: 2px;
-        border-radius: 3px;
+        border-color: #49996f;
         color: #fff;
         display: block;
-        font-weight: bold;
         margin: auto;
-        padding: 10px;
-    }
-
-    .game-submitZone-button.disabled {
-        background: #aaa;
-        border-color: #999;
-        opacity: 0.5;
-    }
-
-    .game-submitZone-button.saved {
-        opacity: 0.5;
     }
 
 </style>
