@@ -21,7 +21,7 @@ function execute(url, opts = {}) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-        }
+        },
     })
 
     return fetch(process.env.API_URL + url, config)

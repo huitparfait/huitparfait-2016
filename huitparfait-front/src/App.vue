@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     import TitleBar from 'components/TitleBar'
     import MenuBar from 'components/MenuBar'
 
