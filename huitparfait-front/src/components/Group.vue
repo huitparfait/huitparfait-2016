@@ -8,7 +8,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     import * as WebApi from '../WebApi'
 
     export default {
@@ -18,10 +18,10 @@
         methods: {
             deleteGroup() {
                 WebApi.deleteGroup(this.$route.params.groupId).then(() => {
-                    this.$router.go({name: 'groupList'})
+                    this.$router.go({ name: 'groupList' })
                 })
-            }
-        }
+            },
+        },
     }
 
 </script>

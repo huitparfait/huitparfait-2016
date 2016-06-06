@@ -42,14 +42,14 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     import * as WebApi from '../WebApi'
 
     export default {
         data() {
             return {
                 groups: undefined,
-                newGroup: {}
+                newGroup: {},
             }
         },
         ready() {
@@ -60,10 +60,10 @@
         methods: {
             createGroup() {
                 WebApi.createGroup(this.newGroup).then((group) => {
-                    this.$router.go({name: 'group', params: {groupId: group.id, groupName: this.newGroup.name }})
+                    this.$router.go({ name: 'group', params: { groupId: group.id, groupName: this.newGroup.name } })
                 })
-            }
-        }
+            },
+        },
     }
 
 </script>
