@@ -57,6 +57,8 @@ function authYahoo(req, reply) {
             name: creds.displayName,
             email: _.get(fullProfile, 'profile.emails[0].handle'),
             avatarUrl: _.get(fullProfile, 'profile.image.imageUrl'),
+            oAuthId: creds.id,
+            oAuthProvider: 'yahoo',
         }
 
         findOrCreateUserByProfile(profile)

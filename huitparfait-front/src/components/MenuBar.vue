@@ -1,5 +1,5 @@
 <template>
-    <div class="menu">
+    <div class="menu" :class="{ 'isDisconnected': user == null }">
         <a class="menuitem" v-link="{ name: 'rankings', activeClass: 'menuitem--active' }">
             <img class="menuitem-icon" src="../assets/rankings.svg" alt="">
             <span class="menuitem-label">Classement</span>
@@ -24,6 +24,17 @@
 </template>
 
 <script>
+
+    import { apiState } from '../WebApi'
+
+    export default {
+        data() {
+            return {
+                user: this.$select('user')
+            }
+        }
+    }
+
 </script>
 
 <style scoped>
@@ -31,6 +42,10 @@
     .menu {
         color: #fff;
         display: flex;
+    }
+
+    .menu.isDisconnected {
+        display: none;
     }
 
     .menuitem {
