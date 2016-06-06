@@ -19,7 +19,6 @@ export default {
                 },
             },
         },
-        debug: { request: ['error', 'uncaught'] },
     },
 
     connection: {
