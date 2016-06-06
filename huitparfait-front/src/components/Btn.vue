@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" :class="{ hidden: hidden, inactive: inactive }" type="submit">
+    <button class="btn" :disabled="disabled" :class="{ hidden: hidden, inactive: inactive }" type="submit">
         <slot></slot>
     </button>
 </template>
@@ -8,6 +8,7 @@
 
     export default {
         props: {
+            disabled: Boolean,
             hidden: Boolean,
             inactive: Boolean
         },

@@ -7,7 +7,7 @@
             <card-title class="gameDate">{{gameDate | date}}</card-title>
             <card-list class="games">
 
-                <card wide class="game"
+                <card wide class="game" :class="{ 'game--submissionDisabled': isSubmissionClosed(game) }"
                       v-for="game in games">
 
                     <div class="game-header">
@@ -39,12 +39,14 @@
                     <div class="game-inputs">
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)"
-                                   class="game-scoreInputField" type="number" name="goalsTeamA" number/>
+                                   class="game-scoreInputField" type="number" name="goalsTeamA" number
+                                   :disabled="isSubmissionClosed(game)"/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)"
-                                   class="game-scoreInputField" type="number" name="goalsTeamB" number/>
+                                   class="game-scoreInputField" type="number" name="goalsTeamB" number
+                                   :disabled="isSubmissionClosed(game)"/>
                         </div>
                     </div>
 
@@ -59,21 +61,24 @@
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.value.predictionRiskAnswer" type="radio" :value="true"
                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
-                                               id="yes{{game.value.gameId}}"/>
+                                               id="yes{{game.value.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label for="yes{{game.value.gameId}}">VRAI</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.value.predictionRiskAnswer" type="radio" :value="false"
                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
-                                               id="no{{game.value.gameId}}"/>
+                                               id="no{{game.value.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label for="no{{game.value.gameId}}">FAUX</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice noAnswer">
                                         <input v-model="game.value.predictionRiskAnswer" type="radio" :value="null"
                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
-                                               id="dunno{{game.value.gameId}}"/>
+                                               id="dunno{{game.value.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label for="dunno{{game.value.gameId}}">Je ne sais pas</label>
                                     </div>
                                 </div>
@@ -88,21 +93,24 @@
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.value.predictionRiskAmount" type="radio" :value="1"
                                                @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
-                                               id="riskAmount1{{game.value.gameId}}"/>
+                                               id="riskAmount1{{game.value.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label for="riskAmount1{{game.value.gameId}}">1 pt</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.value.predictionRiskAmount" type="radio" :value="2"
                                                @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
-                                               id="riskAmount2{{game.value.gameId}}"/>
+                                               id="riskAmount2{{game.value.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label for="riskAmount2{{game.value.gameId}}">2 pts</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.value.predictionRiskAmount" type="radio" :value="3"
                                                @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
-                                               id="riskAmount3{{game.value.gameId}}"/>
+                                               id="riskAmount3{{game.value.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label for="riskAmount3{{game.value.gameId}}">3 pts</label>
                                     </div>
                                 </div>
@@ -113,7 +121,8 @@
                     <div class="game-submitZone">
                         <btn :inactive="game.state.saved || !predictionIsValid(game)" class="game-submitZone-button"
                              :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }"
-                             @click="savePrediction(game)">Enregistrer
+                             @click="savePrediction(game)"
+                             :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
                     </div>
 
@@ -158,6 +167,10 @@
                     .mapValues(gamesForDay => {
                         return _(gamesForDay)
                             .map(gameForDay => {
+
+                                // Initialize amount of risked points to the maximum
+                                gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3;
+
                                 const savedState = gameForDay.predictionScoreTeamA != null
                                 return {
                                     value: gameForDay,
@@ -183,6 +196,9 @@
             disablePrediction: function (game) {
                 game.state.saved = true
             },
+            isSubmissionClosed: function (game) {
+                return moment(game.value.startsAt).isBefore(Date.now());
+            },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
                 if (isNaN(game.value.predictionRiskAmount) ||
@@ -192,15 +208,14 @@
                 }
 
                 // No risk amount selected even though an answer to the risk is provided
-                if(game.value.predictionRiskAnswer != null &&
-                game.value.predictionRiskAmount <= 0) {
+                if (game.value.predictionRiskAnswer != null &&
+                    game.value.predictionRiskAmount <= 0) {
                     return false;
                 }
 
                 return true;
             },
             savePrediction: function (game) {
-
                 if (game.state.saved === true || !this.predictionIsValid(game)) {
                     return;
                 }
@@ -353,6 +368,10 @@
         width: 50px;
     }
 
+    .game--submissionDisabled .game-scoreInputField {
+        background: #DDD;
+    }
+
     .game-scoreInputField::-webkit-inner-spin-button,
     .game-scoreInputField::-webkit-outer-spin-button {
         display: none;
@@ -373,6 +392,10 @@
     .game-risk-answer {
         padding: 10px;
         text-align: center;
+    }
+
+    .game--submissionDisabled .game-risk-answer {
+        opacity: 0.5;
     }
 
     @media (min-width: 500px) {
@@ -462,5 +485,10 @@
         display: block;
         margin: auto;
     }
+
+    .game--submissionDisabled .game-submitZone-button {
+        display: none;
+    }
+
 
 </style>
