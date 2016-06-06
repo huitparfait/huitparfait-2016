@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     import TitleBar from 'components/TitleBar'
     import MenuBar from 'components/MenuBar'
 
@@ -15,7 +15,7 @@
         components: {
             TitleBar,
             MenuBar,
-        },
+        }
     }
 </script>
 
@@ -23,23 +23,26 @@
 
     .main {
         box-sizing: border-box;
-        margin: 30px auto 70px auto;
+        margin: 30px auto 100px auto;
         max-width: 1200px;
         width: 100%;
+    }
+
+    @media (min-width: 500px) {
+        .main {
+            margin-top: 30px;
+            padding: 15px 7px;
+        }
     }
 
     @media (min-width: 850px) {
         .main {
             margin: 0 auto;
-            padding-left: 180px;
+            padding: 15px 7px 15px 185px;
         }
     }
 
     .titlebar {
-        background-color: #4db788;
-        border-bottom: 2px solid #49996f;
-        font-weight: bold;
-        color: #fff;
         height: 30px;
         line-height: 30px;
         font-size: 20px;

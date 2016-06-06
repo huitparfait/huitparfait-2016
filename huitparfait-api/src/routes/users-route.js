@@ -1,7 +1,12 @@
 import Joi from 'joi'
 import shortid from 'shortid'
+import _ from 'lodash'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { sendEmpty } from '../infra/replyUtils'
+import initAnimalAdj from '../animal-adj/animal-adj'
+import betterGroup from '../utils/groupUtils'
+
+const animalAdj = initAnimalAdj('fr')
 
 exports.register = function (server, options, next) {
 
@@ -17,26 +22,41 @@ exports.register = function (server, options, next) {
                         email: Joi.string().email().required(),
                         name: Joi.string(),
                         avatarUrl: Joi.string().uri({ scheme: 'https' }),
+                        oAuthId: Joi.string(),
+                        oAuthProvider: Joi.string(),
                     }).required(),
                 },
                 handler(req, reply) {
+
+                    const id = shortid()
+                    const anonymousName = animalAdj(id)
+
                     cypherOne(`
                         MERGE         (u:User { email: {email} })
                         ON CREATE SET u.createdAt        = timestamp(),
                                       u.updatedAt        = timestamp(),
                                       u.id               = {id},
                                       u.name             = {name},
+                                      u.anonymousName    = {anonymousName},
                                       u.email            = {email},
                                       u.avatarUrl        = {avatarUrl},
+                                      u.oAuthId          = {oAuthId},
+                                      u.oAuthProvider    = {oAuthProvider},
                                       u.lastConnectionAt = timestamp(),
                                       u.isAnonymous      = false
                         ON MATCH SET  u.lastConnectionAt = timestamp()
-                        RETURN        u.id          AS id,
-                                      u.isAnonymous AS isAnonymous`,
+                        RETURN        u.id            AS id,
+                                      u.name          AS name,
+                                      u.anonymousName AS anonymousName,
+                                      u.avatarUrl     AS avatarUrl,
+                                      u.isAnonymous   AS isAnonymous`,
                         {
-                            id: shortid(),
+                            id,
                             email: req.payload.email,
                             name: req.payload.name,
+                            oAuthId: req.payload.oAuthId,
+                            oAuthProvider: req.payload.oAuthProvider,
+                            anonymousName,
                             avatarUrl: req.payload.avatarUrl || null,
                         })
                         .then(reply)
@@ -54,10 +74,11 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypherOne(`
                         MATCH (u:User { id: {id} })
-                        RETURN u.id          AS id,
-                               u.name        AS name,
-                               u.avatarUrl   AS avatarUrl,
-                               u.isAnonymous AS isAnonymous`,
+                        RETURN u.id            AS id,
+                               u.name          AS name,
+                               u.anonymousName AS anonymousName,
+                               u.avatarUrl     AS avatarUrl,
+                               u.isAnonymous   AS isAnonymous`,
                         {
                             id: req.auth.credentials.id,
                         })
@@ -107,17 +128,17 @@ exports.register = function (server, options, next) {
                 tags: ['api'],
                 handler(req, reply) {
                     cypher(`
-                        MATCH    (:User { id:{id} })-[imog:IS_MEMBER_OF_GROUP]->(g:Group)
+                        MATCH    (:User { id:{id} })-[:IS_MEMBER_OF_GROUP { isAdmin: true, isActive: true }]->(g:Group)
                         MATCH    (u:User)-->(g)
-                        WHERE    imog.isActive = true
                         RETURN   g.name      AS name, 
                                  g.avatarUrl AS avatarUrl, 
                                  g.id        AS id, 
                                  count(u.id) AS userCount
-                        ORDER BY g.name`,
+                        ORDER BY lower(g.name)`,
                         {
                             id: req.auth.credentials.id,
                         })
+                        .then((groups) => _.map(groups, betterGroup))
                         .then(reply)
                         .catch(reply)
                 },
