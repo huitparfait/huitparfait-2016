@@ -20,7 +20,7 @@
                             <img v-if="game.value.countryCodeTeamA" class="flag"
                                  :src="'/static/flags/' + game.value.countryCodeTeamA + '.svg'"/>
                             <img v-if="!game.value.countryCodeTeamA" class="flag unknownTeam"
-                                 :src="'/static/flags/euro2016.svg'"/>
+                                 src="../assets/unknown-team.svg"/>
                             <div class="game-countryName">{{game.value.countryNameTeamA}}</div>
                         </div>
                         <div class="game-teams-section">
@@ -31,7 +31,7 @@
                             <img v-if="game.value.countryCodeTeamB" class="flag"
                                  :src="'/static/flags/' + game.value.countryCodeTeamB + '.svg'"/>
                             <img v-if="!game.value.countryCodeTeamB" class="flag unknownTeam"
-                                 :src="'/static/flags/euro2016.svg'"/>
+                                 src="../assets/unknown-team.svg"/>
                             <div class="game-countryName">{{game.value.countryNameTeamB}}</div>
                         </div>
                     </div>
@@ -315,12 +315,6 @@
         border-radius: 5px;
         height: 80px;
         width: 80px;
-    }
-
-    .flag.unknownTeam {
-        filter: grayscale(100%);
-        opacity: 0.4;
-        border: 0;
     }
 
     .game-countryName {
