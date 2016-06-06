@@ -13,3 +13,6 @@ huitparfait-data/data
 dist
 
 *.log
+
+docker-compose-dev.yml
+

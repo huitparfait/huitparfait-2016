@@ -1,18 +1,18 @@
 <template>
 
-    <card class="group" v-if="group != null">
-        <a class="details" v-link="{ name: 'group', params: { groupId: group.id, groupName: group.slug } }">
+    <card class="user" v-if="user != null">
+        <div class="details">
             <div class="avatar--wrapper">
-                <img class="avatar" :src="group.avatarUrl">
+                <img class="avatar" src="../assets/unknown-user.svg" v-if="user.avatarUrl" :src="user.avatarUrl">
+                <img class="avatar" src="../assets/unknown-user.svg" v-else>
             </div>
             <div class="infos">
-                <div class="name">{{group.name}}</div>
-                <div class="size"><strong>{{group.userCount}}</strong> joueurs</div>
+                <div class="name">{{ user.name }}</div>
+                <div class="anonymousName">{{ user.anonymousName }}</div>
             </div>
-        </a>
+        </div>
         <div class="btnBar">
-            <btn v-if="mode === 'edit'" @click="editGroup">Éditer</btn>
-            <btn v-if="mode === 'delete'" @click="deleteGroup">Supprimer</btn>
+            <link-btn href="/auth/logout">Se déconnecter</link-btn>
         </div>
     </card>
 
@@ -20,38 +20,28 @@
 
 <script type="text/babel">
 
-    import Btn from './Btn'
+    import LinkBtn from './LinkBtn.vue'
     import Card from './Card'
-    import CardList from './CardList'
-    import store from '../state/configureStore'
-    import { deleteGroup } from '../state/actions/groups'
 
     export default {
         components: {
-            Btn,
+            LinkBtn,
             Card,
-            CardList,
         },
-        props: ['group', 'mode', 'loader'],
-        methods: {
-            deleteGroup() {
-                store.dispatch(deleteGroup(this.group))
-            },
-            editGroup() {
-//                WebApi.editGroup(this.group.id)
-            },
-        },
+        props: ['user'],
     }
 
 </script>
 
 <style scoped>
 
-    .group {
+    .user {
         align-items: flex-start;
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
+        position: relative;
+        overflow: hidden;
     }
 
     .details {
@@ -62,12 +52,20 @@
     }
 
     .avatar--wrapper {
+        align-self: flex-start;
         border-radius: 3px;
         flex-shrink: 0;
-        height: 70px;
+        height: 60px;
         margin-right: 15px;
         overflow: hidden;
-        width: 70px;
+        width: 60px;
+    }
+
+    @media (min-width: 500px) {
+        .avatar--wrapper {
+            height: 70px;
+            width: 70px;
+        }
     }
 
     .avatar {
@@ -83,11 +81,12 @@
 
     .name {
         color: #333;
+        font-size: 18px;
         font-weight: bold;
     }
 
-    .size {
-        color: #555;
+    .anonymousName {
+        font-style: italic;
     }
 
     .btnBar {

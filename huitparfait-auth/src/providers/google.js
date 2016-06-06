@@ -47,6 +47,8 @@ function authGoogle(req, reply) {
         name: creds.displayName,
         email: _.get(creds, 'emails[0].value'),
         avatarUrl: _.get(creds, 'raw.image.url').replace(/sz=50$/, 'sz=250'),
+        oAuthId: creds.id,
+        oAuthProvider: 'google',
     }
 
     findOrCreateUserByProfile(profile)

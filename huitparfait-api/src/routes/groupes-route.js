@@ -1,55 +1,13 @@
 import Joi from 'joi'
-import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { sendEmpty, sendEmptyIfPositiveDeleteCount } from '../infra/replyUtils'
+import betterGroup from '../utils/groupUtils'
 
 const shortIdSchema = Joi.string().required().regex(/^[a-zA-Z0-9-_]{7,14}$/)
 
 exports.register = function (server, options, next) {
 
     server.route([
-        {
-            method: 'POST',
-            path: '/api/groups',
-            config: {
-                description: 'Create group',
-                notes: 'Create group and link the user to it as active and admin',
-                tags: ['api'],
-                validate: {
-                    payload: Joi.object({
-                        name: Joi.string().required(),
-                        avatarUrl: Joi.string().uri({ scheme: 'https' }),
-                    }).required(),
-                },
-                handler(req, reply) {
-                    cypherOne(`
-                        MATCH (u:User {id: {userId} })
-                        CREATE 
-                        (g:Group { 
-                            createdAt:  timestamp(), 
-                            updatedAt:  timestamp(), 
-                            id:         {groupId}, 
-                            name:       {groupName}, 
-                            avatarUrl:  {groupAvatarUrl}
-                        }),
-                        (u)-[:IS_MEMBER_OF_GROUP {
-                            createdAt:  timestamp(),
-                            updatedAt:  timestamp(), 
-                            isAdmin:    true, 
-                            isActive:   true
-                        }]->(g)
-                        RETURN g.id AS id`,
-                        {
-                            userId: req.auth.credentials.id,
-                            groupId: shortid(),
-                            groupName: req.payload.name,
-                            groupAvatarUrl: req.payload.avatarUrl || null,
-                        })
-                        .then(reply)
-                        .catch(reply)
-                },
-            },
-        },
         {
             method: 'GET',
             path: '/api/groups/{groupId}',
@@ -73,6 +31,7 @@ exports.register = function (server, options, next) {
                             userId: req.auth.credentials.id,
                             groupId: req.params.groupId,
                         })
+                        .then(betterGroup)
                         .then(reply)
                         .catch(reply)
                 },
@@ -95,19 +54,33 @@ exports.register = function (server, options, next) {
                 },
                 handler(req, reply) {
                     cypherOne(`
-                        MATCH  (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isAdmin: true }]->(g:Group { id: {groupId} })
-                        SET    g.updatedAt = timestamp(),
-                               g.name      = {groupName},
-                               g.avatarUrl = {groupAvatarUrl}
-                        RETURN g.id AS id`,
+                        MATCH (u:User { id: {userId} })
+                        MERGE (u)-[imog:IS_MEMBER_OF_GROUP { isAdmin: true }]->(g:Group { id: {groupId} })
+                        ON CREATE SET imog.createdAt = timestamp(),
+                                      imog.updatedAt = timestamp(),
+                                      imog.isAdmin   = true,
+                                      imog.isActive  = true,
+                                      g.createdAt    = timestamp(),
+                                      g.updatedAt    = timestamp(),
+                                      g.id           = {groupId},
+                                      g.name         = {groupName},
+                                      g.avatarUrl    = {groupAvatarUrl}
+                        ON MATCH SET  imog.updatedAt = timestamp(),
+                                      g.updatedAt    = timestamp(),
+                                      g.name         = {groupName},
+                                      g.avatarUrl    = {groupAvatarUrl}
+                        RETURN        g.id AS id,
+                                      g.name AS name,
+                                      g.avatarUrl AS avatarUrl, 
+                                      1 AS userCount`,
                         {
                             userId: req.auth.credentials.id,
                             groupId: req.params.groupId,
                             groupName: req.payload.name,
                             groupAvatarUrl: req.payload.avatarUrl || null,
                         })
-
-                        .then(sendEmpty(reply))
+                        .then(betterGroup)
+                        .then(reply)
                         .catch(reply)
                 },
             },
@@ -152,12 +125,15 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypher(`
                         MATCH (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isAdmin: true }]->(g:Group { id: {groupId} })
-                        MATCH (u:User)-[m:IS_MEMBER_OF_GROUP]->(g)
-                        RETURN u.id        AS id, 
-                               u.name      AS name, 
-                               u.avatarUrl AS avatarUrl, 
-                               m.isAdmin   AS isAdmin, 
-                               m.isActive  AS isActive`,
+                        MATCH    (u:User)-[m:IS_MEMBER_OF_GROUP]->(g)
+                        RETURN   u.id        AS id, 
+                                 u.name      AS name, 
+                                 u.avatarUrl AS avatarUrl, 
+                                 m.isAdmin   AS isAdmin, 
+                                 m.isActive  AS isActive,
+                                 m.createdAt AS memberSince
+                        ORDER BY isAdmin,
+                                 memberSince DESC`,
                         {
                             userId: req.auth.credentials.id,
                             groupId: req.params.groupId,
@@ -234,9 +210,6 @@ exports.register = function (server, options, next) {
     next()
 }
 
-
 exports.register.attributes = {
     name: 'groupes-route',
 }
-
-
