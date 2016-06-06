@@ -2,13 +2,13 @@
     <div class="page--predictions">
 
         <div class="day"
-            v-for="(gameDate, games) in gamesByDay">
+             v-for="(gameDate, games) in gamesByDay">
 
-            <h2 class="gameDate">{{gameDate | date}}</h2>
-            <div class="games">
+            <card-title class="gameDate">{{gameDate | date}}</card-title>
+            <card-list class="games">
 
-                <div class="card game"
-                     v-for="game in games">
+                <card wide class="game"
+                      v-for="game in games">
 
                     <div class="game-header">
                         <div class="game-name">Groupe {{game.value.group}}</div>
@@ -17,8 +17,10 @@
 
                     <div class="game-teams">
                         <div class="game-teams-section">
-                            <img v-if="game.value.countryCodeTeamA" class="flag" :src="'/static/flags/' + game.value.countryCodeTeamA + '.svg'"/>
-                            <img v-if="!game.value.countryCodeTeamA" class="flag unknownTeam" :src="'/static/flags/euro2016.svg'"/>
+                            <img v-if="game.value.countryCodeTeamA" class="flag"
+                                 :src="'/static/flags/' + game.value.countryCodeTeamA + '.svg'"/>
+                            <img v-if="!game.value.countryCodeTeamA" class="flag unknownTeam"
+                                 :src="'/static/flags/euro2016.svg'"/>
                             <div class="game-countryName">{{game.value.countryNameTeamA}}</div>
                         </div>
                         <div class="game-teams-section">
@@ -26,19 +28,23 @@
                             <span v-if="!hasScore(game)" class="game-time">{{game.value.startsAt | time}}</span>
                         </div>
                         <div class="game-teams-section">
-                            <img v-if="game.value.countryCodeTeamB" class="flag" :src="'/static/flags/' + game.value.countryCodeTeamB + '.svg'"/>
-                            <img v-if="!game.value.countryCodeTeamB" class="flag unknownTeam" :src="'/static/flags/euro2016.svg'"/>
+                            <img v-if="game.value.countryCodeTeamB" class="flag"
+                                 :src="'/static/flags/' + game.value.countryCodeTeamB + '.svg'"/>
+                            <img v-if="!game.value.countryCodeTeamB" class="flag unknownTeam"
+                                 :src="'/static/flags/euro2016.svg'"/>
                             <div class="game-countryName">{{game.value.countryNameTeamB}}</div>
                         </div>
                     </div>
 
                     <div class="game-inputs">
                         <div class="game-scoreInput">
-                            <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)" class="game-scoreInputField" type="number" name="goalsTeamA" number />
+                            <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)"
+                                   class="game-scoreInputField" type="number" name="goalsTeamA" number/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
-                            <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)" class="game-scoreInputField" type="number" name="goalsTeamB" number />
+                            <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)"
+                                   class="game-scoreInputField" type="number" name="goalsTeamB" number/>
                         </div>
                     </div>
 
@@ -51,38 +57,53 @@
 
                                 <div class="game-risk-answerChoiceGroup">
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="1" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="yes{{game.value.gameId}}" />
+                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="true"
+                                               @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
+                                               id="yes{{game.value.gameId}}"/>
                                         <label for="yes{{game.value.gameId}}">VRAI</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="-1" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="no{{game.value.gameId}}" />
+                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="false"
+                                               @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
+                                               id="no{{game.value.gameId}}"/>
                                         <label for="no{{game.value.gameId}}">FAUX</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice noAnswer">
-                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="0" @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}" id="dunno{{game.value.gameId}}" />
+                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="null"
+                                               @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
+                                               id="dunno{{game.value.gameId}}"/>
                                         <label for="dunno{{game.value.gameId}}">Je ne sais pas</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="game-risk-answer game-risk-riskedPoints" :class="{ active: game.value.predictionRiskAnswer === 1 || game.value.predictionRiskAnswer === -1 }">
+                            <div class="game-risk-answer game-risk-riskedPoints">
                                 <div class="game-risk-answerHeader">Risquer</div>
-
-                                <div class="game-risk-answerChoiceGroup">
+                                <div class="game-risk-answerNoRisk" v-show="game.value.predictionRiskAnswer == null">
+                                    Vous avez choisi de ne rien risquer
+                                </div>
+                                <div v-show="game.value.predictionRiskAnswer != null"
+                                     class="game-risk-answerChoiceGroup">
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="1" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount1{{game.value.gameId}}" />
-                                        <label for="riskAmount1{{game.value.gameId}}">1 point</label>
+                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="1"
+                                               @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
+                                               id="riskAmount1{{game.value.gameId}}"/>
+                                        <label for="riskAmount1{{game.value.gameId}}">1 pt</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="2" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount2{{game.value.gameId}}" />
-                                        <label for="riskAmount2{{game.value.gameId}}">2 points</label>
+                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="2"
+                                               @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
+                                               id="riskAmount2{{game.value.gameId}}"/>
+                                        <label for="riskAmount2{{game.value.gameId}}">2 pts</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="3" @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}" id="riskAmount3{{game.value.gameId}}" />
-                                        <label for="riskAmount3{{game.value.gameId}}">3 points</label>
+                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="3"
+                                               @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
+                                               id="riskAmount3{{game.value.gameId}}"/>
+                                        <label for="riskAmount3{{game.value.gameId}}">3 pts</label>
                                     </div>
                                 </div>
                             </div>
@@ -90,11 +111,14 @@
                     </div>
 
                     <div class="game-submitZone">
-                        <button class="game-submitZone-button" :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }" @click="savePrediction(game)">Enregistrer</button>
+                        <btn :inactive="game.state.saved || !predictionIsValid(game)" class="game-submitZone-button"
+                             :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }"
+                             @click="savePrediction(game)">Enregistrer
+                        </btn>
                     </div>
 
-                </div>
-            </div>
+                </card>
+            </card-list>
         </div>
 
     </div>
@@ -102,12 +126,24 @@
 
 <script type="text/babel">
     import * as WebApi from '../WebApi'
+
+    import Btn from './Btn'
+    import CardList from './CardList'
+    import Card from './Card'
+    import CardTitle from './CardTitle'
+
     import _ from 'lodash'
     import moment from 'moment'
 
     moment.locale('fr')
 
     export default {
+        components: {
+            Btn,
+            CardList,
+            Card,
+            CardTitle,
+        },
         data() {
             return {
                 gamesByDay: undefined
@@ -139,49 +175,58 @@
         methods: {
             hasScore: function (game) {
                 return game.value.goalsTeamA != null &&
-                        game.value.goalsTeamB != null;
+                    game.value.goalsTeamB != null;
             },
-            enablePrediction: function(game) {
+            enablePrediction: function (game) {
                 game.state.saved = false
             },
-            disablePrediction: function(game) {
+            disablePrediction: function (game) {
                 game.state.saved = true
             },
-            predictionIsValid: function(game) {
-                return !isNaN(game.value.predictionRiskAnswer) &&
-                    !isNaN(game.value.predictionRiskAmount) &&
-                    !isNaN(game.value.predictionScoreTeamA) &&
-                    !isNaN(game.value.predictionScoreTeamB)
-            },
-            savePrediction: function(game) {
-
-                if (game.state.saved === true) {
-                    return;
-                }
-
-                if (isNaN(game.value.predictionRiskAnswer) ||
-                    isNaN(game.value.predictionRiskAmount) ||
+            predictionIsValid: function (game) {
+                // Wrong value types in fields
+                if (isNaN(game.value.predictionRiskAmount) ||
                     isNaN(game.value.predictionScoreTeamA) ||
                     isNaN(game.value.predictionScoreTeamB)) {
+                    return false;
+                }
 
+                // No risk amount selected even though an answer to the risk is provided
+                if(game.value.predictionRiskAnswer != null &&
+                game.value.predictionRiskAmount <= 0) {
+                    return false;
+                }
+
+                return true;
+            },
+            savePrediction: function (game) {
+
+                if (game.state.saved === true || !this.predictionIsValid(game)) {
                     return;
                 }
 
+                const prediction = {
+                    gameId: game.value.gameId,
+                    predictionScoreTeamA: game.value.predictionScoreTeamA,
+                    predictionScoreTeamB: game.value.predictionScoreTeamB,
+                    predictionRiskAnswer: game.value.predictionRiskAnswer,
+                    predictionRiskAmount: game.value.predictionRiskAnswer != null ? game.value.predictionRiskAmount : 0,
+                }
 
-                WebApi.savePrediction(game.value)
-                .then(() => {
-                    this.disablePrediction(game);
-                })
-                .catch(() => {
-                    this.enablePrediction(game);
-                });
+                WebApi.savePrediction(prediction)
+                    .then(() => {
+                        this.disablePrediction(game);
+                    })
+                    .catch(() => {
+                        this.enablePrediction(game);
+                    });
             }
         },
         filters: {
-            date: function(gameTime) {
+            date: function (gameTime) {
                 return moment(gameTime).format('dddd Do MMMM')
             },
-            time: function(gameTime) {
+            time: function (gameTime) {
                 return moment(gameTime).format('HH[h]mm')
             }
         }

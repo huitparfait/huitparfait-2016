@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" :class="{ inactive: inactive }" type="submit">
+    <button class="btn" :class="{ hidden: hidden, inactive: inactive }" type="submit">
         <slot></slot>
     </button>
 </template>
@@ -8,7 +8,8 @@
 
     export default {
         props: {
-            inactive: Boolean,
+            hidden: Boolean,
+            inactive: Boolean
         },
     }
 
@@ -36,7 +37,7 @@
         padding: 8px 12px;
     }
 
-    .inactive {
+    .hidden {
         border-bottom-width: 0;
         border-top-width: 0;
         height: 0;
@@ -45,6 +46,10 @@
         overflow: hidden;
         padding-bottom: 0;
         padding-top: 0;
+    }
+
+    .inactive {
+        opacity: 0.5;
     }
 
 </style>
