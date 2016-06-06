@@ -199,10 +199,10 @@ exports.register = function (server, options, next) {
                 validate: {
                     payload: {
                         gameId: Joi.string(),
-                        predictionScoreTeamA: Joi.number().integer().min(0),
-                        predictionScoreTeamB: Joi.number().integer().min(0),
+                        predictionScoreTeamA: Joi.number().integer().min(0).required(),
+                        predictionScoreTeamB: Joi.number().integer().min(0).required(),
                         predictionRiskAnswer: Joi.boolean(),
-                        predictionRiskAmount: Joi.number().integer().min(0).max(3),
+                        predictionRiskAmount: Joi.number().integer().min(0).max(3).required(),
                     },
                 },
                 handler(req, reply) {
@@ -235,7 +235,7 @@ exports.register = function (server, options, next) {
                             gameId: req.payload.gameId,
                             predictionScoreTeamA: req.payload.predictionScoreTeamA,
                             predictionScoreTeamB: req.payload.predictionScoreTeamB,
-                            predictionRiskAnswer: req.payload.predictionRiskAnswer,
+                            predictionRiskAnswer: req.payload.predictionRiskAnswer != null ? req.payload.predictionRiskAnswer : null,
                             predictionRiskAmount: req.payload.predictionRiskAmount,
                         })
                         .then(reply)
