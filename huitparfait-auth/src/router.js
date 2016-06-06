@@ -10,7 +10,7 @@ exports.register = function (server, options, next) {
         handler(req, reply) {
             req.auth.artifacts = null
             reply.unstate('token', { path: '/' })
-            reply()
+            reply.redirect('/')
         },
 
     }, {

@@ -1,15 +1,52 @@
+export function fetchCurrentUser() {
+
+    return new Promise((res) => {
+        setTimeout(function () {
+            res(execute('/users/me'))
+        }, 1000)
+    })
+    return
+}
+
 export function fetchGroups() {
-    return execute('/users/me/groups')
+    return new Promise((res) => {
+        setTimeout(function () {
+            res(execute('/users/me/groups'))
+        }, 3000)
+    })
 }
 
 export function createGroup(newGroup) {
     return execute('/groups', { method: 'POST', body: newGroup })
 }
 
+export function fetchGroup(groupId) {
+    return execute(`/groups/${groupId}`)
+}
+
 export function deleteGroup(groupId) {
     return execute(`/groups/${groupId}`, { method: 'DELETE' })
 }
 
+export function fetchGroupMembers(groupId) {
+    return execute(`/groups/${groupId}/users`)
+}
+
+export function toggleGroupMembership(groupId, userId, isActive) {
+    return execute(`/groups/${groupId}/users/${userId}`, { method: 'PUT', body: { isActive } })
+}
+
+export function joinGroup(groupId) {
+    return execute(`/groups/${groupId}/users`, { method: 'POST' })
+}
+
+export function fetchPredictions() {
+    return execute('/users/me/predictions')
+}
+
+export function savePrediction(newPrediction) {
+    return execute('/users/me/predictions', { method: 'POST', body: newPrediction })
+}
 
 function execute(url, opts = {}) {
     if (opts.body) {

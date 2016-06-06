@@ -18,8 +18,9 @@ export function findOrCreateUserByProfile(profile) {
     return apiClient.post('/api/users/me', options).then((result) => {
         return sign({
             id: result.id,
-            name: profile.name,
-            avatarUrl: profile.avatarUrl,
+            name: result.name,
+            anonymousName: result.anonymousName,
+            avatarUrl: result.avatarUrl,
             isAnonymous: result.isAnonymous,
         })
     })

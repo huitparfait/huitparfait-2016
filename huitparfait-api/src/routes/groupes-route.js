@@ -2,6 +2,7 @@ import Joi from 'joi'
 import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { sendEmpty, sendEmptyIfPositiveDeleteCount } from '../infra/replyUtils'
+import betterGroup from '../utils/groupUtils'
 
 const shortIdSchema = Joi.string().required().regex(/^[a-zA-Z0-9-_]{7,14}$/)
 
@@ -73,6 +74,7 @@ exports.register = function (server, options, next) {
                             userId: req.auth.credentials.id,
                             groupId: req.params.groupId,
                         })
+                        .then(betterGroup)
                         .then(reply)
                         .catch(reply)
                 },
@@ -152,12 +154,15 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypher(`
                         MATCH (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isAdmin: true }]->(g:Group { id: {groupId} })
-                        MATCH (u:User)-[m:IS_MEMBER_OF_GROUP]->(g)
-                        RETURN u.id        AS id, 
-                               u.name      AS name, 
-                               u.avatarUrl AS avatarUrl, 
-                               m.isAdmin   AS isAdmin, 
-                               m.isActive  AS isActive`,
+                        MATCH    (u:User)-[m:IS_MEMBER_OF_GROUP]->(g)
+                        RETURN   u.id        AS id, 
+                                 u.name      AS name, 
+                                 u.avatarUrl AS avatarUrl, 
+                                 m.isAdmin   AS isAdmin, 
+                                 m.isActive  AS isActive,
+                                 m.createdAt AS memberSince
+                        ORDER BY isAdmin,
+                                 memberSince DESC`,
                         {
                             userId: req.auth.credentials.id,
                             groupId: req.params.groupId,
