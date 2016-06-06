@@ -3,9 +3,9 @@ import shortid from 'shortid'
 import _ from 'lodash'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { sendEmpty } from '../infra/replyUtils'
-import initAnimalAdj from '../animal-adj/animal-adj'
+import initAnimalAdj from '../infra/animal-adj/animal-adj'
 import betterGroup from '../utils/groupUtils'
-
+import moment from 'moment'
 const animalAdj = initAnimalAdj('fr')
 
 exports.register = function (server, options, next) {
@@ -138,7 +138,7 @@ exports.register = function (server, options, next) {
                         {
                             id: req.auth.credentials.id,
                         })
-                        .then((groups) => _.map(groups, betterGroup))
+                        .map(betterGroup)
                         .then(reply)
                         .catch(reply)
                 },
@@ -207,12 +207,13 @@ exports.register = function (server, options, next) {
                     },
                 },
                 handler(req, reply) {
-                    cypher(`
+                    cypherOne(`
                         MATCH (u:User { id: {userId} })
                         MATCH (g:Game { id: {gameId} })
                         MATCH (ta:Team)-[:PLAYS_IN_GAME { order: 1 }]->(g)
                         MATCH (tb:Team)-[:PLAYS_IN_GAME { order: 2 }]->(g)
                         MATCH (r:Risk)-[:USED_FOR_GAME]->(g)
+                        WHERE g.startsAt > timestamp()
                         
                         MERGE (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u)
                         ON CREATE SET   p.createdAt = timestamp(),
