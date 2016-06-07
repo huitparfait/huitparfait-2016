@@ -7,7 +7,8 @@
             <card-title class="gameDate">{{gameDate | date}}</card-title>
             <card-list wide class="games">
 
-                <card wide class="game" :class="{ 'game--submissionDisabled': isSubmissionClosed(game) }"
+                <card wide class="game"
+                      :class="{ 'game--submissionDisabled': isSubmissionClosed(game), 'game--notSaved' : game.state.notSaved }"
                       v-for="game in games">
 
                     <div class="game-header">
@@ -39,13 +40,15 @@
                     <div class="game-inputs">
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)"
-                                   class="game-scoreInputField" type="number" name="goalsTeamA" number
+                                   class="game-scoreInputField" type="number" name="goalsTeamA"
+                                   onfocus="this.select()"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)"
-                                   class="game-scoreInputField" type="number" name="goalsTeamB" number
+                                   class="game-scoreInputField" type="number" name="goalsTeamB"
+                                   onfocus="this.select()"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                     </div>
@@ -79,14 +82,14 @@
                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
                                                id="dunno{{game.value.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="dunno{{game.value.gameId}}">Je ne sais pas</label>
+                                        <label class="game-risk-answerChoice--multiline" for="dunno{{game.value.gameId}}">Je ne sais pas</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="game-risk-answer game-risk-riskedPoints">
                                 <div class="game-risk-answerHeader">Risquer</div>
                                 <div class="game-risk-answerNoRisk" v-show="game.value.predictionRiskAnswer == null">
-                                    Vous&nbsp;avez&nbsp;choisi&nbsp;de ne&nbsp;rien&nbsp;risquer
+                                    Aucun point risqué
                                 </div>
                                 <div v-show="game.value.predictionRiskAnswer != null"
                                      class="game-risk-answerChoiceGroup">
@@ -119,8 +122,8 @@
                     </div>
 
                     <div class="game-submitZone">
-                        <btn :inactive="game.state.saved || !predictionIsValid(game)" class="game-submitZone-button"
-                             :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }"
+                        <btn :inactive="game.state.notSaved !== true || !predictionIsValid(game)" class="game-submitZone-button"
+                             :class="{ disabled: !predictionIsValid(game) }"
                              @click="savePrediction(game)"
                              :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
@@ -172,11 +175,10 @@
                                 // Initialize amount of risked points to the maximum
                                 gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3;
 
-                                const savedState = gameForDay.predictionScoreTeamA != null
                                 return {
                                     value: gameForDay,
                                     state: {
-                                        saved: savedState,
+                                        notSaved: undefined,
                                     }
                                 }
                             })
@@ -192,19 +194,20 @@
                     game.value.goalsTeamB != null;
             },
             enablePrediction: function (game) {
-                game.state.saved = false
+                game.state.notSaved = true
             },
             disablePrediction: function (game) {
-                game.state.saved = true
+                game.state.notSaved = false
             },
             isSubmissionClosed: function (game) {
                 return moment(game.value.startsAt).isBefore(Date.now());
             },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
-                if (isNaN(game.value.predictionRiskAmount) ||
-                    isNaN(game.value.predictionScoreTeamA) ||
-                    isNaN(game.value.predictionScoreTeamB)) {
+                if (isNaN(game.value.predictionRiskAmount) || game.value.predictionRiskAmount <= 0 ||
+                    isNaN(game.value.predictionScoreTeamA) || game.value.predictionScoreTeamA < 0 ||
+                    isNaN(game.value.predictionScoreTeamB) || game.value.predictionScoreTeamB < 0
+                ) {
                     return false;
                 }
 
@@ -217,7 +220,7 @@
                 return true;
             },
             savePrediction: function (game) {
-                if (game.state.saved === true || !this.predictionIsValid(game)) {
+                if (game.state.notSaved !== true || !this.predictionIsValid(game)) {
                     return;
                 }
 
@@ -256,23 +259,32 @@
     }
 
     .card.game {
+        padding: 0;
+        padding-bottom: 60px;
+    }
+
+    .game {
         background-color: #fff;
         border-bottom: 2px solid #ddd;
         box-sizing: border-box;
         margin-bottom: 15px;
         overflow: hidden;
-        padding: 0;
-        padding-bottom: 60px;
         position: relative;
+        transition: background-color 0.2s,
     }
 
     @media (min-width: 500px) {
         .game {
             border: 1px solid #ddd;
             border-bottom-width: 2px;
-            border-radius: 5px;
+            border-radius: 4px;
             margin: 0 8px 15px 8px;
         }
+    }
+
+    .game.game--notSaved {
+        background-color: #FFFFCC;
+        transition: background-color 0.2s,
     }
 
     .game-header {
@@ -298,6 +310,7 @@
     }
 
     .game-teams {
+        background: white;
         border-bottom: 1px dashed #ddd;
         display: flex;
         flex-direction: row;
@@ -312,7 +325,7 @@
     .flag {
         border: 1px solid #DDD;
         border-bottom-width: 2px;
-        border-radius: 5px;
+        border-radius: 4px;
         height: 80px;
         width: 80px;
     }
@@ -341,10 +354,9 @@
     }
 
     .game-inputs {
-        border-bottom: 1px dashed #ddd;
         display: flex;
         flex-direction: row;
-        padding: 15px;
+        padding: 20px 0 5px;
     }
 
     .game-scoreInput {
@@ -354,12 +366,13 @@
     .game-scoreInputField {
         border: 1px solid #ddd;
         border-bottom-width: 2px;
+        border-radius: 4px;
         display: block;
-        font-size: 15px;
+        font-size: 20px;
         height: 30px;
         margin: auto;
         text-align: center;
-        width: 50px;
+        width: 60px;
     }
 
     .game--submissionDisabled .game-scoreInputField {
@@ -380,7 +393,7 @@
     }
 
     .game-risk-input {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .game-risk-answer {
@@ -392,7 +405,7 @@
         opacity: 0.5;
     }
 
-    @media (min-width: 500px) {
+    @media (min-width: 550px) {
 
         .game-risk-input {
             display: flex;
@@ -400,6 +413,14 @@
 
         .game-risk-answer {
             flex: 1 1 0;
+        }
+
+        .game-risk-answer:first-child {
+            padding-left: 0;
+        }
+
+        .game-risk-answer:last-child {
+            padding-right: 0;
         }
     }
 
@@ -409,7 +430,7 @@
     }
 
     .game-risk-answerNoRisk {
-        padding: 0 15px;
+        padding: 8px 0;
     }
 
     .game-risk-answerChoiceGroup {
@@ -429,36 +450,51 @@
         flex: 2 1 0;
     }
 
-    .game-risk-answer input[type="radio"] {
+    .game-risk-answerChoice input[type="radio"] {
         display: none;
     }
 
-    .game-risk-answer label {
+    .game-risk-answerChoice label {
         background: #eee;
         box-sizing: border-box;
-        border: 1px solid #ddd;
-        border-bottom-width: 2px;
+        box-shadow: 0 2px 0 #ddd;
         cursor: pointer;
-        font-size: 13px;
+        display: inline-block;
+        font-size: 14px;
         font-weight: bold;
         height: 40px;
         line-height: 40px;
-        padding: 0 5px;
         user-select: none;
         width: 100%;
-        display: inline-block;
     }
 
-    .game-risk-answer input[type="radio"]:checked + label {
-        background: #AAA;
-        border-color: #999;
+    .game-risk-answerChoice:first-child label {
+        border-radius: 5px 0 0 5px;
+    }
+
+    .game-risk-answerChoice:last-child label {
+        border-radius: 0 5px 5px 0;
+    }
+
+    .game-risk-answerChoice:nth-child(2) label {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+
+    .game-risk-answerChoice input[type="radio"]:checked + label {
+        background: #aaa;
+        box-shadow: 0 2px 0 #888;
         color: #fff;
+    }
+
+    .game-risk-answerChoice:nth-child(2) input[type="radio"]:checked + label {
+        border: none;
     }
 
     .game-submitZone {
         border-top: 1px dashed #ddd;
         bottom: 0;
-        height: 35px;
+        height: 40px;
         left: 0;
         padding: 10px;
         position: absolute;
