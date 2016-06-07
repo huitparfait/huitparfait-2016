@@ -17,7 +17,7 @@ const actions = {
 
 const reduxStore = createStore(reducer, compose(
     applyMiddleware(invariant(), thunk),
-    window.devToolsExtension ? window.devToolsExtension() : f => f,
+    window.devToolsExtension ? window.devToolsExtension() : f => f
 ))
 
 const store = new Revue(Vue, reduxStore, actions)
