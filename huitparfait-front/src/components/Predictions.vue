@@ -80,14 +80,14 @@
                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
                                                id="dunno{{game.value.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="dunno{{game.value.gameId}}">Je ne sais pas</label>
+                                        <label class="game-risk-answerChoice--multiline" for="dunno{{game.value.gameId}}">Je ne sais pas</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="game-risk-answer game-risk-riskedPoints">
                                 <div class="game-risk-answerHeader">Risquer</div>
                                 <div class="game-risk-answerNoRisk" v-show="game.value.predictionRiskAnswer == null">
-                                    Vous&nbsp;avez&nbsp;choisi&nbsp;de ne&nbsp;rien&nbsp;risquer
+                                    Aucun point risqué
                                 </div>
                                 <div v-show="game.value.predictionRiskAnswer != null"
                                      class="game-risk-answerChoiceGroup">
@@ -274,7 +274,7 @@
         .game {
             border: 1px solid #ddd;
             border-bottom-width: 2px;
-            border-radius: 5px;
+            border-radius: 4px;
             margin: 0 8px 15px 8px;
         }
     }
@@ -322,7 +322,7 @@
     .flag {
         border: 1px solid #DDD;
         border-bottom-width: 2px;
-        border-radius: 5px;
+        border-radius: 4px;
         height: 80px;
         width: 80px;
     }
@@ -364,6 +364,7 @@
     .game-scoreInputField {
         border: 1px solid #ddd;
         border-bottom-width: 2px;
+        border-radius: 4px;
         display: block;
         font-size: 20px;
         height: 30px;
@@ -390,7 +391,7 @@
     }
 
     .game-risk-input {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .game-risk-answer {
@@ -402,7 +403,7 @@
         opacity: 0.5;
     }
 
-    @media (min-width: 500px) {
+    @media (min-width: 550px) {
 
         .game-risk-input {
             display: flex;
@@ -410,6 +411,14 @@
 
         .game-risk-answer {
             flex: 1 1 0;
+        }
+
+        .game-risk-answer:first-child {
+            padding-left: 0;
+        }
+
+        .game-risk-answer:last-child {
+            padding-right: 0;
         }
     }
 
@@ -419,7 +428,7 @@
     }
 
     .game-risk-answerNoRisk {
-        padding: 0 15px;
+        padding: 8px 0;
     }
 
     .game-risk-answerChoiceGroup {
@@ -439,36 +448,51 @@
         flex: 2 1 0;
     }
 
-    .game-risk-answer input[type="radio"] {
+    .game-risk-answerChoice input[type="radio"] {
         display: none;
     }
 
-    .game-risk-answer label {
+    .game-risk-answerChoice label {
         background: #eee;
         box-sizing: border-box;
-        border: 1px solid #ddd;
-        border-bottom-width: 2px;
+        box-shadow: 0 2px 0 #ddd;
         cursor: pointer;
-        font-size: 13px;
+        display: inline-block;
+        font-size: 14px;
         font-weight: bold;
         height: 40px;
         line-height: 40px;
-        padding: 0 5px;
         user-select: none;
         width: 100%;
-        display: inline-block;
     }
 
-    .game-risk-answer input[type="radio"]:checked + label {
-        background: #AAA;
-        border-color: #999;
+    .game-risk-answerChoice:first-child label {
+        border-radius: 5px 0 0 5px;
+    }
+
+    .game-risk-answerChoice:last-child label {
+        border-radius: 0 5px 5px 0;
+    }
+
+    .game-risk-answerChoice:nth-child(2) label {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+    }
+
+    .game-risk-answerChoice input[type="radio"]:checked + label {
+        background: #aaa;
+        box-shadow: 0 2px 0 #888;
         color: #fff;
+    }
+
+    .game-risk-answerChoice:nth-child(2) input[type="radio"]:checked + label {
+        border: none;
     }
 
     .game-submitZone {
         border-top: 1px dashed #ddd;
         bottom: 0;
-        height: 35px;
+        height: 40px;
         left: 0;
         padding: 10px;
         position: absolute;

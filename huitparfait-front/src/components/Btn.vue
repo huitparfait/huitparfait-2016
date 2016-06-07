@@ -19,23 +19,17 @@
 <style scoped>
 
     .btn {
-        /*background-color: #4d88b7;*/
-        /*background-color: #4db788;*/
         background-color: #ddd;
-        /*border: 1px solid #496f99;*/
-        /*border: 1px solid #49996f;*/
-        border: 1px solid #aaa;
-        border-bottom-width: 2px;
+        border: none;
         border-radius: 4px;
-        /*color: #fff;*/
+        box-shadow: 0 2px 0 #49996f;
         color: #555;
         color: #346943;
         cursor: pointer;
         display: inline-block;
-        font-size: 14px;
+        font-size: 15px;
         font-weight: bold;
-        /*margin: 10px;*/
-        padding: 8px 12px;
+        padding: 10px 12px;
     }
 
     .hidden {
