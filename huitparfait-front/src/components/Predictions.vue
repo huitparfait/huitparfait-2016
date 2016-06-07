@@ -124,6 +124,7 @@
                              @click="savePrediction(game)"
                              :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
+                        <img class="game-savedTick" src="../assets/tick.svg" alt="Pronostic sauvegardé"/>
                     </div>
 
                 </card>
@@ -481,6 +482,14 @@
 
     .game--submissionDisabled .game-submitZone-button {
         display: none;
+    }
+
+    .game-savedTick {
+        height: 20px;
+        width: 20px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
     }
 
 
