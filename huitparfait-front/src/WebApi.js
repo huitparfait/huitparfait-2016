@@ -49,6 +49,10 @@ export function fetchPredictions() {
     return execute('/users/me/predictions')
 }
 
+export function fetchRanking() {
+    return execute('/ranking')
+}
+
 export function savePrediction(newPrediction) {
     return execute('/users/me/predictions', { method: 'POST', body: newPrediction })
 }
