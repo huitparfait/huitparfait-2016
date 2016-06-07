@@ -39,13 +39,13 @@
                     <div class="game-inputs">
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)"
-                                   class="game-scoreInputField" type="number" name="goalsTeamA" number
+                                   class="game-scoreInputField" type="number" name="goalsTeamA"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)"
-                                   class="game-scoreInputField" type="number" name="goalsTeamB" number
+                                   class="game-scoreInputField" type="number" name="goalsTeamB"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                     </div>
