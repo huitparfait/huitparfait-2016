@@ -41,12 +41,14 @@
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)"
                                    class="game-scoreInputField" type="number" name="goalsTeamA"
+                                   onfocus="this.select()"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
                             <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)"
                                    class="game-scoreInputField" type="number" name="goalsTeamB"
+                                   onfocus="this.select()"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                     </div>
@@ -351,10 +353,9 @@
     }
 
     .game-inputs {
-        border-bottom: 1px dashed #ddd;
         display: flex;
         flex-direction: row;
-        padding: 15px;
+        padding: 20px 0 5px;
     }
 
     .game-scoreInput {
@@ -370,7 +371,7 @@
         height: 30px;
         margin: auto;
         text-align: center;
-        width: 50px;
+        width: 60px;
     }
 
     .game--submissionDisabled .game-scoreInputField {
