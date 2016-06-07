@@ -3,9 +3,34 @@ import neo4j from 'neo4j'
 import _ from 'lodash'
 import Config from './config'
 import { notFound } from 'boom'
+import Joi from 'joi'
 
 const db = new neo4j.GraphDatabase(Config.get('neo4j.url'))
 const dbCypherAsync = B.promisify(db.cypher, { context: db })
+
+
+initialize({
+    User: {
+        id: { unique: true },
+        email: { index: true },
+    },
+    Group: {
+        id: { unique: true },
+    },
+    Team: {
+        id: { unique: true },
+    },
+    Risk: {
+        id: { unique: true },
+    },
+    Game: {
+        id: { unique: true },
+    },
+    Pronostic: {
+        id: { unique: true },
+    },
+})
+
 
 export function cypher(fatQuery, params) {
 
@@ -29,4 +54,37 @@ export function cypherOne(fatQuery, params) {
 
 function omitNull(item) {
     return _.omitBy(item, _.isNil)
+}
+
+
+function initialize(opts) {
+
+    return B
+        .reduce(Object.keys(opts), (result, nodeName) => {
+            return B
+                .map(Object.keys(opts[nodeName]), (propertyName) => {
+                    return indexQueryByProperty(nodeName, propertyName)
+                })
+                .then((queries) => {
+                    return result.concat(queries)
+                })
+        }, [])
+        .filter((query) => query != null)
+        .mapSeries((query) => cypher(query))
+
+
+    function indexQueryByProperty(nodeName, propertyName) {
+        const propOpts = Joi.attempt(opts[nodeName][propertyName], Joi.object({
+            unique: Joi.boolean().default(false),
+            index: Joi.boolean().default(false).when('unique', { is: false, then: Joi.valid(true).required() }),
+        }))
+
+        if (propOpts.unique) {
+            return `CREATE CONSTRAINT ON (n:${nodeName}) ASSERT n.${propertyName} IS UNIQUE`
+        }
+
+        if (propOpts.index) {
+            return `CREATE INDEX ON :${nodeName}(${propertyName})`
+        }
+    }
 }
