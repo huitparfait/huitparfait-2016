@@ -18,6 +18,10 @@ export function fetchGroupUsers(groupId) {
     return execute(`/groups/${groupId}/users`)
 }
 
+export function fetchGroupRanking(groupId) {
+    return execute(`/groups/${groupId}/ranking`)
+}
+
 export function upsertGroup({ id, name, avatarUrl }) {
 
     const body = { name };

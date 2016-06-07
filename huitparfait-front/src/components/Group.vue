@@ -1,7 +1,7 @@
 <template>
 
     <card class="group" v-if="group != null">
-        <a class="details" v-link="{ name: 'group', params: { groupId: group.id, groupName: group.slug } }">
+        <a class="details" v-link="{ name: link ? link : 'group', params: { groupId: group.id, groupName: group.slug } }">
             <div class="avatar--wrapper">
                 <img class="avatar" :src="group.avatarUrl">
             </div>
@@ -19,19 +19,11 @@
 
 <script type="text/babel">
 
-    import Btn from './Btn'
-    import Card from './Card'
-    import CardList from './CardList'
     import store from '../state/configureStore'
     import { deleteGroup } from '../state/actions/groups'
 
     export default {
-        components: {
-            Btn,
-            Card,
-            CardList,
-        },
-        props: ['group', 'mode', 'loader'],
+        props: ['group', 'mode', 'loader', 'link'],
         methods: {
             deleteGroup() {
                 store.dispatch(deleteGroup(this.group))
