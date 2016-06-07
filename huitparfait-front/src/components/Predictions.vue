@@ -7,7 +7,8 @@
             <card-title class="gameDate">{{gameDate | date}}</card-title>
             <card-list wide class="games">
 
-                <card wide class="game" :class="{ 'game--submissionDisabled': isSubmissionClosed(game) }"
+                <card wide class="game"
+                      :class="{ 'game--submissionDisabled': isSubmissionClosed(game), 'game--notSaved' : game.state.notSaved }"
                       v-for="game in games">
 
                     <div class="game-header">
@@ -119,8 +120,8 @@
                     </div>
 
                     <div class="game-submitZone">
-                        <btn :inactive="game.state.saved || !predictionIsValid(game)" class="game-submitZone-button"
-                             :class="{ saved: game.state.saved, disabled: !predictionIsValid(game) }"
+                        <btn :inactive="game.state.notSaved !== true || !predictionIsValid(game)" class="game-submitZone-button"
+                             :class="{ disabled: !predictionIsValid(game) }"
                              @click="savePrediction(game)"
                              :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
@@ -171,11 +172,10 @@
                                 // Initialize amount of risked points to the maximum
                                 gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3;
 
-                                const savedState = gameForDay.predictionScoreTeamA != null
                                 return {
                                     value: gameForDay,
                                     state: {
-                                        saved: savedState,
+                                        notSaved: undefined,
                                     }
                                 }
                             })
@@ -191,19 +191,20 @@
                     game.value.goalsTeamB != null;
             },
             enablePrediction: function (game) {
-                game.state.saved = false
+                game.state.notSaved = true
             },
             disablePrediction: function (game) {
-                game.state.saved = true
+                game.state.notSaved = false
             },
             isSubmissionClosed: function (game) {
                 return moment(game.value.startsAt).isBefore(Date.now());
             },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
-                if (isNaN(game.value.predictionRiskAmount) ||
-                    isNaN(game.value.predictionScoreTeamA) ||
-                    isNaN(game.value.predictionScoreTeamB)) {
+                if (isNaN(game.value.predictionRiskAmount) || game.value.predictionRiskAmount <= 0 ||
+                    isNaN(game.value.predictionScoreTeamA) || game.value.predictionScoreTeamA < 0 ||
+                    isNaN(game.value.predictionScoreTeamB) || game.value.predictionScoreTeamB < 0
+                ) {
                     return false;
                 }
 
@@ -216,7 +217,7 @@
                 return true;
             },
             savePrediction: function (game) {
-                if (game.state.saved === true || !this.predictionIsValid(game)) {
+                if (game.state.notSaved !== true || !this.predictionIsValid(game)) {
                     return;
                 }
 
@@ -255,14 +256,18 @@
     }
 
     .card.game {
+        padding: 0;
+        padding-bottom: 60px;
+    }
+
+    .game {
         background-color: #fff;
         border-bottom: 2px solid #ddd;
         box-sizing: border-box;
         margin-bottom: 15px;
         overflow: hidden;
-        padding: 0;
-        padding-bottom: 60px;
         position: relative;
+        transition: background-color 0.2s,
     }
 
     @media (min-width: 500px) {
@@ -272,6 +277,11 @@
             border-radius: 5px;
             margin: 0 8px 15px 8px;
         }
+    }
+
+    .game.game--notSaved {
+        background-color: #FFFFCC;
+        transition: background-color 0.2s,
     }
 
     .game-header {
@@ -297,6 +307,7 @@
     }
 
     .game-teams {
+        background: white;
         border-bottom: 1px dashed #ddd;
         display: flex;
         flex-direction: row;
@@ -354,7 +365,7 @@
         border: 1px solid #ddd;
         border-bottom-width: 2px;
         display: block;
-        font-size: 15px;
+        font-size: 20px;
         height: 30px;
         margin: auto;
         text-align: center;
