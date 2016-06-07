@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div class="btnBar">
+        <div class="btnBar" v-if="!ranking">
             <btn class="btn" :inactive="user.isAdmin || !user.isActive" @click="excludeUser(user)">Exclure</btn>
             <btn class="btn" :inactive="user.isAdmin || user.isActive" @click="includeUser(user)">Réintégrer</btn>
         </div>
@@ -28,7 +28,7 @@
     import momentFr from 'moment/locale/fr'
 
     export default {
-        props: ['user'],
+        props: ['user', 'ranking'],
         data() {
             return {
                 humanSince: moment(this.user.memberSince).fromNow(true),

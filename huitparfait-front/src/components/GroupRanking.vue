@@ -3,7 +3,7 @@
     <div class="cardLabel">Joueurs du groupe :</div>
 
     <card-list>
-        <group-player v-for="user in groupRanking" :user="user"></group-player>
+        <group-player v-for="user in groupRanking" :user="user" :ranking="true"></group-player>
     </card-list>
 
 </template>
