@@ -19,6 +19,8 @@ exports.register = function (server, options, next) {
                         email: Joi.string().email().required(),
                         name: Joi.string(),
                         avatarUrl: Joi.string().uri({ scheme: 'https' }),
+                        oAuthId: Joi.string(),
+                        oAuthProvider: Joi.string(),
                     }).required(),
                 },
                 handler(req, reply) {
@@ -35,6 +37,8 @@ exports.register = function (server, options, next) {
                                       u.anonymousName    = {anonymousName},
                                       u.email            = {email},
                                       u.avatarUrl        = {avatarUrl},
+                                      u.oAuthId          = {oAuthId},
+                                      u.oAuthProvider    = {oAuthProvider},
                                       u.lastConnectionAt = timestamp(),
                                       u.isAnonymous      = false
                         ON MATCH SET  u.lastConnectionAt = timestamp()
@@ -47,6 +51,8 @@ exports.register = function (server, options, next) {
                             id,
                             email: req.payload.email,
                             name: req.payload.name,
+                            oAuthId: req.payload.oAuthId,
+                            oAuthProvider: req.payload.oAuthProvider,
                             anonymousName,
                             avatarUrl: req.payload.avatarUrl || null,
                         })
