@@ -7,7 +7,7 @@ import {
 } from '../../WebApi'
 
 export const FETCH_USER_GROUPS = 'FETCH_USER_GROUPS'
-function fetchGroupAttempt() {
+function fetchUserGroupAttempt() {
     return {
         type: FETCH_USER_GROUPS,
     }
@@ -32,7 +32,7 @@ export function fetchUserGroups() {
 
     return (dispatch) => {
 
-        dispatch(fetchGroupAttempt())
+        dispatch(fetchUserGroupAttempt())
 
         apiFetchUserGroups()
             .then((groups) => dispatch(fetchUserGroupsSuccess(groups)))

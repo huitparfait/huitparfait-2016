@@ -1,9 +1,8 @@
 import Joi from 'joi'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { sendEmpty, sendEmptyIfPositiveDeleteCount } from '../infra/replyUtils'
-import betterGroup from '../utils/groupUtils'
+import betterGroup, { shortIdSchema } from '../utils/groupUtils'
 
-const shortIdSchema = Joi.string().required().regex(/^[a-zA-Z0-9-_]{7,14}$/)
 
 exports.register = function (server, options, next) {
 
