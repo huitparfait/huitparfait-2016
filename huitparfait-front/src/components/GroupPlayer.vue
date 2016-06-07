@@ -24,18 +24,10 @@
 <script type="text/babel">
 
     import * as WebApi from '../WebApi'
-    import Btn from './Btn'
-    import Card from './Card'
-    import CardList from './CardList'
     import moment from 'moment'
     import momentFr from 'moment/locale/fr'
 
     export default {
-        components: {
-            Btn,
-            Card,
-            CardList,
-        },
         props: ['user'],
         data() {
             return {

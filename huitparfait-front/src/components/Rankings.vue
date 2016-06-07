@@ -4,7 +4,7 @@
     </card-title>
 
     <card-list>
-        <group v-for="group in ranking" :group="group"></group>
+        <group v-for="group in ranking" :group="group" :link="'groupRanking'"></group>
     </card-list>
 </template>
 

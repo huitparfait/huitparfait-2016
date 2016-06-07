@@ -4,6 +4,7 @@ import Rankings from './components/Rankings'
 import Predictions from './components/Predictions'
 import GroupList from './components/GroupList'
 import GroupUsers from './components/GroupUsers'
+import GroupRanking from './components/GroupRanking'
 import GroupJoin from './components/GroupJoin'
 import NewGroup from './components/NewGroup'
 import Faq from './components/Faq'
@@ -24,35 +25,39 @@ router.map({
     },
     '/classements': {
         name: 'rankings',
-        component: Vue.component('Rankings', Rankings),
+        component: Rankings,
     },
     '/pronostics': {
         name: 'predictions',
-        component: Vue.component('Predictions', Predictions),
+        component: Predictions,
     },
     '/groupes': {
         name: 'groupList',
-        component: Vue.component('GroupList', GroupList),
+        component: GroupList,
     },
     '/groupes/:groupId/:groupName': {
         name: 'group',
-        component: Vue.component('GroupUsers', GroupUsers),
+        component: GroupUsers,
     },
     '/rejoindre/:groupId/:groupName': {
         name: 'groupJoin',
-        component: Vue.component('GroupJoin', GroupJoin),
+        component: GroupJoin,
+    },
+    '/groupes/:groupId/:groupName/classements': {
+        name: 'groupRanking',
+        component: GroupRanking,
     },
     '/groupes/nouveau': {
         name: 'newGroup',
-        component: Vue.component('NewGroup', NewGroup),
+        component:  NewGroup,
     },
     '/faq': {
         name: 'faq',
-        component: Vue.component('Faq', Faq),
+        component: Faq,
     },
     '/profil': {
         name: 'profile',
-        component: Vue.component('Profile', Profile),
+        component: Profile,
     },
 })
 
@@ -83,7 +88,7 @@ router.beforeEach(({ to, next, redirect }) => {
     if (store.state.user != null) {
         return next()
     }
-    
+
     localStorage.setItem(PATH_BEFORE_LOGIN, to.path);
     return redirect({ name: 'home' })
 })
