@@ -49,6 +49,8 @@ function authFacebook(req, reply) {
         email: creds.email,
         // TODO redirect
         avatarUrl: `https://graph.facebook.com/${creds.id}/picture?width=250&height=250`,
+        oAuthId: creds.id,
+        oAuthProvider: 'facebook',
     }
 
     findOrCreateUserByProfile(profile)

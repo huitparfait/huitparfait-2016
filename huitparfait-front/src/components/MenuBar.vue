@@ -1,5 +1,6 @@
 <template>
-    <div class="menu">
+
+    <div class="menubar">
         <a class="menuitem" v-link="{ name: 'rankings', activeClass: 'menuitem--active' }">
             <img class="menuitem-icon" src="../assets/rankings.svg" alt="">
             <span class="menuitem-label">Classement</span>
@@ -21,14 +22,14 @@
             <span class="menuitem-label">Profil</span>
         </a>
     </div>
-</template>
 
-<script>
-</script>
+</template>
 
 <style scoped>
 
-    .menu {
+    .menubar {
+        background: #4db788;
+        border-color: #49996f;
         color: #fff;
         display: flex;
     }
@@ -43,6 +44,10 @@
         text-align: center;
         text-decoration: none;
         height: 100%;
+    }
+
+    .menuitem:hover {
+        background-color: #4baf81;
     }
 
     .menuitem.menuitem--active {
