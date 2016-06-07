@@ -23,6 +23,6 @@ export default function (lang) {
         const adjectiveIndex = integer % adjectivesLength
         const adjective = data.adjectives[adjectiveIndex]
 
-        return ucfirst(animal.name + ' ' + adjective[animal.genre])
+        return ucfirst(`${animal.name} ${adjective[animal.genre]}`)
     }
 }
