@@ -2,6 +2,7 @@ import Joi from 'joi'
 import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { sendEmpty } from '../infra/replyUtils'
+import betterGroup from '../utils/groupUtils'
 
 exports.register = function (server, options, next) {
 
@@ -118,6 +119,7 @@ exports.register = function (server, options, next) {
                         {
                             id: req.auth.credentials.id,
                         })
+                        .then((groups) => _.map(groups, betterGroup))
                         .then(reply)
                         .catch(reply)
                 },
