@@ -46,6 +46,7 @@ const manifest = {
 
         require('./routes/users-route'),
         require('./routes/groupes-route'),
+        require('./routes/ranking-route'),
     ],
 }
 

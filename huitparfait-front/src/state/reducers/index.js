@@ -4,6 +4,7 @@ import user from './user'
 import group from './group'
 import groups from './groups'
 import groupUsers from './groupUsers'
+import ranking from './ranking'
 
 export default combineReducers({
     loaders,
@@ -11,4 +12,5 @@ export default combineReducers({
     group,
     groups,
     groupUsers,
+    ranking,
 })
