@@ -5,7 +5,7 @@
              v-for="(gameDate, games) in gamesByDay">
 
             <card-title class="gameDate">{{gameDate | date}}</card-title>
-            <card-list class="games">
+            <card-list wide class="games">
 
                 <card wide class="game" :class="{ 'game--submissionDisabled': isSubmissionClosed(game) }"
                       v-for="game in games">
@@ -86,7 +86,7 @@
                             <div class="game-risk-answer game-risk-riskedPoints">
                                 <div class="game-risk-answerHeader">Risquer</div>
                                 <div class="game-risk-answerNoRisk" v-show="game.value.predictionRiskAnswer == null">
-                                    Vous avez choisi de ne rien risquer
+                                    Vous&nbsp;avez&nbsp;choisi&nbsp;de ne&nbsp;rien&nbsp;risquer
                                 </div>
                                 <div v-show="game.value.predictionRiskAnswer != null"
                                      class="game-risk-answerChoiceGroup">
@@ -259,7 +259,6 @@
         border-bottom: 2px solid #ddd;
         box-sizing: border-box;
         margin-bottom: 15px;
-        max-width: 500px;
         overflow: hidden;
         padding: 0;
         padding-bottom: 60px;

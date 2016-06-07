@@ -1,8 +1,8 @@
 <template>
     <div class="cardList">
         <slot></slot>
-        <card invisible v-if="!simple"></card>
-        <card invisible v-if="!simple"></card>
+        <card invisible :wide="wide" v-if="!simple"></card>
+        <card invisible :wide="wide" v-if="!simple && !wide"></card>
     </div>
 </template>
 
@@ -16,6 +16,7 @@
         },
         props: {
             simple: Boolean,
+            wide: Boolean,
         }
     }
 
