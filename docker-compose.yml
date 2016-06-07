@@ -2,23 +2,27 @@ version: '2'
 
 services:
 
-#    traefik:
-#        image: containous/traefik
-#        command: --web --docker --docker.domain=huitparfait.fr --logLevel=DEBUG
-#        ports:
-#            - "80:80"
-#            - "443:443"
-#            - "127.0.0.1:8080:8080"
-#        volumes:
-#            - /var/run/docker.sock:/var/run/docker.sock
-#            - ./traefik.toml:/etc/traefik/traefik.toml
-#            - ./acme:/acme
+    traefik:
+        image: containous/traefik:pr-433
+        command: --web --docker --docker.domain=huitparfait.fr --logLevel=DEBUG
+        ports:
+            - "80:80"
+            - "443:443"
+            - "127.0.0.1:8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.toml:/etc/traefik/traefik.toml
+            - ./acme:/acme
+
+    huitparfait-front-build:
+        build:
+            dockerfile: ./huitparfait-front/Dockerfile
 
     huitparfait-front:
         build: ./huitparfait-front
         image: huitparfait/huitparfait-front
         labels:
-            - "traefik.backend=huitparfait_front"
+            - "traefik.backend=huitparfait-front"
             - "traefik.protocol=http"
             - "traefik.port=80"
             - "traefik.frontend.rule=Host:huitparfait.fr"
@@ -32,6 +36,7 @@ services:
             NODE_ENV: production
             SERVER_URL: http://localhost:3000
             SERVER_PORT: 3000
+            PROXY_API_URL: http://huitparfait-api:3000
             JWT_PUBLIC_KEY_PATH: /jwt-keys/jwt-public.pem
             JWT_PRIVATE_KEY_PATH: /jwt-keys/jwt-private.pem
             FACEBOOK_CLIENT_ID: FACEBOOK_CLIENT_ID
@@ -41,10 +46,10 @@ services:
             YAHOO_CLIENT_ID: YAHOO_CLIENT_ID
             YAHOO_CLIENT_SECRET: YAHOO_CLIENT_SECRET
         labels:
-            - "traefik.backend=huitparfait_front"
+            - "traefik.backend=huitparfait-auth"
             - "traefik.protocol=http"
             - "traefik.port=3000"
-            - "traefik.frontend.rule=Host:huitparfait.fr"
+            - "traefik.frontend.rule=Host:huitparfait.fr;PathPrefix:/api,/auth"
 
     huitparfait-api:
         build: ./huitparfait-api
@@ -53,12 +58,7 @@ services:
             - ./keys:/jwt-keys
         environment:
             NODE_ENV: production
+            SERVER_URL: http://localhost:3000
+            SERVER_PORT: 3000
             JWT_PUBLIC_KEY_PATH: /jwt-keys/jwt-public.pem
             JWT_PRIVATE_KEY_PATH: /jwt-keys/jwt-private.pem
-
-    huitparfait-data:
-        image: 'neo4j:2.3.3'
-        volumes:
-            - './huitparfait-data/data:/data'
-        ports:
-            - '7474:7474'

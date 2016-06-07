@@ -53,22 +53,22 @@ exports.register = function (server, options, next) {
                 },
             },
         },
-        {
-            method: '*',
-            path: '/{frontPath*}',
-            config: {
-                auth: false,
-            },
-            handler: {
-                proxy: {
-                    passThrough: true,
-                    mapUri(req, callback) {
-                        const url = `${PROXY_CONFIG.frontUrl}${req.path}`
-                        callback(null, url)
-                    },
-                },
-            },
-        }
+        // {
+        //     method: '*',
+        //     path: '/{frontPath*}',
+        //     config: {
+        //         auth: false,
+        //     },
+        //     handler: {
+        //         proxy: {
+        //             passThrough: true,
+        //             mapUri(req, callback) {
+        //                 const url = `${PROXY_CONFIG.frontUrl}${req.path}`
+        //                 callback(null, url)
+        //             },
+        //         },
+        //     },
+        // }
     ])
 
     next()

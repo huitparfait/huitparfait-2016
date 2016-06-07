@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+
+    huitparfait-auth:
+        environment:
+            FACEBOOK_CLIENT_ID: 577584085691854
+            FACEBOOK_CLIENT_SECRET: 2ca2f09bc49d485196d206d6dc67d0e1
+            GOOGLE_CLIENT_ID: 414572524758-gu7jrc4f7e22uo9plbq47u38eune73rt.apps.googleusercontent.com
+            GOOGLE_CLIENT_SECRET: CNuMIOqHmu1fNT3USZIbfqxX
+            YAHOO_CLIENT_ID: dj0yJmk9eWo2ZU1aVGF3c0ViJmQ9WVdrOVRVMVBZbk01TlRBbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1hOQ--
+            YAHOO_CLIENT_SECRET: ff6ac38d373c2304552459e446e280daa103693c
+
+    huitparfait-auth:
+        environment:
+            NEO4J_URL: http://neo4j:neo@huitparfait-data:7474

@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+
+    traefik:
+        command: --web --docker --docker.domain=localhost --logLevel=DEBUG
+        ports:
+            - "3000:80"
+
+    huitparfait-front:
+        image: node:6.2.0
+        entrypoint: npm run dev
+        working_dir: /app
+        volumes:
+            - ./huitparfait-front:/app
+        labels:
+            - "traefik.port=8081"
+            - "traefik.frontend.rule=Host:localhost"
+
+    huitparfait-auth:
+        image: node:6.2.0
+        entrypoint: npm run dev
+        working_dir: /app
+        volumes:
+            - ./huitparfait-auth:/app
+        environment:
+            NODE_ENV: development
+        labels:
+            - "traefik.frontend.rule=Host:localhost;PathPrefix:/api,/auth"
+
+    huitparfait-api:
+        image: node:6.2.0
+        entrypoint: npm run dev
+        working_dir: /app
+        volumes:
+            - ./huitparfait-api:/app
+        environment:
+            NODE_ENV: development
+            NEO4J_URL: http://neo4j:neo@huitparfait-data:7474
+
+    huitparfait-data:
+        image: 'neo4j:2.3.3'
+        volumes:
+            - './huitparfait-data/data:/data'
+        ports:
+            - '7474:7474'
