@@ -1,13 +1,14 @@
 import Joi from 'joi'
 import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
-import { sendEmpty } from '../infra/replyUtils'
 import betterGroup from '../utils/groupUtils'
+import initAnimalAdj from '../infra/animal-adj/animal-adj'
+
+const animalAdj = initAnimalAdj('fr')
 
 exports.register = function (server, options, next) {
 
     server.route([
-
         {
             method: 'POST',
             path: '/api/users/me',
@@ -21,23 +22,32 @@ exports.register = function (server, options, next) {
                     }).required(),
                 },
                 handler(req, reply) {
+
+                    const id = shortid()
+                    const anonymousName = animalAdj(id)
+
                     cypherOne(`
                         MERGE         (u:User { email: {email} })
                         ON CREATE SET u.createdAt        = timestamp(),
                                       u.updatedAt        = timestamp(),
                                       u.id               = {id},
                                       u.name             = {name},
+                                      u.anonymousName    = {anonymousName},
                                       u.email            = {email},
                                       u.avatarUrl        = {avatarUrl},
                                       u.lastConnectionAt = timestamp(),
                                       u.isAnonymous      = false
                         ON MATCH SET  u.lastConnectionAt = timestamp()
-                        RETURN        u.id          AS id,
-                                      u.isAnonymous AS isAnonymous`,
+                        RETURN        u.id            AS id,
+                                      u.name          AS name,
+                                      u.anonymousName AS anonymousName,
+                                      u.avatarUrl     AS avatarUrl,
+                                      u.isAnonymous   AS isAnonymous`,
                         {
-                            id: shortid(),
+                            id,
                             email: req.payload.email,
                             name: req.payload.name,
+                            anonymousName,
                             avatarUrl: req.payload.avatarUrl || null,
                         })
                         .then(reply)
@@ -45,7 +55,6 @@ exports.register = function (server, options, next) {
                 },
             },
         },
-
         {
             method: 'GET',
             path: '/api/users/me',
@@ -55,10 +64,11 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypherOne(`
                         MATCH (u:User { id: {id} })
-                        RETURN u.id          AS id,
-                               u.name        AS name,
-                               u.avatarUrl   AS avatarUrl,
-                               u.isAnonymous AS isAnonymous`,
+                        RETURN u.id            AS id,
+                               u.name          AS name,
+                               u.anonymousName AS anonymousName,
+                               u.avatarUrl     AS avatarUrl,
+                               u.isAnonymous   AS isAnonymous`,
                         {
                             id: req.auth.credentials.id,
                         })
@@ -84,18 +94,21 @@ exports.register = function (server, options, next) {
                     cypherOne(`
                         MATCH (u:User { id: {userId} })
                         SET u.updatedAt   = timestamp(),
-                            u.name        = {userName}, 
+                            u.name        = {userName},
                             u.avatarUrl   = {userAvatarUrl}, 
                             u.isAnonymous = {userIsAnonymous}
-                        RETURN u AS user`,
+                        RETURN u.id            AS id,
+                               u.name          AS name,
+                               u.anonymousName AS anonymousName,
+                               u.avatarUrl     AS avatarUrl, 
+                               u.isAnonymous   AS isAnonymous`,
                         {
                             userId: req.auth.credentials.id,
                             userName: req.payload.name,
                             userAvatarUrl: req.payload.avatarUrl || null,
                             userIsAnonymous: req.payload.isAnonymous,
                         })
-
-                        .then(sendEmpty(reply))
+                        .then(reply)
                         .catch(reply)
                 },
             },
