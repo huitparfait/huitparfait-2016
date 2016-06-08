@@ -51,22 +51,23 @@ function authYahoo(req, reply) {
         json: true,
     }
 
-    request.get(options).then((fullProfile) => {
+    request.get(options)
+        .then((fullProfile) => {
 
-        const profile = {
-            name: creds.displayName,
-            email: _.get(fullProfile, 'profile.emails[0].handle'),
-            avatarUrl: _.get(fullProfile, 'profile.image.imageUrl'),
-            oAuthId: creds.id,
-            oAuthProvider: 'yahoo',
-        }
+            const profile = {
+                name: creds.displayName,
+                email: _.get(fullProfile, 'profile.emails[0].handle'),
+                avatarUrl: _.get(fullProfile, 'profile.image.imageUrl'),
+                oAuthId: creds.id,
+                oAuthProvider: 'yahoo',
+            }
 
-        findOrCreateUserByProfile(profile)
-            .then((token) => {
-                reply()
-                    .state('token', token, { path: '/' })
-                    .redirect('/')
-            })
-            .catch(reply)
-    })
+            return findOrCreateUserByProfile(profile)
+        })
+        .then((token) => {
+            reply()
+                .state('token', token, { path: '/' })
+                .redirect('/')
+        })
+        .catch(reply)
 }
