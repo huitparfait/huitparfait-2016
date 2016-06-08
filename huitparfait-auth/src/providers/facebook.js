@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import Joi from 'joi'
 import { findOrCreateUserByProfile } from '../user-service'
+import request from 'request-promise'
 
 const schema = Joi.object({
     clientId: Joi.string().required(),
@@ -44,21 +45,27 @@ function authFacebook(req, reply) {
 
     const creds = req.auth.credentials.profile
 
-    const profile = {
-        name: creds.displayName,
-        email: creds.email,
-        // TODO redirect
-        avatarUrl: `https://graph.facebook.com/${creds.id}/picture?width=250&height=250`,
-        oAuthId: creds.id,
-        oAuthProvider: 'facebook',
+    const options = {
+        uri: `https://graph.facebook.com/${creds.id}/picture?width=250&height=250`,
+        resolveWithFullResponse: true,
     }
+    request.get(options)
+        .then((response) => {
 
-    findOrCreateUserByProfile(profile)
+            const profile = {
+                name: creds.displayName,
+                email: creds.email,
+                avatarUrl: response.request.uri.href,
+                oAuthId: creds.id,
+                oAuthProvider: 'facebook',
+            }
+
+            return findOrCreateUserByProfile(profile)
+        })
         .then((token) => {
             reply()
                 .state('token', token, { path: '/' })
                 .redirect('/')
         })
         .catch(reply)
-
 }
