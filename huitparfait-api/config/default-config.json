@@ -11,12 +11,6 @@
   },
 
   "server": {
-    "url": {
-      "doc": "Server url",
-      "format": "url",
-      "default": "http://localhost:3000",
-      "env": "SERVER_URL"
-    },
     "port": {
       "doc": "Port to bind",
       "format": "port",
