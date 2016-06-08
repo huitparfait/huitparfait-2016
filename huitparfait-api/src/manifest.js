@@ -25,7 +25,6 @@ const manifest = {
 
     connection: {
         port: Config.get('server.port'),
-        uri: Config.get('server.url'),
         state: {
             password: Config.get('cookie.secret'),
             ttl: Config.get('cookie.ttl'),
