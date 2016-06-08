@@ -27,6 +27,10 @@ router.map({
         name: 'rankings',
         component: Rankings,
     },
+    '/classements/:groupId': {
+        name: 'groupRanking',
+        component: GroupRanking,
+    },
     '/pronostics': {
         name: 'predictions',
         component: Predictions,
@@ -42,10 +46,6 @@ router.map({
     '/rejoindre/:groupId/:groupName': {
         name: 'groupJoin',
         component: GroupJoin,
-    },
-    '/groupes/:groupId/:groupName/classements': {
-        name: 'groupRanking',
-        component: GroupRanking,
     },
     '/groupes/nouveau': {
         name: 'newGroup',
