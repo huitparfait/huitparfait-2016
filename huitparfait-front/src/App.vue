@@ -1,8 +1,8 @@
 <template>
-    <div class="main">
-        <title-bar class="titlebar"></title-bar>
+    <div class="main" :class="{ 'isDisconnected': user == null }">
+        <title-bar class="titlebar" :class="{ 'isDisconnected': user == null }"></title-bar>
         <router-view></router-view>
-        <menu-bar class="menubar"></menu-bar>
+        <menu-bar class="menubar" :class="{ 'isDisconnected': user == null }"></menu-bar>
     </div>
 </template>
 
@@ -16,6 +16,11 @@
             TitleBar,
             MenuBar,
         },
+        data() {
+            return {
+                user: this.$select('user'),
+            }
+        },
     }
 </script>
 
@@ -23,23 +28,36 @@
 
     .main {
         box-sizing: border-box;
-        margin: 30px auto 70px auto;
-        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 0 72px 0;
+        max-width: 1400px;
         width: 100%;
+    }
+
+    .main.isDisconnected {
+        padding-bottom: 0;
+    }
+
+    @media (min-width: 500px) {
+        .main {
+            padding: 47px 7px 72px 7px;
+        }
     }
 
     @media (min-width: 850px) {
         .main {
-            margin: 0 auto;
-            padding-left: 180px;
+            padding: 67px 7px 0 185px;
+        }
+
+        .main.isDisconnected {
+            padding: 67px 7px 0 7px;
         }
     }
 
     .titlebar {
         background-color: #4db788;
         border-bottom: 2px solid #49996f;
-        font-weight: bold;
-        color: #fff;
+        box-sizing: border-box;
         height: 30px;
         line-height: 30px;
         font-size: 20px;
@@ -47,27 +65,35 @@
         position: fixed;
         text-align: center;
         top: 0;
-        width: 100%;
+        right: 0;
         z-index: 3;
     }
 
     @media (min-width: 850px) {
         .titlebar {
-            height: 80px;
+            height: 50px;
+            left: 182px;
             line-height: 80px;
-            width: 180px;
+        }
+
+        .titlebar.isDisconnected {
+            left: 0;
         }
     }
 
     .menubar {
-        background: #4db788;
-        border-top: 2px solid #49996f;
+        border-top-style: solid;
+        border-top-width: 2px;
         bottom: -1px;
         height: 41px;
         left: 0;
         position: fixed;
         width: 100%;
         z-index: 2;
+    }
+
+    .menubar.isDisconnected {
+        display: none;
     }
 
     @media (min-height: 550px) {
@@ -78,10 +104,13 @@
 
     @media (min-width: 850px) {
         .menubar {
-            border-top: none;
+            border-right-style: solid;
+            border-right-width: 2px;
+            border-top-style: none;
+            border-top-width: 0;
             flex-direction: column;
             height: auto;
-            top: 80px;
+            top: 0;
             width: 180px;
         }
     }

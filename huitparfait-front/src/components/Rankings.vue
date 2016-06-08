@@ -1,10 +1,33 @@
 <template>
-    <div class="faq">
-        Rankings contents
-    </div>
+    <card-title>
+        Vos groupe(s) :
+    </card-title>
+
+    <card-list>
+        <group v-for="group in ranking" :group="group" :link="'groupRanking'"></group>
+    </card-list>
 </template>
 
-<script>
+<script type="text/babel">
+    import Group from './Group'
+    import store from '../state/configureStore'
+    import { fetchRanking } from '../state/actions/ranking'
+
+    export default {
+        components: {
+            Group,
+        },
+        data() {
+            return {
+                ranking: this.$select('ranking'),
+            }
+        },
+        route: {
+            data() {
+                store.dispatch(fetchRanking())
+            },
+        },
+    }
 </script>
 
 <style scoped></style>

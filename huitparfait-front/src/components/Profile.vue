@@ -1,74 +1,115 @@
 <template>
-    <div class="page--profile">
 
-        <div class="card card--editProfile">
-            <label class="profile-nameInput--wrapper">
+    <card-title>Vous êtes connecté en tant que :</card-title>
+
+    <user :user="user"></user>
+
+    <card-title>Mise à jour du profil :</card-title>
+
+    <form @submit.prevent="updateProfile" v-if="user != null && profile != null"
+          :class="{ 'updateProfile--progress': updateProfileInPogress }">
+        <card>
+            <label class="inputLabel">
                 Prénom et Nom :
-                <input v-model="name" type="text" class="profile-nameInput" placeholder="Mes collègues">
+                <input v-model="profile.name" type="text" class="input nameInput" placeholder="Mes collègues">
             </label>
-            <label class="profile-avatarInput--wrapper">
+            <label class="inputLabel">
                 Avatar (HTTPS uniquement) :
-                <input v-model="avatarUrl" type="text" class="profile-avatarInput" placeholder="https://placekitten.com/g/100/200">
+                <input v-model="profile.avatarUrl" type="text" class="input avatarInput"
+                       placeholder="https://les-super-logos.com/monimage.jpg">
             </label>
-            <label class="profile-isPublic--wrapper">
-                Apparaître anonymement dans le classement général : <input v-model="isPublic" type="checkbox" class="profile-isPublic">
+            <label class="inputLabel">
+                Apparaître anonymement dans le classement général :
+                <input v-model="profile.isAnonymous" type="checkbox" class="checkbox isPublicCheckbox">
             </label>
-            <button class="profile-createBtn">Mettre à jour le profil</button>
-        </div>
-    </div>
+            <div>
+                Si vous choisissez cette option, votre nom et votre avatar n'apparaîtront pas dans le classement
+                général.
+                Vous apparaîtrez en tant que <strong>{{ user.anonymousName }}</strong>.
+            </div>
+            <div class="btnBar">
+                <btn :disabled="createGroupInPogress">Mettre à jour le profil</btn>
+            </div>
+        </card>
+    </form>
 
 </template>
 
-<script>
+<script type="text/babel">
+
+    import User from './User'
+    import store from '../state/configureStore'
+    import { fetchCurrentUser, updateProfile } from '../state/actions/user'
+
+    export default {
+        components: {
+            User,
+        },
+        data() {
+            return {
+                user: this.$select('user'),
+                profile: null,
+            }
+        },
+        route: {
+            data() {
+                store.dispatch(fetchCurrentUser())
+            },
+        },
+        watch: {
+            user(user) {
+
+                if (user == null) {
+                    this.profile = null
+                    return
+                }
+
+                this.profile = {
+                    name: user.name,
+                    avatarUrl: user.avatarUrl,
+                    isAnonymous: user.isAnonymous,
+                }
+            },
+        },
+        methods: {
+            updateProfile() {
+
+                this.updateGroupInPogress = true
+
+                store.dispatch(updateProfile(this.profile))
+                        .then(() => {
+                            this.updateGroupInPogress = false
+                        })
+                        .catch(() => {
+                            this.updateGroupInPogress = false
+                        })
+            },
+        },
+    }
+
 </script>
 
 <style scoped>
 
-    @media (min-width: 500px) {
-        .page--profile {
-            padding: 15px 7px;
-        }
+    .updateProfileInPogress {
+        cursor: not-allowed;
+        opacity: 0.5;
     }
 
-    .card {
-        background-color: #fff;
-        box-sizing: border-box;
-        border-radius: 5px;
-        flex: 1 1 300px;
-        padding: 15px;
-    }
-
-    @media (min-width: 500px) {
-        .card {
-            border: 1px solid #ddd;
-            border-bottom-width: 2px;
-            margin: 0 8px 15px 8px;
-        }
-    }
-
-    .card--editProfile {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 0;
-    }
-
-    .profile-nameInput--wrapper,
-    .profile-avatarInput--wrapper,
-    .profile-isPublic--wrapper {
+    .inputLabel {
         color: #777;
+        display: block;
         font-style: italic;
         font-weight: bold;
-        margin: 10px;
+        margin-bottom: 10px;
     }
 
-    .profile-nameInput,
-    .profile-avatarInput {
+    .input {
         width: 100%;
     }
 
-    .profile-nameInput,
-    .profile-avatarInput,
-    .profile-isPublic {
+    .input,
+    .checkbox {
         background-color: #f9f9f9;
         border: none;
         border-bottom: 1px solid #ddd;
@@ -78,18 +119,9 @@
         margin-top: 5px;
     }
 
-    .profile-createBtn {
-        background-color: #4db788;
-        background-color: #4d88b7;
-        border: 1px solid #496f99;
-        border-bottom-width: 2px;
-        border-radius: 3px;
-        color: #fff;
-        font-size: 20px;
-        font-weight: bold;
-        padding: 8px 15px;
-        margin: 10px;
-        align-self: flex-end;
+    .btnBar {
+        text-align: right;
+        margin-top: 20px;
     }
 
 </style>

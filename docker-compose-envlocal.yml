@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+    huitparfait-auth:
+        environment:
+            NODE_ENV: development
+            FACEBOOK_CLIENT_ID: FACEBOOK_CLIENT_ID
+            FACEBOOK_CLIENT_SECRET: FACEBOOK_CLIENT_SECRET
+            GOOGLE_CLIENT_ID: GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET: GOOGLE_CLIENT_SECRET
+            YAHOO_CLIENT_ID: YAHOO_CLIENT_ID
+            YAHOO_CLIENT_SECRET: YAHOO_CLIENT_SECRET

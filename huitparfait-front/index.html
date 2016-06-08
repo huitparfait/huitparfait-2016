@@ -12,14 +12,32 @@
         body {
             background-color: #f9f9f9;
             color: #333;
-            margin: 0;
             font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
             font-size: 16px;
+            height: 100%;
             line-height: 1.5;
+            margin: 0;
+        }
+
+        .loading {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        .loadingLogo {
+            margin: auto;
+            height: 120px;
+            height: 35vmin;
+            width: 120px;
+            width: 35vmin;
         }
     </style>
 </head>
 <body>
+<div class="loading">
+    <img class="loadingLogo" src="./src/assets/huitparfait-logo-mini.svg">
+</div>
 <!-- built files will be auto injected -->
 </body>
 </html>
