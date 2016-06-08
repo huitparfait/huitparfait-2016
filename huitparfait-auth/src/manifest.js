@@ -23,7 +23,6 @@ export default {
 
     connection: {
         port: Config.get('server.port'),
-        uri: Config.get('server.url'),
         routes: {
             cors: {
                 credentials: true,
