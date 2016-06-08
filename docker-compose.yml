@@ -15,7 +15,6 @@ services:
             - ./acme:/acme
 
     huitparfait-front:
-        build: ./huitparfait-front
         image: huitparfait/huitparfait-front
         labels:
             - "traefik.backend=huitparfait-front"
