@@ -5,10 +5,10 @@ import {
     UPSERT_GROUP_SUCCESS,
     UPSERT_GROUP_FAILURE,
     DELETE_GROUP,
-    DELETE_GROUP_FAILURE
+    DELETE_GROUP_FAILURE,
 } from '../actions/groups'
 
-const initialState = [];
+const initialState = []
 
 export default function (state = initialState, action) {
 

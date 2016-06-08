@@ -82,7 +82,8 @@
                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
                                                id="dunno{{game.value.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label class="game-risk-answerChoice--multiline" for="dunno{{game.value.gameId}}">Je ne sais pas</label>
+                                        <label class="game-risk-answerChoice--multiline"
+                                               for="dunno{{game.value.gameId}}">Je ne sais pas</label>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +123,8 @@
                     </div>
 
                     <div class="game-submitZone">
-                        <btn :inactive="game.state.notSaved !== true || !predictionIsValid(game)" class="game-submitZone-button"
+                        <btn :inactive="game.state.notSaved !== true || !predictionIsValid(game)"
+                             class="game-submitZone-button"
                              :class="{ disabled: !predictionIsValid(game) }"
                              @click="savePrediction(game)"
                              :disabled="isSubmissionClosed(game)">Enregistrer
@@ -138,59 +140,47 @@
 
 <script type="text/babel">
     import * as WebApi from '../WebApi'
-
-    import Btn from './Btn'
-    import CardList from './CardList'
-    import Card from './Card'
-    import CardTitle from './CardTitle'
-
     import _ from 'lodash'
     import moment from 'moment'
 
     moment.locale('fr')
 
     export default {
-        components: {
-            Btn,
-            CardList,
-            Card,
-            CardTitle,
-        },
         data() {
             return {
-                gamesByDay: undefined
+                gamesByDay: undefined,
             }
         },
         ready() {
             WebApi.fetchPredictions().then((games) => {
                 this.gamesByDay = _(games)
-                    .groupBy(game => {
-                        return moment(game.startsAt).startOf('day');
-                    })
-                    .mapValues(gamesForDay => {
-                        return _(gamesForDay)
-                            .map(gameForDay => {
+                        .groupBy((game) => {
+                            return moment(game.startsAt).startOf('day')
+                        })
+                        .mapValues((gamesForDay) => {
+                            return _(gamesForDay)
+                                    .map((gameForDay) => {
 
-                                // Initialize amount of risked points to the maximum
-                                gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3;
+                                        // Initialize amount of risked points to the maximum
+                                        gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3
 
-                                return {
-                                    value: gameForDay,
-                                    state: {
-                                        notSaved: undefined,
-                                    }
-                                }
-                            })
-                            .value();
+                                        return {
+                                            value: gameForDay,
+                                            state: {
+                                                notSaved: undefined,
+                                            },
+                                        }
+                                    })
+                                    .value()
 
-                    })
-                    .value();
+                        })
+                        .value()
             })
         },
         methods: {
             hasScore: function (game) {
                 return game.value.goalsTeamA != null &&
-                    game.value.goalsTeamB != null;
+                        game.value.goalsTeamB != null
             },
             enablePrediction: function (game) {
                 game.state.notSaved = true
@@ -199,28 +189,28 @@
                 game.state.notSaved = false
             },
             isSubmissionClosed: function (game) {
-                return moment(game.value.startsAt).isBefore(Date.now());
+                return moment(game.value.startsAt).isBefore(Date.now())
             },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
                 if (isNaN(game.value.predictionRiskAmount) || game.value.predictionRiskAmount <= 0 ||
-                    isNaN(game.value.predictionScoreTeamA) || game.value.predictionScoreTeamA < 0 ||
-                    isNaN(game.value.predictionScoreTeamB) || game.value.predictionScoreTeamB < 0
+                        isNaN(game.value.predictionScoreTeamA) || game.value.predictionScoreTeamA < 0 ||
+                        isNaN(game.value.predictionScoreTeamB) || game.value.predictionScoreTeamB < 0
                 ) {
-                    return false;
+                    return false
                 }
 
                 // No risk amount selected even though an answer to the risk is provided
                 if (game.value.predictionRiskAnswer != null &&
-                    game.value.predictionRiskAmount <= 0) {
-                    return false;
+                        game.value.predictionRiskAmount <= 0) {
+                    return false
                 }
 
-                return true;
+                return true
             },
             savePrediction: function (game) {
                 if (game.state.notSaved !== true || !this.predictionIsValid(game)) {
-                    return;
+                    return
                 }
 
                 const prediction = {
@@ -232,13 +222,13 @@
                 }
 
                 WebApi.savePrediction(prediction)
-                    .then(() => {
-                        this.disablePrediction(game);
-                    })
-                    .catch(() => {
-                        this.enablePrediction(game);
-                    });
-            }
+                        .then(() => {
+                            this.disablePrediction(game)
+                        })
+                        .catch(() => {
+                            this.enablePrediction(game)
+                        })
+            },
         },
         filters: {
             date: function (gameTime) {
@@ -246,8 +236,8 @@
             },
             time: function (gameTime) {
                 return moment(gameTime).format('HH[h]mm')
-            }
-        }
+            },
+        },
     }
 </script>
 

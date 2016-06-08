@@ -4,7 +4,7 @@ import {
     FETCH_RANKING_FAILURE,
 } from '../actions/ranking'
 
-const initialState = [];
+const initialState = []
 
 export default function (state = initialState, action) {
 

@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export function fetchCurrentUser() {
     return execute('/users/me')
 }
@@ -24,7 +26,7 @@ export function fetchGroupRanking(groupId) {
 
 export function upsertGroup({ id, name, avatarUrl }) {
 
-    const body = { name };
+    const body = { name }
 
     if (_.startsWith(avatarUrl, 'https://')) {
         body.avatarUrl = avatarUrl

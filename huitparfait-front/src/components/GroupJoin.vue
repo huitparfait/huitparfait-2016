@@ -4,7 +4,7 @@
 
     export default {
         route: {
-            canActivate({ to: { params: { groupId } }, abort, redirect }) {
+            canActivate({ to: { params: { groupId } }, redirect }) {
                 return WebApi.joinGroup(groupId).then(() => {
                     redirect({ name: 'predictions' })
                 })

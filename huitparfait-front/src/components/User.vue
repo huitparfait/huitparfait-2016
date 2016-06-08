@@ -20,14 +20,7 @@
 
 <script type="text/babel">
 
-    import LinkBtn from './LinkBtn.vue'
-    import Card from './Card'
-
     export default {
-        components: {
-            LinkBtn,
-            Card,
-        },
         props: ['user'],
     }
 

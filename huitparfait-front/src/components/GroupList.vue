@@ -9,9 +9,11 @@
 
     <card v-if="groups != null && groups.length === 0">
         <p>Vous n'administrez aucun groupe.</p>
-        <p>Si vos amis ont déjà créé un groupe, demandez leur le lien d'invitation pour rejoindre le groupe et pour pronostiquer avec eux !</p>
+        <p>Si vos amis ont déjà créé un groupe, demandez leur le lien d'invitation pour rejoindre le groupe et pour
+            pronostiquer avec eux !</p>
         <p>
-            Si vous êtes le premier de vos amis à s'inscrire sur Huit Parfait, utilisez le formulaire ci-dessous pour créer des groupes pour vos amis, famille, collègues...
+            Si vous êtes le premier de vos amis à s'inscrire sur Huit Parfait, utilisez le formulaire ci-dessous pour
+            créer des groupes pour vos amis, famille, collègues...
             Vous obtiendrez ensuite un lien d'invitation à leur partager pour qu'il rejoigne votre groupe.
         </p>
     </card>
@@ -30,7 +32,8 @@
             </label>
             <label class="inputLabel">
                 Image du groupe (HTTPS uniquement)&nbsp;:
-                <input v-model="newGroup.avatarUrl" type="text" class="input" placeholder="https://les-super-logos.com/monimage.jpg">
+                <input v-model="newGroup.avatarUrl" type="text" class="input"
+                       placeholder="https://les-super-logos.com/monimage.jpg">
             </label>
             <div class="btnBar">
                 <btn :disabled="createGroupInPogress">Créer le groupe</btn>
@@ -43,10 +46,6 @@
 
 <script type="text/babel">
 
-    import Btn from './Btn'
-    import Card from './Card'
-    import CardList from './CardList'
-    import CardTitle from './CardTitle'
     import Group from './Group'
     import store from '../state/configureStore'
     import { fetchUserGroups, upsertGroup } from '../state/actions/groups'
@@ -62,10 +61,6 @@
 
     export default {
         components: {
-            Btn,
-            Card,
-            CardList,
-            CardTitle,
             Group,
         },
         data() {
@@ -93,15 +88,15 @@
                                 this.newGroup = getNewGroup()
                                 this.$router.go({
                                     name: 'group',
-                                    params: { groupId: foo.group.id, groupName: foo.group.slug }
+                                    params: { groupId: foo.group.id, groupName: foo.group.slug },
                                 })
                             }
                         })
                         .catch(() => {
                             this.createGroupInPogress = false
                         })
-            }
-        }
+            },
+        },
     }
 
 </script>

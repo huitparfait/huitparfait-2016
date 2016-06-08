@@ -18,7 +18,7 @@
         },
         data() {
             return {
-                user: this.$select('user')
+                user: this.$select('user'),
             }
         },
     }

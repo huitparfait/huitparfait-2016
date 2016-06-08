@@ -6,7 +6,8 @@
 
     <card-title>Mise à jour du profil :</card-title>
 
-    <form @submit.prevent="updateProfile" v-if="user != null && profile != null" :class="{ 'updateProfile--progress': updateProfileInPogress }">
+    <form @submit.prevent="updateProfile" v-if="user != null && profile != null"
+          :class="{ 'updateProfile--progress': updateProfileInPogress }">
         <card>
             <label class="inputLabel">
                 Prénom et Nom :
@@ -14,14 +15,16 @@
             </label>
             <label class="inputLabel">
                 Avatar (HTTPS uniquement) :
-                <input v-model="profile.avatarUrl" type="text" class="input avatarInput" placeholder="https://les-super-logos.com/monimage.jpg">
+                <input v-model="profile.avatarUrl" type="text" class="input avatarInput"
+                       placeholder="https://les-super-logos.com/monimage.jpg">
             </label>
             <label class="inputLabel">
                 Apparaître anonymement dans le classement général :
                 <input v-model="profile.isAnonymous" type="checkbox" class="checkbox isPublicCheckbox">
             </label>
             <div>
-                Si vous choisissez cette option, votre nom et votre avatar n'apparaîtront pas dans le classement général.
+                Si vous choisissez cette option, votre nom et votre avatar n'apparaîtront pas dans le classement
+                général.
                 Vous apparaîtrez en tant que <strong>{{ user.anonymousName }}</strong>.
             </div>
             <div class="btnBar">
@@ -34,20 +37,12 @@
 
 <script type="text/babel">
 
-    import Btn from './Btn'
-    import LinkBtn from './LinkBtn'
-    import Card from './Card'
-    import CardTitle from './CardTitle'
     import User from './User'
     import store from '../state/configureStore'
     import { fetchCurrentUser, updateProfile } from '../state/actions/user'
 
     export default {
         components: {
-            Btn,
-            LinkBtn,
-            Card,
-            CardTitle,
             User,
         },
         data() {
@@ -88,8 +83,8 @@
                         .catch(() => {
                             this.updateGroupInPogress = false
                         })
-            }
-        }
+            },
+        },
     }
 
 </script>

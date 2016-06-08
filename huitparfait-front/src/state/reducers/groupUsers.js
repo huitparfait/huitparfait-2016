@@ -1,6 +1,6 @@
 import { FETCH_GROUP_USERS, FETCH_GROUP_USERS_SUCCESS, FETCH_GROUP_USERS_FAILURE } from '../actions/groups'
 
-const initialState = [];
+const initialState = []
 
 export default function (state = initialState, action) {
 

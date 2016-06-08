@@ -3,7 +3,7 @@ import {
     fetchGroup as apiFetchGroup,
     fetchGroupUsers as apiFetchGroupUsers,
     upsertGroup as apiUpsertGroup,
-    deleteGroup as apiDeleteGroup
+    deleteGroup as apiDeleteGroup,
 } from '../../WebApi'
 
 export const FETCH_USER_GROUPS = 'FETCH_USER_GROUPS'

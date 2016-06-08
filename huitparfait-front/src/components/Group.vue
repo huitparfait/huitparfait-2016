@@ -1,7 +1,8 @@
 <template>
 
     <card class="group" v-if="group != null">
-        <a class="details" v-link="{ name: link ? link : 'group', params: { groupId: group.id, groupName: group.slug } }">
+        <a class="details"
+           v-link="{ name: link ? link : 'group', params: { groupId: group.id, groupName: group.slug } }">
             <div class="avatar--wrapper">
                 <img class="avatar" :src="group.avatarUrl">
             </div>

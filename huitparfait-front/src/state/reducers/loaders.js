@@ -1,10 +1,11 @@
+/* eslint complexity: 0 */
 import {
     FETCH_CURRENT_USER,
     FETCH_CURRENT_USER_SUCCESS,
     NO_CONNECTED_USER,
     UPDATE_PROFILE,
     UPDATE_PROFILE_SUCCESS,
-    UPDATE_PROFILE_FAILURE
+    UPDATE_PROFILE_FAILURE,
 } from '../actions/user'
 import {
     FETCH_USER_GROUPS,
@@ -21,10 +22,10 @@ import {
     UPSERT_GROUP_FAILURE,
     DELETE_GROUP,
     DELETE_GROUP_SUCCESS,
-    DELETE_GROUP_FAILURE
+    DELETE_GROUP_FAILURE,
 } from '../actions/groups'
 
-const initialState = 0;
+const initialState = 0
 
 export default function (state = initialState, action) {
 

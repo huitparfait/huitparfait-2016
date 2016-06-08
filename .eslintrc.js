@@ -83,7 +83,7 @@ module.exports = {
         'comma-style': [2, 'last'],
         'computed-property-spacing': [2, 'never'],
         'eol-last': 2,
-        'indent': [2, 4],
+        // 'indent': [2, 4],
         'key-spacing': [2, { beforeColon: false, afterColon: true }],
         'linebreak-style': [2, 'unix'],
         'new-parens': 2,
@@ -131,10 +131,10 @@ module.exports = {
         'no-new': 0,
 
         // Complexity
-        'max-depth': [2, 1],
+        'max-depth': [2, 3],
         'max-params': [2, 3],
-        'max-nested-callbacks': [2, 2],
-        'max-statements': [2, 10],
-        'complexity': [2, 6],
+        'max-nested-callbacks': [2, 3],
+        'max-statements': [2, 13],
+        'complexity': [2, 8],
     },
 };

@@ -7,17 +7,11 @@
 </template>
 
 <script>
-
-    import Card from './Card'
-
     export default {
-        components: {
-            Card,
-        },
         props: {
             simple: Boolean,
             wide: Boolean,
-        }
+        },
     }
 
 </script>

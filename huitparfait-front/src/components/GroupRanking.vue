@@ -26,7 +26,7 @@
             data: ({ to: { params: { groupId } } }) => {
                 store.dispatch(fetchGroupRanking(groupId))
             },
-        }
+        },
     }
 
 </script>

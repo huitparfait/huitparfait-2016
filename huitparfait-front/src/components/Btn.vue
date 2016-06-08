@@ -10,7 +10,7 @@
         props: {
             disabled: Boolean,
             hidden: Boolean,
-            inactive: Boolean
+            inactive: Boolean,
         },
     }
 

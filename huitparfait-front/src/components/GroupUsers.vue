@@ -3,14 +3,16 @@
     <group :group="group" mode="edit"></group>
 
     <card>
-        <form @submit.prevent="updateGroup" v-if="group != null && groupEdit != null" :class="{ 'updateGroup--progress': updateGroupInPogress }">
+        <form @submit.prevent="updateGroup" v-if="group != null && groupEdit != null"
+              :class="{ 'updateGroup--progress': updateGroupInPogress }">
             <label class="inputLabel">
                 Nom du groupe :
                 <input v-model="groupEdit.name" type="text" class="input" placeholder="Mes collègues">
             </label>
             <label class="inputLabel">
                 Image du groupe (HTTPS uniquement) :
-                <input v-model="groupEdit.avatarUrl" type="text" class="input" placeholder="https://les-super-logos.com/monimage.jpg">
+                <input v-model="groupEdit.avatarUrl" type="text" class="input"
+                       placeholder="https://les-super-logos.com/monimage.jpg">
             </label>
             <div class="btnBar">
                 <btn :disabled="updateGroupInPogress">Mettre à jour le groupe</btn>
@@ -33,9 +35,6 @@
 
 <script type="text/babel">
 
-    import Btn from './Btn'
-    import Card from './Card'
-    import CardList from './CardList'
     import Group from './Group'
     import GroupPlayer from './GroupPlayer'
     import store from '../state/configureStore'
@@ -44,9 +43,6 @@
 
     export default {
         components: {
-            Btn,
-            Card,
-            CardList,
             Group,
             GroupPlayer,
         },
@@ -61,7 +57,7 @@
             joinUrl() {
                 return location.origin + router.stringifyPath({
                             name: 'groupJoin',
-                            params: { groupId: this.group.id, groupName: this.group.slug }
+                            params: { groupId: this.group.id, groupName: this.group.slug },
                         })
             },
         },
@@ -102,8 +98,8 @@
                         .catch(() => {
                             this.updateGroupInPogress = false
                         })
-            }
-        }
+            },
+        },
     }
 
 </script>

@@ -22,7 +22,7 @@
 </template>
 
 <script type="text/babel">
-
+    /* eslint-disable no-unused-vars */
     import * as WebApi from '../WebApi'
     import moment from 'moment'
     import momentFr from 'moment/locale/fr'
@@ -50,7 +50,7 @@
                         .catch(() => {
                             user.isActive = false
                         })
-            }
+            },
         },
     }
 

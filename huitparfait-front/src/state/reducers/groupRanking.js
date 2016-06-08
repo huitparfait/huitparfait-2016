@@ -1,6 +1,6 @@
 import { FETCH_GROUP_RANKING, FETCH_GROUP_RANKING_SUCCESS, FETCH_GROUP_RANKING_FAILURE } from '../actions/ranking'
 
-const initialState = [];
+const initialState = []
 
 export default function (state = initialState, action) {
 

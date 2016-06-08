@@ -98,7 +98,8 @@
             Par exemple, pour le match "France - Roumanie", on vous propose une affirmation telle que
             <strong>Les prolongations sont jouées</strong>.
             À vous de pronostiquer si cette risquette sera VRAIE ou FAUSSE. Vous pouvez risquer de 1 à 3 points.
-            Si à la fin du match vous aviez raison, vous gagnez les points risqués, dans le cas contraire vous perdez les points (et votre honneur).
+            Si à la fin du match vous aviez raison, vous gagnez les points risqués, dans le cas contraire vous perdez
+            les points (et votre honneur).
         </p>
         <p>
             Si vous ne vous sentez pas l'âme d'un aventurier vous pouvez choisir de ne rien risquer.
@@ -125,7 +126,8 @@
             </li>
             <li>
                 Si vous pronostiquez
-                <strong>2&nbsp;-&nbsp;1</strong> pour la Suisse, même si celle-ci a gagnée le match aux tirs au but, vous n'avez pas les 3 points pour
+                <strong>2&nbsp;-&nbsp;1</strong> pour la Suisse, même si celle-ci a gagnée le match aux tirs au but,
+                vous n'avez pas les 3 points pour
                 <em>"issue du match trouvé"</em>.
             </li>
         </ul>
@@ -134,8 +136,10 @@
     <card>
         <h2 class="card-title">À propos du site</h2>
         <p>
-            Si vous avez la moindre remarque ou question sur le site, les règles etc... n'hésitez pas à contacter l'équipe.
-            Nous avons réalisé ce site sur notre temps libre pour nous amuser et si possible pour vous permettre de vous amuser aussi.
+            Si vous avez la moindre remarque ou question sur le site, les règles etc... n'hésitez pas à contacter
+            l'équipe.
+            Nous avons réalisé ce site sur notre temps libre pour nous amuser et si possible pour vous permettre de vous
+            amuser aussi.
             Il contient probablement quelques bugs, si c'est le cas, soyez indulgent et signalez les ;-)
         </p>
         <p>
@@ -155,24 +159,13 @@
 </template>
 
 <script type="text/babel">
-
-    import LinkBtn from './LinkBtn'
-    import Card from './Card'
-    import CardList from './CardList'
-
     export default {
-        components: {
-            LinkBtn,
-            Card,
-            CardList,
-        },
         data() {
             return {
-                user: this.$select('user')
+                user: this.$select('user'),
             }
         },
     }
-
 </script>
 
 <style scoped>

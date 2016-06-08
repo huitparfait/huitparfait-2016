@@ -49,7 +49,7 @@ router.map({
     },
     '/groupes/nouveau': {
         name: 'newGroup',
-        component:  NewGroup,
+        component: NewGroup,
     },
     '/faq': {
         name: 'faq',
@@ -62,7 +62,7 @@ router.map({
 })
 
 router.redirect({
-    '*': '/'
+    '*': '/',
 })
 
 router.beforeEach(({ to, next, redirect }) => {
@@ -73,9 +73,9 @@ router.beforeEach(({ to, next, redirect }) => {
 
         if (store.state.user != null) {
 
-            const redirectPath = localStorage.getItem(PATH_BEFORE_LOGIN);
+            const redirectPath = localStorage.getItem(PATH_BEFORE_LOGIN)
             if (redirectPath != null) {
-                localStorage.removeItem(PATH_BEFORE_LOGIN);
+                localStorage.removeItem(PATH_BEFORE_LOGIN)
                 return redirect({ path: redirectPath })
             }
 
@@ -89,7 +89,7 @@ router.beforeEach(({ to, next, redirect }) => {
         return next()
     }
 
-    localStorage.setItem(PATH_BEFORE_LOGIN, to.path);
+    localStorage.setItem(PATH_BEFORE_LOGIN, to.path)
     return redirect({ name: 'home' })
 })
 
