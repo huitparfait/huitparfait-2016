@@ -79,7 +79,7 @@ router.beforeEach(({ to, next, redirect }) => {
                 return redirect({ path: redirectPath })
             }
 
-            return redirect({ name: 'groupList' })
+            return redirect({ name: 'faq' })
         }
 
         return next()
