@@ -58,3 +58,4 @@ services:
             SERVER_PORT: 3000
             JWT_PUBLIC_KEY_PATH: /jwt-keys/jwt-public.pem
             JWT_PRIVATE_KEY_PATH: /jwt-keys/jwt-private.pem
+            API_ANALYTICS_API_KEY: API_ANALYTICS_API_KEY
