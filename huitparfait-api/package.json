@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "nodemon --exec babel-node --watch src --watch config src/server.js",
     "lint": "eslint *.js src config",
-    "build": "babel src -d dist",
+    "build": "cp -a ./src/. dist && babel dist -d dist",
     "start": "node dist/server.js"
   },
   "dependencies": {
