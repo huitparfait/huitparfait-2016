@@ -57,7 +57,6 @@ if (Config.get('env') === 'development') {
         {
             register: require('hapi-swagger'),
             options: {
-                host: url.parse(Config.get('server.url')).host,
                 basePath: '/api',
                 documentationPath: '/console',
                 pathPrefixSize: 2,
