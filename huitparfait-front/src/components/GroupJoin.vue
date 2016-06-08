@@ -6,7 +6,7 @@
         route: {
             canActivate({ to: { params: { groupId } }, redirect }) {
                 return WebApi.joinGroup(groupId).then(() => {
-                    redirect({ name: 'predictions' })
+                    redirect({ name: 'groupRanking', params: { groupId: groupId } })
                 })
             },
         },
