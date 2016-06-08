@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="btnBar" v-if="!ranking">
-            <btn class="btn" :inactive="user.isAdmin || !user.isActive" @click="excludeUser(user)">Exclure</btn>
-            <btn class="btn" :inactive="user.isAdmin || user.isActive" @click="includeUser(user)">Réintégrer</btn>
+            <btn class="btn" :hidden="user.isAdmin || !user.isActive" @click="excludeUser(user)">Exclure</btn>
+            <btn class="btn" :hidden="user.isAdmin || user.isActive" @click="includeUser(user)">Réintégrer</btn>
         </div>
     </card>
 
