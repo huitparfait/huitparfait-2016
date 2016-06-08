@@ -3,7 +3,7 @@
     <div class="menubar">
         <a class="menuitem" v-link="{ name: 'rankings', activeClass: 'menuitem--active' }">
             <img class="menuitem-icon" src="../assets/rankings.svg" alt="">
-            <span class="menuitem-label">Classement</span>
+            <span class="menuitem-label">Classements</span>
         </a>
         <a class="menuitem" v-link="{ name: 'predictions', activeClass: 'menuitem--active' }">
             <img class="menuitem-icon" src="../assets/predictions.svg" alt="">
