@@ -1,6 +1,7 @@
 import Config from './infra/config'
 import fs from 'fs'
 import url from 'url'
+import _ from 'lodash'
 
 const JWT_PUBLIC_KEY_PATH = Config.get('jwt.publicKeyPath')
 const JWT_PUBLIC_KEY = fs.readFileSync(JWT_PUBLIC_KEY_PATH, 'utf8')
@@ -40,6 +41,14 @@ const manifest = {
             register: require('./plugins/auth'),
             options: {
                 jwtPublicKey: JWT_PUBLIC_KEY,
+            },
+        },
+        {
+            register: require('@jbpionnier/api-analytics-client/hapi'),
+            options: {
+                uuidResolver(req) {
+                    return _.get(req, 'auth.credentials.id')
+                },
             },
         },
 
