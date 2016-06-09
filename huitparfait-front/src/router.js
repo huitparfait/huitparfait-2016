@@ -27,7 +27,7 @@ router.map({
         name: 'rankings',
         component: Rankings,
     },
-    '/classements/:groupId': {
+    '/classements/:groupId/:groupName': {
         name: 'groupRanking',
         component: GroupRanking,
     },
