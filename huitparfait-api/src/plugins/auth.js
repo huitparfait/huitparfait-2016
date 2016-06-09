@@ -1,10 +1,10 @@
-/* eslint max-params:4 */
+/* eslint max-params:[2, 4] */
 import Joi from 'joi'
 import shortid from 'shortid'
 
 const schema = Joi.object({
     jwtPublicKey: Joi.string().required(),
-    basicSecret: Joi.string()
+    httpSecret: Joi.string(),
 }).required()
 
 exports.register = function (server, options = {}, next) {
@@ -34,11 +34,11 @@ exports.register = function (server, options = {}, next) {
 
     server.auth.strategy('http-basic', 'basic', {
         validateFunc(request, username, password, callback) {
-            if (username === '8p' && options.basicSecret != null && password === options.basicSecret) {
+            if (username === '8p' && options.httpSecret != null && password === options.httpSecret) {
                 return callback(null, true, {})
             }
             callback(null, false)
-        }
+        },
     })
 
     next()

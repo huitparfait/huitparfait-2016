@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: 0 */
 import B from 'bluebird'
 import neo4j from 'neo4j'
 import _ from 'lodash'

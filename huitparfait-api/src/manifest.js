@@ -41,7 +41,7 @@ const manifest = {
             register: require('./plugins/auth'),
             options: {
                 jwtPublicKey: JWT_PUBLIC_KEY,
-                basicSecret: Config.get('cookie.secret'),
+                httpSecret: Config.get('httpSecret'),
             },
         },
         {

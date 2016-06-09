@@ -19,6 +19,11 @@
     }
   },
 
+  "httpSecret": {
+    "default": "foobar",
+    "env": "HTTP_SECRET"
+  },
+
   "cookie": {
     "secret": {
       "default": "7b8a8b90-a83b-4ac3-ae90-97e644b06d06",
