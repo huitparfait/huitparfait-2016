@@ -34,7 +34,7 @@
 
         <p>Le but du jeu est bien entendu d'avoir le plus gros ... score !</p>
         <p>
-            Pour chaque match, vous pouvez gagner jusqu'à 8 points : le fameux <strong>Huit Pafait</strong> !
+            Pour chaque match, vous pouvez gagner jusqu'à 8 points : le fameux <strong>Huit Parfait</strong> !
             Si vous êtes très mauvais, vous pouvez aussi perdre jusqu'à 3 points, ce qui n'est pas cool.
         </p>
         <p>Vous n'avez que 3 choses à pronostiquer :</p>
