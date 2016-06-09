@@ -19,6 +19,7 @@
     "bluebird": "3.4.0",
     "convict": "1.3.0",
     "hapi": "13.4.1",
+    "hapi-auth-basic": "4.2.0",
     "hapi-auth-jwt2": "7.0.0",
     "identicons": "0.1.0",
     "joi": "8.4.1",

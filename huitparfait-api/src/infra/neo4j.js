@@ -9,27 +9,27 @@ const db = new neo4j.GraphDatabase(Config.get('neo4j.url'))
 const dbCypherAsync = B.promisify(db.cypher, { context: db })
 
 
-initialize({
-    User: {
-        id: { unique: true },
-        email: { index: true },
-    },
-    Group: {
-        id: { unique: true },
-    },
-    Team: {
-        id: { unique: true },
-    },
-    Risk: {
-        id: { unique: true },
-    },
-    Game: {
-        id: { unique: true },
-    },
-    Pronostic: {
-        id: { unique: true },
-    },
-})
+// initialize({
+//     User: {
+//         id: { unique: true },
+//         email: { index: true },
+//     },
+//     Group: {
+//         id: { unique: true },
+//     },
+//     Team: {
+//         id: { unique: true },
+//     },
+//     Risk: {
+//         id: { unique: true },
+//     },
+//     Game: {
+//         id: { unique: true },
+//     },
+//     Pronostic: {
+//         id: { unique: true },
+//     },
+// })
 
 
 export function cypher(fatQuery, params) {
