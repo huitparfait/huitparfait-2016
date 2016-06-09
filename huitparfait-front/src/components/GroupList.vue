@@ -1,14 +1,26 @@
 <template>
 
-    <card v-if="groups != null && groups.length > 0">
+    <card-title v-if="simpleGroups != null && simpleGroups.length > 0">Vous êtes simple membre de {{ simpleGroups.length }} groupe(s)&nbsp;:</card-title>
+
+    <card v-if="simpleGroups != null && simpleGroups.length > 0">
+        <p>Cliquez sur un groupe pour retrouver le classement de ses joueurs.</p>
+    </card>
+
+    <card-list>
+        <group v-for="group in simpleGroups" :group="group" link="groupRanking" track-by="id"></group>
+    </card-list>
+
+    <card-title v-if="adminGroups != null && adminGroups.length > 0">Vous administrez {{ adminGroups.length }} groupe(s)&nbsp;:</card-title>
+
+    <card v-if="adminGroups != null && adminGroups.length > 0">
         <p>
-            Vous administrez <strong>{{ groups.length }}</strong> groupe(s).
             Cliquez sur un groupe pour retrouver le lien d'invitation et la liste des joueurs.
+            Vous pourrez également le modifier et gérer les joueurs.
         </p>
     </card>
 
     <card v-if="groups != null && groups.length === 0">
-        <p>Vous n'administrez aucun groupe.</p>
+        <p>Vous n'êtes membre d'aucun groupe.</p>
         <p>Si vos amis ont déjà créé un groupe, demandez leur le lien d'invitation pour rejoindre le groupe et pour
             pronostiquer avec eux !</p>
         <p>
@@ -19,7 +31,7 @@
     </card>
 
     <card-list>
-        <group v-for="group in groups" :group="group" mode="delete"></group>
+        <group v-for="group in adminGroups" :group="group" mode="delete" track-by="id"></group>
     </card-list>
 
     <card-title>Créer un nouveau groupe&nbsp;:</card-title>
@@ -33,7 +45,7 @@
             <label class="inputLabel">
                 Image du groupe (HTTPS uniquement)&nbsp;:
                 <input v-model="newGroup.avatarUrl" type="text" class="input"
-                       placeholder="https://les-super-logos.com/monimage.jpg">
+                        placeholder="https://les-super-logos.com/monimage.jpg">
             </label>
             <div class="btnBar">
                 <btn :disabled="createGroupInPogress">Créer le groupe</btn>
@@ -50,6 +62,7 @@
     import store from '../state/configureStore'
     import { fetchUserGroups, upsertGroup } from '../state/actions/groups'
     import shortid from 'shortid'
+    import _ from 'lodash'
 
     function getNewGroup() {
         return {
@@ -73,6 +86,14 @@
         route: {
             data() {
                 store.dispatch(fetchUserGroups())
+            },
+        },
+        computed: {
+            simpleGroups() {
+                return _.reject(this.groups, (group) => group.isAdmin)
+            },
+            adminGroups() {
+                return _.filter(this.groups, (group) => group.isAdmin)
             },
         },
         methods: {
