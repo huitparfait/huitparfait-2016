@@ -5,6 +5,7 @@ import group from './group'
 import groups from './groups'
 import groupUsers from './groupUsers'
 import groupRanking from './groupRanking'
+import predictions from './predictions'
 import ranking from './ranking'
 
 export default combineReducers({
@@ -14,5 +15,6 @@ export default combineReducers({
     groups,
     groupUsers,
     groupRanking,
+    predictions,
     ranking,
 })

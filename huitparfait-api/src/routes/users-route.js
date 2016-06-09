@@ -3,6 +3,9 @@ import shortid from 'shortid'
 import { cypher, cypherOne } from '../infra/neo4j'
 import betterGroup from '../utils/groupUtils'
 import initAnimalAdj from '../infra/animal-adj/animal-adj'
+import _ from 'lodash'
+import moment from 'moment'
+
 const animalAdj = initAnimalAdj('fr')
 
 exports.register = function (server, options, next) {
@@ -185,7 +188,25 @@ exports.register = function (server, options, next) {
                         {
                             userId: req.auth.credentials.id,
                         })
-                        .then(reply)
+                        .then(function (predictions) {
+
+                            const predictionsByDay = _(predictions)
+                                .groupBy((game) => {
+                                    return moment(game.startsAt).startOf('day')
+                                })
+                                .mapValues((gamesForDay) => {
+                                    return _(gamesForDay)
+                                        .map((gameForDay) => {
+                                            // Initialize amount of risked points to the maximum if not defined
+                                            gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3
+                                            return gameForDay
+                                        })
+                                        .value()
+                                })
+                                .value()
+
+                            reply(predictionsByDay)
+                        })
                         .catch(reply)
                 },
             },
