@@ -1,4 +1,7 @@
 import _ from 'lodash'
+import fetchPonyfill from 'fetch-ponyfill'
+
+const fetch = fetchPonyfill();
 
 export function fetchCurrentUser() {
     return execute('/users/me')
