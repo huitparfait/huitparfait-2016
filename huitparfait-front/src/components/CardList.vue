@@ -18,9 +18,11 @@
 
 <style scoped>
 
-    .cardList {
-        display: flex;
-        flex-wrap: wrap;
+    @supports (flex-wrap: wrap) {
+        .cardList {
+            display: flex;
+            flex-wrap: wrap;
+        }
     }
 
 </style>

@@ -122,6 +122,7 @@
     .btnBar {
         text-align: right;
         margin-top: 20px;
+        text-align: right;
     }
 
 </style>

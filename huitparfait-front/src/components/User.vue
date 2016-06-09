@@ -29,12 +29,17 @@
 <style scoped>
 
     .user {
-        align-items: flex-start;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
         position: relative;
         overflow: hidden;
+    }
+
+    @supports (flex-wrap: wrap) {
+        .user {
+            align-items: flex-start;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
     }
 
     .details {
@@ -86,6 +91,7 @@
         align-self: flex-end;
         margin-left: 10px;
         margin-top: 10px;
+        text-align: right;
     }
 
 </style>
