@@ -13,11 +13,11 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypher(`
                         MATCH    (:User { id:{userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group)
-                        MATCH    (u:User)-->(g)
+                        MATCH    (u:User)-[:IS_MEMBER_OF_GROUP]->(g)
                         RETURN   g.name      AS name, 
                                  g.avatarUrl AS avatarUrl, 
                                  g.id        AS id,
-                                 count(u.id) AS userCount
+                                 count(DISTINCT u.id) AS userCount
                         ORDER BY lower(g.name)`,
                         {
                             userId: req.auth.credentials.id,

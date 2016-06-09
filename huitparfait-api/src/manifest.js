@@ -1,6 +1,5 @@
 import Config from './infra/config'
 import fs from 'fs'
-import url from 'url'
 import _ from 'lodash'
 
 const JWT_PUBLIC_KEY_PATH = Config.get('jwt.publicKeyPath')
