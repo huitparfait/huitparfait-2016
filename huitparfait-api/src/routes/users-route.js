@@ -179,7 +179,7 @@ exports.register = function (server, options, next) {
 									sb.goals            AS predictionScoreTeamB,
 									pr.willHappen       AS predictionRiskAnswer,
 									pr.amount           AS predictionRiskAmount
-                        ORDER BY    g.playsAt
+                        ORDER BY    g.startsAt
                         `,
                         {
                             userId: req.auth.credentials.id,
