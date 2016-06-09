@@ -20,12 +20,12 @@ exports.register = function (server, options, next) {
                 },
                 handler(req, reply) {
                     cypherOne(`
-                        MATCH  (:User { id: {userId} })-->(g:Group { id: {groupId} })
-                        MATCH  (u:User)-->(g)
+                        MATCH  (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP]->(g:Group { id: {groupId} })
+                        MATCH  (u:User)-[:IS_MEMBER_OF_GROUP]->(g)
                         RETURN g.id        AS id, 
                                g.name      AS name, 
                                g.avatarUrl AS avatarUrl, 
-                               count(u.id) AS userCount`,
+                               count(DISTINCT u.id) AS userCount`,
                         {
                             userId: req.auth.credentials.id,
                             groupId: req.params.groupId,
