@@ -1,15 +1,4 @@
-defaultEntryPoints = ["http", "https"]
+defaultEntryPoints = ["http"]
 [entryPoints]
   [entryPoints.http]
   address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
-  [entryPoints.https]
-  address = ":443"
-    [entryPoints.https.tls]
-[acme]
-email = "huitparfait@gmail.com"
-storageFile = "/acme/acme.json"
-entryPoint = "https"
-[[acme.domains]]
-  main = "huitparfait.fr"
