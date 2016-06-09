@@ -36,22 +36,26 @@ const manifest = {
 
     plugins: [
         require('hapi-auth-jwt2'),
+        require('hapi-auth-basic'),
 
         {
             register: require('./plugins/auth'),
             options: {
                 jwtPublicKey: JWT_PUBLIC_KEY,
+                basicSecret: Config.get('cookie.secret'),
             },
         },
         {
             register: require('@jbpionnier/api-analytics-client/hapi'),
             options: {
+                enabled: process.env.API_ANALYTICS_API_KEY != null,
                 uuidResolver(req) {
                     return _.get(req, 'auth.credentials.id')
                 },
             },
         },
 
+        require('./plugins/metrics'),
         require('./routes/users-route'),
         require('./routes/groupes-route'),
         require('./routes/ranking-route'),
