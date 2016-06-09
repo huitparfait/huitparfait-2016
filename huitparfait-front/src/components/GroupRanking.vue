@@ -1,6 +1,6 @@
 <template>
 
-    <card>
+    <card v-if="group != null">
         Retrouvez bientôt ici le classement du groupe <strong>{{ group.name }}</strong>.
     </card>
 
