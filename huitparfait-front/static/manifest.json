@@ -1,0 +1,12 @@
+{
+    "short_name": "Huit parfait",
+    "name": "Huit Parfait - Pronostics entre amis",
+    "icons": [
+        {
+            "src": "/static/huitparfait-logo.png",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone"
+}
