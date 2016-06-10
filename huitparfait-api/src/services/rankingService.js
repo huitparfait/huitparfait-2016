@@ -3,7 +3,16 @@ import { cypher } from '../infra/neo4j'
 import { betterUser } from './userService'
 
 
-export function calculateRanking({ groupId, userId }) {
+let rankingAllCache
+rankingAllCache = calculateRanking({ pageSize: null })
+
+export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
+    if (groupId == null && rankingAllCache) {
+        return rankingAllCache.then(paginate)
+    }
+
+    console.log('Calculate Ranking...')
+
     let matchUserQuery = 'MATCH (u:User)'
 
     if (groupId) {
@@ -21,33 +30,48 @@ export function calculateRanking({ groupId, userId }) {
                 AND game.startsAt < timestamp()
                 AND pperf.classicPoints = 5
                 AND pperf.riskPoints = 3
+        WITH
+          u, pperf,
+          p.classicPoints + p.riskPoints AS score
         RETURN
                 u.id            AS userId,
                 u.name          AS userName,
                 u.anonymousName AS anonymousName,
                 u.avatarUrl     AS avatarUrl,
                 u.isAnonymous   AS isAnonymous,
-                p.id AS pronosticId,
-                p.createdAt, 
-                SUM(p.classicPoints + p.riskPoints) as totalScore,
-                COUNT(DISTINCT p.id) as nbPredictions,
-                COUNT(DISTINCT pperf.id) as nbPerfects
-        ORDER BY totalScore DESC, nbPredictions DESC, nbPerfects DESC, p.createdAt`,
+                SUM(score) as totalScore,
+                COUNT(score) as nbPredictions,
+                COUNT(pperf) as nbPerfects
+        ORDER BY totalScore DESC, nbPredictions DESC, nbPerfects DESC`,
         {
             userId,
             groupId,
         })
         .map(formatRanking)
         .then(calculateRank)
+        .then(paginate)
+        .tap((results = []) => {
+            console.log('Calculate Ranking:', results.length)
+        })
+
+    function paginate(results = []) {
+        if (pageSize == null) {
+            return results
+        }
+
+        return results.slice(from, pageSize + from)
+    }
 }
 
 export function formatRanking(rank) {
+    const user = betterUser({
+        id: rank.userId,
+        name: rank.userName,
+        ..._.pick(rank, 'avatarUrl', 'anonymousName', 'isAnonymous'),
+    })
+
     return {
-        user: betterUser({
-            id: rank.userId,
-            name: rank.userName,
-            ..._.pick(rank, 'anonymousName', 'avatarUrl', 'isAnonymous'),
-        }),
+        user: _.omit(user, 'id', 'isAnonymous', 'anonymousName'),
         stats: {
             totalScore: rank.totalScore,
             nbPredictions: rank.nbPredictions,

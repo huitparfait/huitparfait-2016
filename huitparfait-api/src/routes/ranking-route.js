@@ -1,3 +1,4 @@
+import Joi from 'joi'
 import { calculateRanking } from '../services/rankingService'
 import { calculatePronostic } from '../services/pronosticService'
 
@@ -10,8 +11,15 @@ exports.register = function (server, options, next) {
             config: {
                 description: 'Fetch ranking',
                 tags: ['api'],
+                validate: {
+                    query: {
+                        from: Joi.number().integer().min(0),
+                        pageSize: Joi.number().integer().min(0),
+                    },
+                },
                 handler(req, reply) {
                     calculateRanking({
+                        ...req.query,
                         userId: req.auth.credentials.id,
                         groupId: req.params.groupId,
                     })
