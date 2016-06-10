@@ -206,6 +206,8 @@ exports.register = function (server, options, next) {
                     },
                 },
                 handler(req, reply) {
+                    const pronosticId = shortid()
+
                     cypherOne(`
                         MATCH (u:User { id: {userId} })
                         MATCH (g:Game { id: {gameId} })
@@ -216,7 +218,8 @@ exports.register = function (server, options, next) {
                         
                         MERGE (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u)
                         ON CREATE SET   p.createdAt = timestamp(),
-                                        p.updatedAt = timestamp()
+                                        p.updatedAt = timestamp(),
+                                        p.id        = {pronosticId}
                         ON MATCH SET    p.updatedAt = timestamp()
                         
                         MERGE (p)-[sa:PREDICT_SCORE]->(ta)
@@ -238,6 +241,7 @@ exports.register = function (server, options, next) {
                             predictionScoreTeamB: req.payload.predictionScoreTeamB,
                             predictionRiskAnswer: req.payload.predictionRiskAnswer != null ? req.payload.predictionRiskAnswer : null,
                             predictionRiskAmount: req.payload.predictionRiskAmount,
+                            pronosticId,
                         })
                         .then(reply)
                         .catch(reply)
