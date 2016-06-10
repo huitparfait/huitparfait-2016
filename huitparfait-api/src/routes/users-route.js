@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import shortid from 'shortid'
+import { generateId } from '../infra/utils'
 import { cypher, cypherOne } from '../infra/neo4j'
 import { betterGroup } from '../services/groupService'
 import { generateName } from '../services/userService'
@@ -25,14 +25,14 @@ exports.register = function (server, options, next) {
                 },
                 handler(req, reply) {
 
-                    const id = shortid()
-                    const anonymousName = generateName(id)
+                    const userId = generateId()
+                    const anonymousName = generateName(userId)
 
                     cypherOne(`
                         MERGE         (u:User { email: {email} })
                         ON CREATE SET u.createdAt        = timestamp(),
                                       u.updatedAt        = timestamp(),
-                                      u.id               = {id},
+                                      u.id               = {userId},
                                       u.name             = {name},
                                       u.anonymousName    = {anonymousName},
                                       u.email            = {email},
@@ -48,7 +48,7 @@ exports.register = function (server, options, next) {
                                       u.avatarUrl     AS avatarUrl,
                                       u.isAnonymous   AS isAnonymous`,
                         {
-                            id,
+                            userId,
                             email: req.payload.email,
                             name: req.payload.name,
                             oAuthId: req.payload.oAuthId,
@@ -225,7 +225,7 @@ exports.register = function (server, options, next) {
                     },
                 },
                 handler(req, reply) {
-                    const pronosticId = shortid()
+                    const pronosticId = generateId()
 
                     cypherOne(`
                         MATCH (u:User { id: {userId} })

@@ -15,6 +15,9 @@ export function calculatePronostic() {
         .catch((err) => {
             console.error('Error calculator ranking', err)
         })
+        .finally(() => {
+            console.log('Calculate Points OK')
+        })
 }
 
 
@@ -34,7 +37,7 @@ function fetchGames() {
 }
 
 function fetchPronosticByGames(games) {
-    console.log(`Fetch Pronostic By Games: Games: ${games.length}`)
+    console.log(`Fetch Pronostic By Games: ${games.length}`)
     if (_.isEmpty(games)) {
         return B.resolve()
     }
@@ -95,13 +98,21 @@ function calculateClassicPointsByPronostic(games = [], pronostics = []) {
         .map((pronostic) => {
             const currentGame = gamesById[pronostic.gameId]
 
-            pronostic.classicPoints = calculateClassicPoints(pronostic, currentGame)
-            pronostic.riskPoints = calculateRiskPoints({ ..._.pick(pronostic, 'happened', 'willHappen', 'amount') })
-
-            return pronostic
+            return calculatePointsByPronostic(pronostic, currentGame)
         })
 
     function pronosticIsValid(pronostic) {
         return pronostic.pronosticId != null && pronostic.gameId != null && gamesById[pronostic.gameId] != null
+    }
+
+    function calculatePointsByPronostic(pronostic, currentGame) {
+        try {
+            pronostic.classicPoints = calculateClassicPoints(pronostic, currentGame)
+            pronostic.riskPoints = calculateRiskPoints({ ..._.pick(pronostic, 'happened', 'willHappen', 'amount') })
+            return pronostic
+        }
+        catch (err) {
+            console.log(`Error calcul pronostic with ${JSON.stringify(pronostic)}`, err)
+        }
     }
 }

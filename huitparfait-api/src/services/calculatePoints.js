@@ -11,7 +11,7 @@ const predictGoalsSchema = Joi
 const predictRiskSchema = Joi
     .object({
         happened: Joi.boolean().required(),
-        willHappen: Joi.boolean().allow(null).required(),
+        willHappen: Joi.boolean().allow(null),
         amount: Joi.number().integer().min(0).max(3).integer(),
     })
     .options({ stripUnknown: true })

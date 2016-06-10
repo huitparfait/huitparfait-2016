@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import { cypher, cypherOne } from '../infra/neo4j'
+import { shortIdSchema } from '../infra/utils'
 import { sendEmpty, sendEmptyIfPositiveDeleteCount } from '../infra/replyUtils'
-import { betterGroup, shortIdSchema } from '../services/groupService'
-
+import { betterGroup } from '../services/groupService'
 
 exports.register = function (server, options, next) {
 
