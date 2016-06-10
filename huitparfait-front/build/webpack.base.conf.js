@@ -80,6 +80,9 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
   vue: {
-    loaders: utils.cssLoaders()
+    loaders: utils.cssLoaders(),
+    autoprefixer: {
+      browsers: ['last 2 versions', '> 5%', 'ie >= 9', 'ff >= 17', 'chrome >= 10', 'safari >= 6', 'ios >= 6'],
+    },
   }
 }
