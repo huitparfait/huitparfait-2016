@@ -4,57 +4,57 @@
         <div class="day"
                 v-for="(gameDate, games) in gamesByDay">
 
-            <card-title class="gameDate">{{gameDate | date}}</card-title>
+            <card-title class="gameDate">{{* gameDate | date}}</card-title>
             <card-list wide class="games">
 
                 <card wide class="game"
-                        :class="{ 'game--submissionDisabled': isSubmissionClosed(game), 'game--notSaved' : game.state.notSaved }"
-                        v-for="game in games">
+                      :class="{ 'game--submissionDisabled': isSubmissionClosed(game), 'game--notSaved' : game.notSaved }"
+                      v-for="game in games" track-by="gameId">
 
                     <div class="game-header">
-                        <div class="game-name">Groupe {{game.value.group}}</div>
-                        <div class="game-location">{{game.value.stadium}} ({{game.value.city}})</div>
+                        <div class="game-name">Groupe {{* game.group}}</div>
+                        <div class="game-location">{{* game.stadium}} ({{* game.city}})</div>
                     </div>
 
                     <div class="game-teams">
                         <div class="game-teams-section">
-                            <img v-if="game.value.countryCodeTeamA" class="flag"
-                                    :src="'/static/flags/' + game.value.countryCodeTeamA + '.svg'"/>
-                            <img v-if="!game.value.countryCodeTeamA" class="flag unknownTeam"
-                                    src="../assets/unknown-team.svg"/>
-                            <div class="game-countryName">{{game.value.countryNameTeamA}}</div>
+                            <img v-if="game.countryCodeTeamA" class="flag"
+                                 :src="'/static/flags/' + game.countryCodeTeamA + '.svg'"/>
+                            <img v-if="!game.countryCodeTeamA" class="flag unknownTeam"
+                                 src="../assets/unknown-team.svg"/>
+                            <div class="game-countryName">{{* game.countryNameTeamA}}</div>
                         </div>
                         <div class="game-teams-section">
-                            <span v-if="hasScore(game)" class="game-score">{{game.value.goalsTeamA}} - {{game.value.goalsTeamB}}</span>
-                            <span v-if="!hasScore(game)" class="game-time">{{game.value.startsAt | time}}</span>
+                            <span v-if="hasScore(game)" class="game-score">{{* game.goalsTeamA}} - {{* game.goalsTeamB}}</span>
+                            <span v-if="!hasScore(game)" class="game-time">{{* game.startsAt | time}}</span>
                         </div>
                         <div class="game-teams-section">
-                            <img v-if="game.value.countryCodeTeamB" class="flag"
-                                    :src="'/static/flags/' + game.value.countryCodeTeamB + '.svg'"/>
-                            <img v-if="!game.value.countryCodeTeamB" class="flag unknownTeam"
-                                    src="../assets/unknown-team.svg"/>
-                            <div class="game-countryName">{{game.value.countryNameTeamB}}</div>
+                            <img v-if="game.countryCodeTeamB" class="flag"
+                                 :src="'/static/flags/' + game.countryCodeTeamB + '.svg'"/>
+                            <img v-if="!game.countryCodeTeamB" class="flag unknownTeam"
+                                 src="../assets/unknown-team.svg"/>
+                            <div class="game-countryName">{{* game.countryNameTeamB}}</div>
                         </div>
                     </div>
 
                     <div class="game-inputs">
                         <div class="game-scoreInput">
-                            <input v-model="game.value.predictionScoreTeamA" @change="enablePrediction(game)"
-                                    class="game-scoreInputField" type="number" name="goalsTeamA"
-                                    onfocus="this.select()"
-                                    :disabled="isSubmissionClosed(game)"/>
+                            <input v-model="game.predictionScoreTeamA" @change="enablePrediction(game)"
+                                   class="game-scoreInputField" type="number" name="goalsTeamA"
+                                   onfocus="this.select()"
+                                   :disabled="isSubmissionClosed(game)"/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
-                            <input v-model="game.value.predictionScoreTeamB" @change="enablePrediction(game)"
-                                    class="game-scoreInputField" type="number" name="goalsTeamB"
-                                    onfocus="this.select()"
-                                    :disabled="isSubmissionClosed(game)"/>
+                            <input v-model="game.predictionScoreTeamB" @change="enablePrediction(game)"
+                                   class="game-scoreInputField" type="number" name="goalsTeamB"
+                                   onfocus="this.select()"
+                                   :disabled="isSubmissionClosed(game)"/>
                         </div>
                     </div>
 
                     <div class="game-risk">
-                        <strong>Risquette : </strong><span class="game-risk-title">{{game.value.riskTitle}}</span>
+                        <strong>Risquette : </strong><span class="game-risk-title">{{* game.riskTitle}}</span>
 
                         <div class="game-risk-input">
                             <div class="game-risk-answer game-risk-trueOrFalse">
@@ -62,60 +62,60 @@
 
                                 <div class="game-risk-answerChoiceGroup">
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="true"
-                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
-                                                id="yes{{game.value.gameId}}"
-                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="yes{{game.value.gameId}}">VRAI</label>
+                                        <input v-model="game.predictionRiskAnswer" type="radio" :value="true"
+                                               @change="enablePrediction(game)" name="riskAnswer{{* game.gameId}}"
+                                               id="yes{{* game.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
+                                        <label for="yes{{* game.gameId}}">VRAI</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="false"
-                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
-                                                id="no{{game.value.gameId}}"
-                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="no{{game.value.gameId}}">FAUX</label>
+                                        <input v-model="game.predictionRiskAnswer" type="radio" :value="false"
+                                               @change="enablePrediction(game)" name="riskAnswer{{* game.gameId}}"
+                                               id="no{{* game.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
+                                        <label for="no{{* game.gameId}}">FAUX</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice noAnswer">
-                                        <input v-model="game.value.predictionRiskAnswer" type="radio" :value="null"
-                                                @change="enablePrediction(game)" name="riskAnswer{{game.value.gameId}}"
-                                                id="dunno{{game.value.gameId}}"
-                                                :disabled="isSubmissionClosed(game)"/>
+                                        <input v-model="game.predictionRiskAnswer" type="radio" :value="null"
+                                               @change="enablePrediction(game)" name="riskAnswer{{* game.gameId}}"
+                                               id="dunno{{* game.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
                                         <label class="game-risk-answerChoice--multiline"
-                                                for="dunno{{game.value.gameId}}">Je ne sais pas</label>
+                                               for="dunno{{* game.gameId}}">Je ne sais pas</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="game-risk-answer game-risk-riskedPoints">
                                 <div class="game-risk-answerHeader">Risquer</div>
-                                <div class="game-risk-answerNoRisk" v-show="game.value.predictionRiskAnswer == null">
+                                <div class="game-risk-answerNoRisk" v-show="game.predictionRiskAnswer == null">
                                     Aucun point risqué
                                 </div>
-                                <div v-show="game.value.predictionRiskAnswer != null"
-                                        class="game-risk-answerChoiceGroup">
+                                <div v-show="game.predictionRiskAnswer != null"
+                                     class="game-risk-answerChoiceGroup">
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="1"
-                                                @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
-                                                id="riskAmount1{{game.value.gameId}}"
-                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="riskAmount1{{game.value.gameId}}">1 pt</label>
+                                        <input v-model="game.predictionRiskAmount" type="radio" :value="1"
+                                               @change="enablePrediction(game)" name="riskAmount{{* game.gameId}}"
+                                               id="riskAmount1{{* game.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
+                                        <label for="riskAmount1{{* game.gameId}}">1 pt</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="2"
-                                                @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
-                                                id="riskAmount2{{game.value.gameId}}"
-                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="riskAmount2{{game.value.gameId}}">2 pts</label>
+                                        <input v-model="game.predictionRiskAmount" type="radio" :value="2"
+                                               @change="enablePrediction(game)" name="riskAmount{{* game.gameId}}"
+                                               id="riskAmount2{{* game.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
+                                        <label for="riskAmount2{{* game.gameId}}">2 pts</label>
                                     </div>
 
                                     <div class="game-risk-answerChoice">
-                                        <input v-model="game.value.predictionRiskAmount" type="radio" :value="3"
-                                                @change="enablePrediction(game)" name="riskAmount{{game.value.gameId}}"
-                                                id="riskAmount3{{game.value.gameId}}"
-                                                :disabled="isSubmissionClosed(game)"/>
-                                        <label for="riskAmount3{{game.value.gameId}}">3 pts</label>
+                                        <input v-model="game.predictionRiskAmount" type="radio" :value="3"
+                                               @change="enablePrediction(game)" name="riskAmount{{* game.gameId}}"
+                                               id="riskAmount3{{* game.gameId}}"
+                                               :disabled="isSubmissionClosed(game)"/>
+                                        <label for="riskAmount3{{* game.gameId}}">3 pts</label>
                                     </div>
                                 </div>
                             </div>
@@ -123,11 +123,11 @@
                     </div>
 
                     <div class="game-submitZone">
-                        <btn :inactive="game.state.notSaved !== true || !predictionIsValid(game)"
-                                class="game-submitZone-button"
-                                :class="{ disabled: !predictionIsValid(game) }"
-                                @click="savePrediction(game)"
-                                :disabled="isSubmissionClosed(game)">Enregistrer
+                        <btn :inactive="game.notSaved !== true || !predictionIsValid(game)"
+                             class="game-submitZone-button"
+                             :class="{ disabled: !predictionIsValid(game) }"
+                             @click="savePrediction(game)"
+                             :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
                     </div>
 
@@ -139,7 +139,9 @@
 </template>
 
 <script type="text/babel">
-    import * as WebApi from '../WebApi'
+    import Vue from 'vue'
+    import store from '../state/configureStore'
+    import { fetchPredictions, savePrediction } from '../state/actions/predictions'
     import _ from 'lodash'
     import moment from 'moment'
 
@@ -148,86 +150,68 @@
     export default {
         data() {
             return {
-                gamesByDay: undefined,
+                predictions: this.$select('predictions'),
+                gamesByDay: null,
             }
         },
-        ready() {
-            WebApi.fetchPredictions().then((games) => {
-                this.gamesByDay = _(games)
-                        .groupBy((game) => {
-                            return moment(game.startsAt).startOf('day')
-                        })
-                        .mapValues((gamesForDay) => {
-                            return _(gamesForDay)
-                                    .map((gameForDay) => {
+        route: {
+            data() {
+                store.dispatch(fetchPredictions())
+            },
+        },
+        watch: {
+            predictions(predictions) {
 
-                                        // Initialize amount of risked points to the maximum
-                                        gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3
-
-                                        return {
-                                            value: gameForDay,
-                                            state: {
-                                                notSaved: undefined,
-                                            },
-                                        }
-                                    })
-                                    .value()
-
-                        })
-                        .value()
-            })
+                if (predictions == null) {
+                    this.gamesByDay = null
+                    return
+                }
+                this.gamesByDay = _.cloneDeep(predictions)
+            },
         },
         methods: {
             hasScore: function (game) {
-                return game.value.goalsTeamA != null &&
-                        game.value.goalsTeamB != null
+                return game.goalsTeamA != null &&
+                    game.goalsTeamB != null
             },
             enablePrediction: function (game) {
-                game.state.notSaved = true
+                Vue.set(game, 'notSaved', true)
             },
             disablePrediction: function (game) {
-                game.state.notSaved = false
+                Vue.set(game, 'notSaved', false)
             },
             isSubmissionClosed: function (game) {
-                return moment(game.value.startsAt).isBefore(Date.now())
+                return moment(game.startsAt).isBefore(Date.now())
             },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
-                if (isNaN(game.value.predictionRiskAmount) || game.value.predictionRiskAmount <= 0 ||
-                        isNaN(game.value.predictionScoreTeamA) || game.value.predictionScoreTeamA < 0 ||
-                        isNaN(game.value.predictionScoreTeamB) || game.value.predictionScoreTeamB < 0
+                if (isNaN(game.predictionRiskAmount) || game.predictionRiskAmount <= 0 ||
+                    isNaN(game.predictionScoreTeamA) || game.predictionScoreTeamA < 0 ||
+                    isNaN(game.predictionScoreTeamB) || game.predictionScoreTeamB < 0
                 ) {
                     return false
                 }
 
                 // No risk amount selected even though an answer to the risk is provided
-                if (game.value.predictionRiskAnswer != null &&
-                        game.value.predictionRiskAmount <= 0) {
+                if (game.predictionRiskAnswer != null &&
+                    game.predictionRiskAmount <= 0) {
                     return false
                 }
 
                 return true
             },
             savePrediction: function (game) {
-                if (game.state.notSaved !== true || !this.predictionIsValid(game)) {
+                if (game.notSaved !== true || !this.predictionIsValid(game)) {
                     return
                 }
 
-                const prediction = {
-                    gameId: game.value.gameId,
-                    predictionScoreTeamA: game.value.predictionScoreTeamA,
-                    predictionScoreTeamB: game.value.predictionScoreTeamB,
-                    predictionRiskAnswer: game.value.predictionRiskAnswer,
-                    predictionRiskAmount: game.value.predictionRiskAnswer != null ? game.value.predictionRiskAmount : 0,
-                }
-
-                WebApi.savePrediction(prediction)
-                        .then(() => {
-                            this.disablePrediction(game)
-                        })
-                        .catch(() => {
-                            this.enablePrediction(game)
-                        })
+                store.dispatch(savePrediction(game))
+                    .then(() => {
+                        this.disablePrediction(game)
+                    })
+                    .catch(() => {
+                        this.enablePrediction(game)
+                    })
             },
         },
         filters: {

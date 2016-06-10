@@ -7,12 +7,14 @@ import reducer from './reducers/index'
 
 import * as userActions from './actions/user'
 import * as groupsActions from './actions/groups'
+import * as predictionsActions from './actions/predictions'
 import * as rankingActions from './actions/ranking'
 
 const actions = {
     userActions,
     groupsActions,
     rankingActions,
+    predictionsActions,
 }
 
 const reduxStore = createStore(reducer, compose(
