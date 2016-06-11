@@ -7,7 +7,7 @@ exports.register = function (server, options, next) {
     server.route([
         {
             method: 'GET',
-            path: '/api/ranking/{groupId?}',
+            path: '/api/ranking/{groupId}',
             config: {
                 description: 'Fetch ranking',
                 tags: ['api'],
@@ -25,8 +25,6 @@ exports.register = function (server, options, next) {
                     })
                         .then(reply)
                         .catch(reply)
-
-
                 },
             },
         },

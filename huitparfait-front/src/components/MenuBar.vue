@@ -76,7 +76,7 @@
 
     .menuitem-label {
         font-size: 10px;
-        font-size: 3.2vw;
+        font-size: 3vw;
         font-weight: bold;
         height: 24px;
         line-height: 24px;
@@ -86,7 +86,7 @@
 
     @media (min-width: 500px) {
         .menuitem-label {
-            font-size: 16px;
+            font-size: 15px;
         }
     }
 

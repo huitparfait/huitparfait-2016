@@ -24,7 +24,7 @@ export function fetchGroupUsers(groupId) {
 }
 
 export function fetchGroupRanking(groupId) {
-    return execute(`/groups/${groupId}/ranking`)
+    return execute(`/ranking/${groupId}`)
 }
 
 export function upsertGroup({ id, name, avatarUrl }) {

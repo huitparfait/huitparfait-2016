@@ -1,41 +1,32 @@
-import _ from 'lodash'
 import { cypher } from '../infra/neo4j'
 import { betterUser } from './userService'
-
-let rankingAllCache = null
-
-export function recalculateRanking() {
-    console.log('Calculate Ranking...')
-    rankingAllCache = null
-    rankingAllCache = calculateRanking({ pageSize: null })
-}
-
+import moment from 'moment'
 
 export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
-    if (groupId == null && rankingAllCache) {
-        return rankingAllCache.then(paginate)
-    }
 
-    let matchUserQuery = 'MATCH (u:User)'
+    const transformAnonymous = (groupId == null)
 
-    if (groupId) {
-        matchUserQuery = `
-        MATCH (me:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
-        MATCH (u:User)-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g)`
-    }
+    // TODO ça marche pas
+    const eightLimit = moment()
+    // .subtract(8, 'hours')
+    // .subtract(8, 'minutes')
+    // .startOf('day')
+        .valueOf()
 
     return cypher(`
-        ${matchUserQuery}
-        MATCH   (u)<-[:CREATED_BY_USER]-(p:Pronostic)
-        MATCH   (p)-[IS_ABOUT_GAME]->(game:Game)
-        OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(pperf:Pronostic)
+        MATCH (me:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
+        MATCH (u:User)-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g)
+        OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(p:Pronostic)-[IS_ABOUT_GAME]->(game:Game)
+        OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(pp:Pronostic)-[IS_ABOUT_GAME]->(game)
         WHERE   p.classicPoints IS NOT NULL
-                AND game.startsAt < timestamp()
-                AND pperf.classicPoints = 5
-                AND pperf.riskPoints = 3
+                AND pp.classicPoints IS NOT NULL
+                AND game.startsAt < {eightLimit}
+                AND pp.classicPoints = 5
+                AND pp.riskPoints = 3
         WITH
-          u, pperf,
-          p.classicPoints + p.riskPoints AS score
+          u,
+          p.classicPoints + p.riskPoints AS score,
+          pp AS perfect
         RETURN
                 u.id            AS userId,
                 u.name          AS userName,
@@ -44,13 +35,14 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
                 u.isAnonymous   AS isAnonymous,
                 SUM(score) as totalScore,
                 COUNT(score) as nbPredictions,
-                COUNT(pperf) as nbPerfects
-        ORDER BY totalScore DESC, nbPredictions DESC, nbPerfects DESC`,
+                COUNT(perfect) AS nbPerfects
+                ORDER BY totalScore DESC, nbPredictions DESC, nbPerfects DESC`,
         {
             userId,
             groupId,
+            eightLimit,
         })
-        .map(formatRanking)
+        .map(formatRanking({ transformAnonymous }))
         .then(calculateRank)
         .then(paginate)
 
@@ -63,47 +55,34 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
     }
 }
 
-function formatRanking(rank) {
-    const user = betterUser({
-        id: rank.userId,
-        name: rank.userName,
-        ..._.pick(rank, 'avatarUrl', 'anonymousName', 'isAnonymous'),
-    })
+function formatRanking({ transformAnonymous }) {
 
-    return {
-        user: _.omit(user, 'id', 'isAnonymous', 'anonymousName'),
-        stats: {
-            totalScore: rank.totalScore,
-            nbPredictions: rank.nbPredictions,
-            nbPerfects: rank.nbPerfects,
-        },
+    return function formatRanking(rank) {
+
+        console.log(rank);
+
+        return {
+            user: betterUser(rank, transformAnonymous),
+            stats: {
+                totalScore: rank.totalScore,
+                nbPredictions: rank.nbPredictions,
+                nbPerfects: rank.nbPerfects,
+            },
+        }
     }
 }
 
 function calculateRank(ranking = []) {
-    return _(ranking)
-        .orderBy((row) => row.stats.totalScore, 'desc')
-        .transform((result, row) => {
-            row.rank = getRank(result, row.stats)
-            result.push(row)
-        }, [])
-        .orderBy([
-            (rank) => rank.stats.totalScore,
-            (rank) => rank.stats.nbPredictions,
-            (rank) => rank.stats.nbPerfects,
-        ], ['desc', 'desc', 'desc'])
-        .value()
 
-    function getRank(rows, stats) {
-        if (rows.length === 0) {
-            return 1
+    ranking.forEach((row, idx, rows) => {
+
+        if (idx > 0 && rows[idx - 1].stats.totalScore === row.stats.totalScore) {
+            row.rank = rows[idx - 1].rank
+            return
         }
 
-        const lastRank = _.last(rows, stats)
-        if (lastRank.stats.totalScore === stats.totalScore) {
-            return lastRank.rank
-        }
+        row.rank = idx + 1
+    })
 
-        return lastRank.rank + 1
-    }
+    return ranking
 }

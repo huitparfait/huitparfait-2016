@@ -7,14 +7,17 @@ export function generateName(id) {
     return animalAdj(id)
 }
 
-export function betterUser(user = {}) {
-    if (user.isAnonymous) {
+export function betterUser(user = {}, transformAnonymous = false) {
+
+    if (user.isAnonymous && transformAnonymous) {
         return {
-            ...user,
             name: user.anonymousName,
-            avatarUrl: generateSVGDataURIString(user.id, { width: 70, size: 3 }),
+            avatarUrl: generateSVGDataURIString(user.userId, { width: 70, size: 3 }),
         }
     }
 
-    return user
+    return {
+        name: user.userName,
+        avatarUrl: user.avatarUrl,
+    }
 }
