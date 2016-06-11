@@ -55,11 +55,14 @@
                     </div>
 
                     <div class="game-risk">
-                        <span v-if="game.riskHappened == null || !isResultPublishable(game)" class="game-risk-titlePrefix">Risquette :</span>
+                        <span v-if="game.riskHappened == null || !isResultPublishable(game)"
+                              class="game-risk-titlePrefix">Risquette :</span>
                         <span v-if="game.riskHappened === true && isResultPublishable(game)"
-                              class="game-risk-titlePrefix game-risk-titlePrefix--happened">Risquette vraie :</span>
+                              class="game-risk-titlePrefix"
+                              :class="{ rightAnswer: wasRightAboutRisk(game) === true, wrongAnswer: wasRightAboutRisk(game) === false }">Risquette vraie :</span>
                         <span v-if="game.riskHappened === false && isResultPublishable(game)"
-                              class="game-risk-titlePrefix game-risk-titlePrefix--notHappened">Risquette fausse :</span>
+                              class="game-risk-titlePrefix"
+                              :class="{ rightAnswer: wasRightAboutRisk(game) === true, wrongAnswer: wasRightAboutRisk(game) === false }">Risquette fausse :</span>
                         <span class="game-risk-title">{{* game.riskTitle}}</span>
 
                         <div class="game-risk-input">
@@ -138,7 +141,8 @@
                         <div class="game-submitZone-savedCheck" v-show="showPredictionSavedTick(game)"></div>
                         <div class="game-pointsExplanation"
                              v-if="isResultPublishable(game) && game.points != null && game.points < 8">
-                            {{* game.points}} pts : {{* game.classicPoints}} pts {{* game.riskPoints >= 0 ? '+' : '-'}} {{* (game.riskPoints || 0) | abs}} pts (risquette)
+                            {{* game.points}} pts : {{* game.classicPoints}} pts {{* game.riskPoints >= 0 ? '+' : '-'}}
+                            {{* (game.riskPoints || 0) | abs}} pts (risquette)
                         </div>
                         <div class="game-pointsExplanation"
                              v-if="isResultPublishable(game) && game.points == 8">
@@ -209,6 +213,12 @@
                 // A result is publishable at 8:08AM the next day of a game
                 return moment(game.startsAt).endOf('day').add(8, 'hours').add(8, 'minutes').isBefore(Date.now())
             },
+            wasRightAboutRisk: function (game) {
+                if (game.predictionRiskAnswer == null) {
+                    return null
+                }
+                return game.predictionRiskAnswer === game.riskHappened
+            },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
                 if (isNaN(game.predictionRiskAmount) || game.predictionRiskAmount <= 0 ||
@@ -247,9 +257,9 @@
             time: function (gameTime) {
                 return moment(gameTime).format('HH[h]mm')
             },
-            abs: function(number) {
-                return Math.abs(number);
-            }
+            abs: function (number) {
+                return Math.abs(number)
+            },
         },
     }
 </script>
@@ -398,13 +408,13 @@
         font-weight: bold;
     }
 
-    .game-risk-titlePrefix--happened {
+    .game-risk-titlePrefix.rightAnswer {
         background: url('../assets/tick.svg') no-repeat;
         color: #49996f;
         padding-left: 20px;
     }
 
-    .game-risk-titlePrefix--notHappened {
+    .game-risk-titlePrefix.wrongAnswer {
         background: url('../assets/cross.svg') no-repeat;
         color: #b50101;
         padding-left: 20px;
