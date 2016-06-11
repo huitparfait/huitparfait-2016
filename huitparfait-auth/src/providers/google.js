@@ -26,7 +26,10 @@ exports.register = function (server, options, next) {
         method: 'GET',
         path: '/auth/google',
         config: {
-            auth: 'google',
+            auth: {
+                strategy: 'google',
+                mode: 'try',
+            },
             handler: authGoogle,
         },
     })
@@ -41,6 +44,12 @@ exports.register.attributes = {
 
 
 function authGoogle(req, reply) {
+    if (!req.auth.isAuthenticated) {
+        console.error('Error no isAuthenticated', req.auth.error)
+
+        return reply.redirect('/')
+    }
+
     const creds = req.auth.credentials.profile
 
     const profile = {
@@ -57,5 +66,10 @@ function authGoogle(req, reply) {
                 .state('token', token, { path: '/' })
                 .redirect('/')
         })
-        .catch(reply)
+        .catch((err) => {
+            console.error('Error findOrCreateUserByProfile', err)
+
+            reply.unstate('token', { path: '/' })
+            reply.redirect('/')
+        })
 }
