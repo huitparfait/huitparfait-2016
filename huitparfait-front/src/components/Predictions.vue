@@ -55,10 +55,10 @@
                     </div>
 
                     <div class="game-risk">
-                        <span v-if="game.riskHappened == null || !isSubmissionClosed(game)" class="game-risk-titlePrefix">Risquette :</span>
-                        <span v-if="game.riskHappened === true && isSubmissionClosed(game)"
+                        <span v-if="game.riskHappened == null || !isResultPublishable(game)" class="game-risk-titlePrefix">Risquette :</span>
+                        <span v-if="game.riskHappened === true && isResultPublishable(game)"
                               class="game-risk-titlePrefix game-risk-titlePrefix--happened">Risquette vraie :</span>
-                        <span v-if="game.riskHappened === false && isSubmissionClosed(game)"
+                        <span v-if="game.riskHappened === false && isResultPublishable(game)"
                               class="game-risk-titlePrefix game-risk-titlePrefix--notHappened">Risquette fausse :</span>
                         <span class="game-risk-title">{{* game.riskTitle}}</span>
 
@@ -136,11 +136,11 @@
                              :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
                         <div class="game-pointsExplanation"
-                             v-if="isSubmissionClosed(game) && game.points != null && game.points < 8">
+                             v-if="isResultPublishable(game) && game.points != null && game.points < 8">
                             {{* game.points}} pts : {{* game.classicPoints}} pts {{* game.riskPoints >= 0 ? '+' : '-'}} {{* (game.riskPoints || 0) | abs}} pts (risquette)
                         </div>
                         <div class="game-pointsExplanation"
-                             v-if="isSubmissionClosed(game) && game.points == 8">
+                             v-if="isResultPublishable(game) && game.points == 8">
                             Huit parfait !
                         </div>
                     </div>
@@ -195,7 +195,12 @@
                 Vue.set(game, 'notSaved', false)
             },
             isSubmissionClosed: function (game) {
+                // Submissions close as soon as the game begins
                 return moment(game.startsAt).isBefore(Date.now())
+            },
+            isResultPublishable: function (game) {
+                // A result is publishable at 8:08AM the next day of a game
+                return moment(game.startsAt).endOf('day').add(8, 'hours').add(8, 'minutes').isBefore(Date.now())
             },
             predictionIsValid: function (game) {
                 // Wrong value types in fields
