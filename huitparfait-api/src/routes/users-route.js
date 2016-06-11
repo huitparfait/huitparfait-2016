@@ -155,7 +155,7 @@ exports.register = function (server, options, next) {
                         MATCH		        (g:Game)
                         MATCH               (ta:Team)-[piga:PLAYS_IN_GAME {order: 1}]->(g)
                         MATCH		        (tb:Team)-[pigb:PLAYS_IN_GAME {order: 2}]->(g)
-                        MATCH		        (r:Risk)-[:USED_FOR_GAME]->(g)
+                        MATCH		        (r:Risk)-[ufg:USED_FOR_GAME]->(g)
                         OPTIONAL MATCH      (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u:User { id: {userId} })
                         OPTIONAL MATCH      (p)-[sa:PREDICT_SCORE]->(ta)
                         OPTIONAL MATCH      (p)-[sb:PREDICT_SCORE]->(tb)
@@ -180,7 +180,10 @@ exports.register = function (server, options, next) {
 									sa.goals            AS predictionScoreTeamA,
 									sb.goals            AS predictionScoreTeamB,
 									pr.willHappen       AS predictionRiskAnswer,
-									pr.amount           AS predictionRiskAmount
+									pr.amount           AS predictionRiskAmount,
+									p.classicPoints     AS classicPoints,
+									p.riskPoints        AS riskPoints,
+									ufg.happened        AS riskHappened
                         ORDER BY    g.startsAt
                         `,
                         {
@@ -195,8 +198,15 @@ exports.register = function (server, options, next) {
                                 .mapValues((gamesForDay) => {
                                     return _(gamesForDay)
                                         .map((gameForDay) => {
+
                                             // Initialize amount of risked points to the maximum if not defined
                                             gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3
+
+                                            // Calculate the total number of points for a prediction
+                                            if (gameForDay.classicPoints != null) {
+                                                gameForDay.points = gameForDay.classicPoints + (gameForDay.riskPoints || 0)
+                                            }
+
                                             return gameForDay
                                         })
                                         .value()

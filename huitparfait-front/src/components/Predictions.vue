@@ -2,7 +2,7 @@
     <div class="page--predictions">
 
         <div class="day"
-                v-for="(gameDate, games) in gamesByDay">
+             v-for="(gameDate, games) in gamesByDay">
 
             <card-title class="gameDate">{{* gameDate | date}}</card-title>
             <card-list wide class="games">
@@ -25,7 +25,8 @@
                             <div class="game-countryName">{{* game.countryNameTeamA}}</div>
                         </div>
                         <div class="game-teams-section">
-                            <span v-if="hasScore(game)" class="game-score">{{* game.goalsTeamA}} - {{* game.goalsTeamB}}</span>
+                            <span v-if="hasScore(game)"
+                                  class="game-score">{{* game.goalsTeamA}} - {{* game.goalsTeamB}}</span>
                             <span v-if="!hasScore(game)" class="game-time">{{* game.startsAt | time}}</span>
                         </div>
                         <div class="game-teams-section">
@@ -54,7 +55,12 @@
                     </div>
 
                     <div class="game-risk">
-                        <strong>Risquette : </strong><span class="game-risk-title">{{* game.riskTitle}}</span>
+                        <span v-if="game.riskHappened == null || !isSubmissionClosed(game)" class="game-risk-titlePrefix">Risquette :</span>
+                        <span v-if="game.riskHappened === true && isSubmissionClosed(game)"
+                              class="game-risk-titlePrefix game-risk-titlePrefix--happened">Risquette vraie :</span>
+                        <span v-if="game.riskHappened === false && isSubmissionClosed(game)"
+                              class="game-risk-titlePrefix game-risk-titlePrefix--notHappened">Risquette fausse :</span>
+                        <span class="game-risk-title">{{* game.riskTitle}}</span>
 
                         <div class="game-risk-input">
                             <div class="game-risk-answer game-risk-trueOrFalse">
@@ -129,6 +135,14 @@
                              @click="savePrediction(game)"
                              :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
+                        <div class="game-pointsExplanation"
+                             v-if="isSubmissionClosed(game) && game.points != null && game.points < 8">
+                            {{* game.points}} pts : {{* game.classicPoints}} pts {{* game.riskPoints >= 0 ? '+' : '-'}} {{* (game.riskPoints || 0) | abs}} pts (risquette)
+                        </div>
+                        <div class="game-pointsExplanation"
+                             v-if="isSubmissionClosed(game) && game.points == 8">
+                            Huit parfait !
+                        </div>
                     </div>
 
                 </card>
@@ -221,6 +235,9 @@
             time: function (gameTime) {
                 return moment(gameTime).format('HH[h]mm')
             },
+            abs: function(number) {
+                return Math.abs(number);
+            }
         },
     }
 </script>
@@ -365,6 +382,22 @@
         font-style: italic;
     }
 
+    .game-risk-titlePrefix {
+        font-weight: bold;
+    }
+
+    .game-risk-titlePrefix--happened {
+        background: url('../assets/tick.svg') no-repeat;
+        color: #49996f;
+        padding-left: 20px;
+    }
+
+    .game-risk-titlePrefix--notHappened {
+        background: url('../assets/cross.svg') no-repeat;
+        color: #b50101;
+        padding-left: 20px;
+    }
+
     .game-risk-input {
         font-size: 15px;
     }
@@ -415,11 +448,11 @@
         padding: 0;
     }
 
-        .game-risk-answerChoice {
-            flex: 1 1 0;
-            margin: 0;
-            padding: 0;
-        }
+    .game-risk-answerChoice {
+        flex: 1 1 0;
+        margin: 0;
+        padding: 0;
+    }
 
     .game-risk-answerChoice.noAnswer {
         flex: 2 1 0;
@@ -493,6 +526,13 @@
 
     .game--submissionDisabled .game-submitZone-button {
         display: none;
+    }
+
+    .game-pointsExplanation {
+        color: #49996f;
+        font-weight: bold;
+        margin-top: 8px;
+        text-align: center;
     }
 
 
