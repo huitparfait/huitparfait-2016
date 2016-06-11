@@ -240,10 +240,11 @@ exports.register = function (server, options, next) {
                     cypherOne(`
                         MATCH (u:User { id: {userId} })
                         MATCH (g:Game { id: {gameId} })
+                        WHERE g.startsAt > timestamp()
+
                         MATCH (ta:Team)-[:PLAYS_IN_GAME { order: 1 }]->(g)
                         MATCH (tb:Team)-[:PLAYS_IN_GAME { order: 2 }]->(g)
                         MATCH (r:Risk)-[:USED_FOR_GAME]->(g)
-                        WHERE g.startsAt > timestamp()
                         
                         MERGE (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u)
                         ON CREATE SET   p.createdAt = timestamp(),

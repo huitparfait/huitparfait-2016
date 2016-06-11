@@ -1,6 +1,5 @@
 import { Server } from 'hapi'
 import Manifest from './manifest'
-import { CronJob } from 'cron'
 
 const server = new Server(Manifest.server)
 

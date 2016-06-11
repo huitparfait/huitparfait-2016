@@ -24,13 +24,14 @@ export function calculatePronostic() {
 function fetchGames() {
     return cypher(`
         MATCH (g:Game)
+        WHERE g.startsAt < timestamp()
+
         MATCH (p:Pronostic)-[IS_ABOUT_GAME]->(g)
         MATCH (ta:Team)-[piga:PLAYS_IN_GAME { order: 1 }]->(g)
         MATCH (tb:Team)-[pigb:PLAYS_IN_GAME { order: 2 }]->(g)
         WHERE 
             piga.goals IS NOT NULL 
             AND pigb.goals IS NOT NULL
-            AND g.startsAt < timestamp()
         RETURN g.id as gameId, 
                piga.goals as goalsTeamA, 
                pigb.goals as goalsTeamB`)
@@ -46,17 +47,19 @@ function fetchPronosticByGames(games) {
 
     return cypher(`
         MATCH (g:Game)
+        WHERE g.id IN { gameIds }
+
         MATCH (p:Pronostic)-[IS_ABOUT_GAME]->(g)
+        WHERE 
+               p.id IS NOT NULL
+               AND p.classicPoints IS NULL
         MATCH (ta:Team)-[:PLAYS_IN_GAME { order: 1 }]->(g)
         MATCH (tb:Team)-[:PLAYS_IN_GAME { order: 2 }]->(g)
         MATCH (p)-[sa:PREDICT_SCORE]->(ta)
         MATCH (p)-[sb:PREDICT_SCORE]->(tb)
         MATCH (p)-[pr:PREDICT_RISK]->(r:Risk)
         MATCH (r)-[ug:USED_FOR_GAME]->(g)
-        WHERE 
-               g.id IN { gameIds }
-               AND p.id IS NOT NULL
-               AND p.classicPoints IS NULL
+
         RETURN g.id as gameId, 
                p.id as pronosticId, 
                sa.goals as goalsTeamA, 
@@ -73,7 +76,7 @@ function savePoints(pronostics) {
     console.log(`Save Points: Pronostics: ${pronostics.length}`)
 
     if (_.isEmpty(pronostics)) {
-        return B.resolve()
+        return B.resolve([])
     }
 
     return cypher(`
@@ -110,8 +113,7 @@ function calculateClassicPointsByPronostic(games = [], pronostics = []) {
             pronostic.classicPoints = calculateClassicPoints(pronostic, currentGame)
             pronostic.riskPoints = calculateRiskPoints({ ..._.pick(pronostic, 'happened', 'willHappen', 'amount') })
             return pronostic
-        }
-        catch (err) {
+        } catch (err) {
             console.log(`Error calcul pronostic with ${JSON.stringify(pronostic)}`, err)
         }
     }

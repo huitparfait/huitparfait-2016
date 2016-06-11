@@ -5,22 +5,15 @@ import moment from 'moment'
 export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
 
     const transformAnonymous = (groupId == null)
-
-    // TODO ça marche pas
-    const eightLimit = moment()
-    // .subtract(8, 'hours')
-    // .subtract(8, 'minutes')
-    // .startOf('day')
-        .valueOf()
+    const eightLimit = getEightLimit()
 
     return cypher(`
         MATCH (me:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
         MATCH (u:User)-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g)
-        OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(p:Pronostic)-[IS_ABOUT_GAME]->(game:Game)
+        MATCH (u)<-[:CREATED_BY_USER]-(p:Pronostic)-[IS_ABOUT_GAME]->(game:Game)
+        WHERE game.startsAt < {eightLimit}
         OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(pp:Pronostic)-[IS_ABOUT_GAME]->(game)
         WHERE   p.classicPoints IS NOT NULL
-                AND pp.classicPoints IS NOT NULL
-                AND game.startsAt < {eightLimit}
                 AND pp.classicPoints = 5
                 AND pp.riskPoints = 3
         WITH
@@ -53,14 +46,22 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
 
         return results.slice(from, pageSize + from)
     }
+
+    function getEightLimit() {
+        const now = moment()
+        const eightLimit = moment().startOf('day').add({ hours: 8, minutes: 8 })
+
+        if (now.isBefore(eightLimit)) {
+            return eightLimit.subtract(1, 'days').valueOf()
+        }
+
+        return eightLimit.valueOf()
+    }
 }
 
 function formatRanking({ transformAnonymous }) {
 
     return function formatRanking(rank) {
-
-        console.log(rank);
-
         return {
             user: betterUser(rank, transformAnonymous),
             stats: {
@@ -72,7 +73,7 @@ function formatRanking({ transformAnonymous }) {
     }
 }
 
-function calculateRank(ranking = []) {
+export function calculateRank(ranking = []) {
 
     ranking.forEach((row, idx, rows) => {
 
