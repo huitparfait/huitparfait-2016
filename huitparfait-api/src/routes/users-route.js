@@ -153,6 +153,7 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypher(`
                         MATCH		        (g:Game)
+                        WHERE               g.startsAt < 1466859600000
                         MATCH               (ta:Team)-[piga:PLAYS_IN_GAME {order: 1}]->(g)
                         MATCH		        (tb:Team)-[pigb:PLAYS_IN_GAME {order: 2}]->(g)
                         MATCH		        (r:Risk)-[ufg:USED_FOR_GAME]->(g)
