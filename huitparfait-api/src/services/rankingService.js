@@ -2,23 +2,26 @@ import _ from 'lodash'
 import { cypher } from '../infra/neo4j'
 import { betterUser } from './userService'
 
+let rankingAllCache = null
 
-let rankingAllCache
-rankingAllCache = calculateRanking({ pageSize: null })
+export function recalculateRanking() {
+    console.log('Calculate Ranking...')
+    rankingAllCache = null
+    rankingAllCache = calculateRanking({ pageSize: null })
+}
+
 
 export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
     if (groupId == null && rankingAllCache) {
         return rankingAllCache.then(paginate)
     }
 
-    console.log('Calculate Ranking...')
-
     let matchUserQuery = 'MATCH (u:User)'
 
     if (groupId) {
         matchUserQuery = `
-        MATCH (:User { id: {userId} })-[IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
-        MATCH (u:User)-[IS_MEMBER_OF_GROUP { isActive: true }]->(g)`
+        MATCH (me:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
+        MATCH (u:User)-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g)`
     }
 
     return cypher(`
@@ -50,9 +53,6 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
         .map(formatRanking)
         .then(calculateRank)
         .then(paginate)
-        .tap((results = []) => {
-            console.log('Calculate Ranking:', results.length)
-        })
 
     function paginate(results = []) {
         if (pageSize == null) {
@@ -63,7 +63,7 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
     }
 }
 
-export function formatRanking(rank) {
+function formatRanking(rank) {
     const user = betterUser({
         id: rank.userId,
         name: rank.userName,
@@ -80,7 +80,7 @@ export function formatRanking(rank) {
     }
 }
 
-export function calculateRank(ranking = []) {
+function calculateRank(ranking = []) {
     return _(ranking)
         .orderBy((row) => row.stats.totalScore, 'desc')
         .transform((result, row) => {

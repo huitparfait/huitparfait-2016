@@ -34,6 +34,7 @@ exports.register = function (server, options, next) {
             method: 'GET',
             path: '/api/ranking/calculate',
             config: {
+                auth: 'http-basic',
                 handler(req, reply) {
                     calculatePronostic()
                         .then(reply)
