@@ -25,9 +25,9 @@
                             <div class="game-countryName">{{* game.countryNameTeamA}}</div>
                         </div>
                         <div class="game-teams-section">
-                            <span v-if="hasScore(game)"
+                            <span v-if="hasScore(game) && isResultPublishable(game)"
                                   class="game-score">{{* game.goalsTeamA}} - {{* game.goalsTeamB}}</span>
-                            <span v-if="!hasScore(game)" class="game-time">{{* game.startsAt | time}}</span>
+                            <span v-if="!hasScore(game) || !isResultPublishable(game)" class="game-time">{{* game.startsAt | time}}</span>
                         </div>
                         <div class="game-teams-section">
                             <img v-if="game.countryCodeTeamB" class="flag"
