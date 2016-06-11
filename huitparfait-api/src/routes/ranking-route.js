@@ -1,28 +1,28 @@
-import { cypher } from '../infra/neo4j'
-import betterGroup, { shortIdSchema } from '../utils/groupUtils'
+import Joi from 'joi'
+import { calculateRanking } from '../services/rankingService'
+import { calculatePronostic } from '../services/pronosticService'
 
 exports.register = function (server, options, next) {
 
     server.route([
         {
             method: 'GET',
-            path: '/api/ranking',
+            path: '/api/ranking/{groupId}',
             config: {
                 description: 'Fetch ranking',
                 tags: ['api'],
+                validate: {
+                    query: {
+                        from: Joi.number().integer().min(0),
+                        pageSize: Joi.number().integer().min(0),
+                    },
+                },
                 handler(req, reply) {
-                    cypher(`
-                        MATCH    (:User { id:{userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group)
-                        MATCH    (u:User)-[:IS_MEMBER_OF_GROUP]->(g)
-                        RETURN   g.name      AS name, 
-                                 g.avatarUrl AS avatarUrl, 
-                                 g.id        AS id,
-                                 count(DISTINCT u.id) AS userCount
-                        ORDER BY lower(g.name)`,
-                        {
-                            userId: req.auth.credentials.id,
-                        })
-                        .map(betterGroup)
+                    calculateRanking({
+                        ...req.query,
+                        userId: req.auth.credentials.id,
+                        groupId: req.params.groupId,
+                    })
                         .then(reply)
                         .catch(reply)
                 },
@@ -30,35 +30,18 @@ exports.register = function (server, options, next) {
         },
         {
             method: 'GET',
-            path: '/api/groups/{groupId}/ranking',
+            path: '/api/ranking/calculate',
             config: {
-                description: 'Read group\'s users',
-                tags: ['api'],
-                validate: {
-                    params: {
-                        groupId: shortIdSchema,
-                    },
-                },
+                auth: 'http-basic',
                 handler(req, reply) {
-                    cypher(`
-                        MATCH (:User { id: {userId} })-[:IS_MEMBER_OF_GROUP]->(g:Group { id: {groupId} })
-                        MATCH    (u:User)-[m:IS_MEMBER_OF_GROUP {isActive: true}]->(g)
-                        RETURN   u.id        AS id, 
-                                 u.name      AS name, 
-                                 u.avatarUrl AS avatarUrl, 
-                                 m.isActive  AS isActive,
-                                 m.createdAt AS memberSince
-                        ORDER BY memberSince DESC`,
-                        {
-                            userId: req.auth.credentials.id,
-                            groupId: req.params.groupId,
-                        })
+                    calculatePronostic()
                         .then(reply)
                         .catch(reply)
                 },
             },
         },
     ])
+
     next()
 }
 

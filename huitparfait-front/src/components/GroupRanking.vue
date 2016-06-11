@@ -1,26 +1,20 @@
 <template>
 
-    <card v-if="group != null">
-        Retrouvez bientôt ici le classement du groupe <strong>{{ group.name }}</strong>.
-    </card>
+    <card-title v-if="group != null">Classement de <em>{{ group.name }}</em>&nbsp;:</card-title>
 
-    <card-title>Joueurs du groupe&nbsp;:</card-title>
-
-    <card-list>
-        <group-player v-for="user in groupRanking" :user="user" :ranking="true"></group-player>
-    </card-list>
+    <ranked-player v-for="rankedPlayer in groupRanking" :ranked-player="rankedPlayer"></ranked-player>
 
 </template>
 
 <script type="text/babel">
-    import GroupPlayer from './GroupPlayer'
+    import RankedPlayer from './RankedPlayer'
     import store from '../state/configureStore'
     import { fetchGroup } from '../state/actions/groups'
     import { fetchGroupRanking } from '../state/actions/ranking'
 
     export default {
         components: {
-            GroupPlayer,
+            RankedPlayer,
         },
         data() {
             return {
