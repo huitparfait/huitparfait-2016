@@ -8,7 +8,7 @@
             <card-list wide class="games">
 
                 <card wide class="game"
-                      :class="{ 'game--submissionDisabled': isSubmissionClosed(game), 'game--notSaved' : game.notSaved }"
+                      :class="{ 'game--submissionDisabled': isSubmissionClosed(game), 'game--unsaved' : game.unsaved }"
                       v-for="game in games" track-by="gameId">
 
                     <div class="game-header">
@@ -40,14 +40,14 @@
 
                     <div class="game-inputs">
                         <div class="game-scoreInput">
-                            <input v-model="game.predictionScoreTeamA" @change="enablePrediction(game)"
+                            <input v-model="game.predictionScoreTeamA" @change="setPredictionUnsaved(game)"
                                    class="game-scoreInputField" type="number" name="goalsTeamA"
                                    onfocus="this.select()"
                                    :disabled="isSubmissionClosed(game)"/>
                         </div>
                         <div class="game-scoreInput"><!-- Dummy element to align flex items --></div>
                         <div class="game-scoreInput">
-                            <input v-model="game.predictionScoreTeamB" @change="enablePrediction(game)"
+                            <input v-model="game.predictionScoreTeamB" @change="setPredictionUnsaved(game)"
                                    class="game-scoreInputField" type="number" name="goalsTeamB"
                                    onfocus="this.select()"
                                    :disabled="isSubmissionClosed(game)"/>
@@ -69,7 +69,7 @@
                                 <div class="game-risk-answerChoiceGroup">
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.predictionRiskAnswer" type="radio" :value="true"
-                                               @change="enablePrediction(game)" name="riskAnswer{{* game.gameId}}"
+                                               @change="setPredictionUnsaved(game)" name="riskAnswer{{* game.gameId}}"
                                                id="yes{{* game.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
                                         <label for="yes{{* game.gameId}}">VRAI</label>
@@ -77,7 +77,7 @@
 
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.predictionRiskAnswer" type="radio" :value="false"
-                                               @change="enablePrediction(game)" name="riskAnswer{{* game.gameId}}"
+                                               @change="setPredictionUnsaved(game)" name="riskAnswer{{* game.gameId}}"
                                                id="no{{* game.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
                                         <label for="no{{* game.gameId}}">FAUX</label>
@@ -85,7 +85,7 @@
 
                                     <div class="game-risk-answerChoice noAnswer">
                                         <input v-model="game.predictionRiskAnswer" type="radio" :value="null"
-                                               @change="enablePrediction(game)" name="riskAnswer{{* game.gameId}}"
+                                               @change="setPredictionUnsaved(game)" name="riskAnswer{{* game.gameId}}"
                                                id="dunno{{* game.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
                                         <label class="game-risk-answerChoice--multiline"
@@ -102,7 +102,7 @@
                                      class="game-risk-answerChoiceGroup">
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.predictionRiskAmount" type="radio" :value="1"
-                                               @change="enablePrediction(game)" name="riskAmount{{* game.gameId}}"
+                                               @change="setPredictionUnsaved(game)" name="riskAmount{{* game.gameId}}"
                                                id="riskAmount1{{* game.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
                                         <label for="riskAmount1{{* game.gameId}}">1 pt</label>
@@ -110,7 +110,7 @@
 
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.predictionRiskAmount" type="radio" :value="2"
-                                               @change="enablePrediction(game)" name="riskAmount{{* game.gameId}}"
+                                               @change="setPredictionUnsaved(game)" name="riskAmount{{* game.gameId}}"
                                                id="riskAmount2{{* game.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
                                         <label for="riskAmount2{{* game.gameId}}">2 pts</label>
@@ -118,7 +118,7 @@
 
                                     <div class="game-risk-answerChoice">
                                         <input v-model="game.predictionRiskAmount" type="radio" :value="3"
-                                               @change="enablePrediction(game)" name="riskAmount{{* game.gameId}}"
+                                               @change="setPredictionUnsaved(game)" name="riskAmount{{* game.gameId}}"
                                                id="riskAmount3{{* game.gameId}}"
                                                :disabled="isSubmissionClosed(game)"/>
                                         <label for="riskAmount3{{* game.gameId}}">3 pts</label>
@@ -129,12 +129,13 @@
                     </div>
 
                     <div class="game-submitZone">
-                        <btn :inactive="game.notSaved !== true || !predictionIsValid(game)"
+                        <btn :inactive="game.unsaved !== true || !predictionIsValid(game)"
                              class="game-submitZone-button"
                              :class="{ disabled: !predictionIsValid(game) }"
                              @click="savePrediction(game)"
                              :disabled="isSubmissionClosed(game)">Enregistrer
                         </btn>
+                        <div class="game-submitZone-savedCheck" v-show="showPredictionSavedTick(game)"></div>
                         <div class="game-pointsExplanation"
                              v-if="isResultPublishable(game) && game.points != null && game.points < 8">
                             {{* game.points}} pts : {{* game.classicPoints}} pts {{* game.riskPoints >= 0 ? '+' : '-'}} {{* (game.riskPoints || 0) | abs}} pts (risquette)
@@ -188,11 +189,17 @@
                 return game.goalsTeamA != null &&
                     game.goalsTeamB != null
             },
-            enablePrediction: function (game) {
-                Vue.set(game, 'notSaved', true)
+            setPredictionUnsaved: function (game) {
+                Vue.set(game, 'unsaved', true)
             },
-            disablePrediction: function (game) {
-                Vue.set(game, 'notSaved', false)
+            setPredictionSaved: function (game) {
+                Vue.set(game, 'unsaved', false)
+            },
+            showPredictionSavedTick: function (game) {
+                // Do not show the tick when the results are available
+                // Show it when the game has just been saved (game.unsaved === false)
+                // Also show it when we've just laoded the page and the prediction is valid (game.unsaved == null but prediction valid)
+                return !this.isResultPublishable(game) && (game.unsaved === false || (game.unsaved == null && this.predictionIsValid(game)))
             },
             isSubmissionClosed: function (game) {
                 // Submissions close as soon as the game begins
@@ -220,16 +227,16 @@
                 return true
             },
             savePrediction: function (game) {
-                if (game.notSaved !== true || !this.predictionIsValid(game)) {
+                if (game.unsaved !== true || !this.predictionIsValid(game)) {
                     return
                 }
 
                 store.dispatch(savePrediction(game))
                     .then(() => {
-                        this.disablePrediction(game)
+                        this.setPredictionSaved(game)
                     })
                     .catch(() => {
-                        this.enablePrediction(game)
+                        this.setPredictionUnsaved(game)
                     })
             },
         },
@@ -277,7 +284,7 @@
         }
     }
 
-    .game.game--notSaved {
+    .game.game--unsaved {
         background-color: #FFFFCC;
         transition: background-color 0.2s,
     }
@@ -531,6 +538,16 @@
 
     .game--submissionDisabled .game-submitZone-button {
         display: none;
+    }
+
+    .game-submitZone-savedCheck {
+        background: url('../assets/tick.svg') no-repeat;
+        height: 25px;
+        position: absolute;
+        right: 20px;
+        bottom: 15px;
+        width: 25px;
+        z-index: 1;
     }
 
     .game-pointsExplanation {
