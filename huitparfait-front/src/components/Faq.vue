@@ -96,7 +96,7 @@
         </p>
         <p>
             Par exemple, pour le match "France - Roumanie", on vous propose une affirmation telle que
-            <strong>Les prolongations sont jouées</strong>.
+            <strong>But du pied gauche</strong>.
             À vous de pronostiquer si cette risquette sera VRAIE ou FAUSSE. Vous pouvez risquer de 1 à 3 points.
             Si à la fin du match vous aviez raison, vous gagnez les points risqués, dans le cas contraire vous perdez
             les points (et votre honneur).
