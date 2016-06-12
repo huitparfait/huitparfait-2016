@@ -1,6 +1,6 @@
 import { cypherOne } from '../infra/neo4j'
 import Bluebird from 'bluebird'
-import _ from 'lodash'
+import moment from 'moment'
 
 exports.register = function (server, options = {}, next) {
 
@@ -15,7 +15,16 @@ exports.register = function (server, options = {}, next) {
                     .mapSeries(['Game', 'Group', 'Pronostic', 'Risk', 'Team', 'User'], (nodeName) => {
                         return cypherOne(`MATCH (n:${nodeName}) RETURN "${nodeName}" as name, COUNT(n) as count`)
                     })
-                    .then(_.keyBy('name'))
+                    .reduce((result, metric) => {
+                        result[metric.name] = metric.count
+                        return result
+                    }, {})
+                    .then((dbMetrics) => {
+                        return {
+                            startedAt: moment(server.info.started).format(),
+                            data: dbMetrics,
+                        }
+                    })
                     .then(reply)
                     .catch(reply)
             },
