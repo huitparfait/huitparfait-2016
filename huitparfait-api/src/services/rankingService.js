@@ -49,7 +49,8 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
 
     function getEightLimit() {
         const now = moment()
-        const eightLimit = moment().startOf('day').add({ hours: 8, minutes: 8 })
+        // TODO handle 8:08 on Europe/Paris timezone properly ;-)
+        const eightLimit = moment().startOf('day').add({ hours: 6, minutes: 8 })
 
         if (now.isBefore(eightLimit)) {
             return eightLimit.subtract(1, 'days').valueOf()
