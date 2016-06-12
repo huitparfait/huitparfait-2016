@@ -4,7 +4,9 @@
         <div class="day"
              v-for="(gameDate, games) in gamesByDay">
 
-            <card-title class="gameDate">{{* gameDate | date}}</card-title>
+            <card-title class="gameDate" :id="isToday(gameDate) ? 'todaysGames' : null">
+                {{* gameDate | date}}
+            </card-title>
             <card-list wide class="games">
 
                 <card wide class="game"
@@ -188,12 +190,23 @@
                 this.gamesByDay = _.cloneDeep(predictions)
             },
         },
+        ready() {
+            this.$nextTick(function () {
+                console.log('ready');
+                console.log(this.$el);
+                document.querySelector("#todaysGames").scrollIntoView()
+            })
+        },
         methods: {
+            isToday: function (gameDate) {
+                return moment(gameDate).isSame(Date.now(), 'day')
+            },
             hasScore: function (game) {
                 return game.goalsTeamA != null &&
                     game.goalsTeamB != null
             },
             setPredictionUnsaved: function (game) {
+                document.getElementById("todaysGames").scrollIntoView();
                 Vue.set(game, 'unsaved', true)
             },
             setPredictionSaved: function (game) {
