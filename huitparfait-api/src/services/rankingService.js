@@ -10,9 +10,9 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
     return cypher(`
         MATCH (me:User { id: {userId} })-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group {id: {groupId}} )
         MATCH (u:User)-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g)
-        MATCH (u)<-[:CREATED_BY_USER]-(p:Pronostic)-[IS_ABOUT_GAME]->(game:Game)
+        OPTIONAL MATCH (u)<-[:CREATED_BY_USER]-(p:Pronostic)-[IS_ABOUT_GAME]->(game:Game)
         WHERE game.startsAt < {eightLimit}
-        OPTIONAL MATCH   (u)<-[:CREATED_BY_USER]-(pp:Pronostic)-[IS_ABOUT_GAME]->(game)
+        OPTIONAL MATCH (u)<-[:CREATED_BY_USER]-(pp:Pronostic)-[IS_ABOUT_GAME]->(game)
         WHERE   p.classicPoints IS NOT NULL
                 AND pp.classicPoints = 5
                 AND pp.riskPoints = 3
