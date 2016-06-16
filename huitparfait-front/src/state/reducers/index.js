@@ -7,6 +7,7 @@ import groupUsers from './groupUsers'
 import groupRanking from './groupRanking'
 import predictions from './predictions'
 import ranking from './ranking'
+import submenu from './submenu'
 
 export default combineReducers({
     loaders,
@@ -17,4 +18,5 @@ export default combineReducers({
     groupRanking,
     predictions,
     ranking,
+    submenu,
 })

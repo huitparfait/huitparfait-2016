@@ -58,8 +58,8 @@ export function fetchRanking() {
     return execute('/ranking')
 }
 
-export function fetchPredictions() {
-    return execute('/users/me/predictions')
+export function fetchPredictions(period) {
+    return execute(`/users/me/predictions/${period}`)
 }
 
 export function savePrediction(newPrediction) {

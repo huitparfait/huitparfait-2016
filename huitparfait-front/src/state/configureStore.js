@@ -9,12 +9,14 @@ import * as userActions from './actions/user'
 import * as groupsActions from './actions/groups'
 import * as predictionsActions from './actions/predictions'
 import * as rankingActions from './actions/ranking'
+import * as submenuActions from './actions/submenu'
 
 const actions = {
     userActions,
     groupsActions,
     rankingActions,
     predictionsActions,
+    submenuActions,
 }
 
 const reduxStore = createStore(reducer, compose(

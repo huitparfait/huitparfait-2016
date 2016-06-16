@@ -25,13 +25,13 @@ function fetchPredictionsFailure() {
     }
 }
 
-export function fetchPredictions() {
+export function fetchPredictions(period) {
 
     return (dispatch) => {
 
         dispatch(fetchPredictionsAttempt())
 
-        return apiFetchPredictions()
+        return apiFetchPredictions(period)
             .then((predictions) => dispatch(fetchPredictionsSuccess(predictions)))
             .catch(() => dispatch(fetchPredictionsFailure()))
     }

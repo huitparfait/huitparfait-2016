@@ -9,6 +9,7 @@ import GroupJoin from './components/GroupJoin'
 import NewGroup from './components/NewGroup'
 import Faq from './components/Faq'
 import Profile from './components/Profile'
+import { hideSubmenu } from './state/actions/submenu'
 import store from './state/configureStore'
 
 Vue.use(VueRouter)
@@ -31,7 +32,7 @@ router.map({
         name: 'groupRanking',
         component: GroupRanking,
     },
-    '/pronostics': {
+    '/pronostics/:period': {
         name: 'predictions',
         component: Predictions,
     },
@@ -68,6 +69,8 @@ router.redirect({
 router.beforeEach(({ to, next, redirect }) => {
 
     const PATH_BEFORE_LOGIN = 'path-before-login'
+
+    store.dispatch(hideSubmenu())
 
     if (to.name === 'home') {
 
