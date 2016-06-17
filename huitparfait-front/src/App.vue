@@ -1,7 +1,7 @@
 <template>
     <div class="main" :class="{ 'isDisconnected': user == null }">
         <title-bar class="titlebar" :class="{ 'isDisconnected': user == null }"></title-bar>
-        <router-view></router-view>
+        <router-view class="view" :class="{ 'view--hidden': submenu != false }"></router-view>
         <menu-bar class="menubar" :class="{ 'isDisconnected': user == null }"></menu-bar>
     </div>
 </template>
@@ -19,6 +19,7 @@
         data() {
             return {
                 user: this.$select('user'),
+                submenu: this.$select('submenu'),
             }
         },
     }
@@ -46,7 +47,7 @@
 
     @media (min-width: 850px) {
         .main {
-            padding: 67px 7px 0 185px;
+            padding: 67px 5px 0 255px;
         }
 
         .main.isDisconnected {
@@ -72,12 +73,37 @@
     @media (min-width: 850px) {
         .titlebar {
             height: 50px;
-            left: 182px;
             line-height: 80px;
         }
 
         .titlebar.isDisconnected {
             left: 0;
+        }
+    }
+
+    .view {
+        position: relative;
+    }
+
+    @supports (pointer-events: none) {
+
+        .view:after {
+            background-color: #fff;
+            content: '';
+            display: block;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            transition: 150ms opacity ease-in-out;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .view.view--hidden:after {
+            opacity: 0.8;
+            pointer-events: auto;
         }
     }
 
@@ -104,14 +130,12 @@
 
     @media (min-width: 850px) {
         .menubar {
-            border-right-style: solid;
-            border-right-width: 2px;
             border-top-style: none;
             border-top-width: 0;
             flex-direction: column;
             height: auto;
-            top: 0;
-            width: 180px;
+            top: 67px;
+            width: 250px;
         }
     }
 

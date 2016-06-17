@@ -146,75 +146,100 @@ exports.register = function (server, options, next) {
         },
         {
             method: 'GET',
-            path: '/api/users/me/predictions',
+            path: '/api/users/me/predictions/{period}',
             config: {
                 description: 'List games',
                 tags: ['api'],
                 handler(req, reply) {
                     cypher(`
-                        MATCH		        (g:Game)
-                        MATCH               (ta:Team)-[piga:PLAYS_IN_GAME {order: 1}]->(g)
-                        MATCH		        (tb:Team)-[pigb:PLAYS_IN_GAME {order: 2}]->(g)
-                        MATCH		        (r:Risk)-[ufg:USED_FOR_GAME]->(g)
-                        OPTIONAL MATCH      (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u:User { id: {userId} })
-                        OPTIONAL MATCH      (p)-[sa:PREDICT_SCORE]->(ta)
-                        OPTIONAL MATCH      (p)-[sb:PREDICT_SCORE]->(tb)
-                        OPTIONAL MATCH      (p)-[pr:PREDICT_RISK]->(r:Risk)
-                        RETURN      g.id                AS gameId,
-                                    g.phase             AS phase,
-                                    g.city              AS city,
-                                    g.name              AS gameName,
-                                    g.stadium           AS stadium,
-                                    g.startsAt          AS startsAt,
-                                    ta.id               AS idTeamA,
-                                    ta.countryCode      AS countryCodeTeamA,
-                                    ta.countryName      AS countryNameTeamA,
-                                    ta.group            AS group,
-                                    tb.id               AS idTeamB,
-                                    tb.countryCode      AS countryCodeTeamB,
-                                    tb.countryName      AS countryNameTeamB,
-                                    piga.goals          AS goalsTeamA,
-                                    pigb.goals          AS goalsTeamB,
-									r.id				AS riskId,
-									r.text				AS riskTitle,
-									sa.goals            AS predictionScoreTeamA,
-									sb.goals            AS predictionScoreTeamB,
-									pr.willHappen       AS predictionRiskAnswer,
-									pr.amount           AS predictionRiskAmount,
-									p.classicPoints     AS classicPoints,
-									p.riskPoints        AS riskPoints,
-									ufg.happened        AS riskHappened
-                        ORDER BY    g.startsAt
+                        MATCH          (g:Game)
+                        MATCH          (ta:Team)-[piga:PLAYS_IN_GAME {order: 1}]->(g)
+                        MATCH          (tb:Team)-[pigb:PLAYS_IN_GAME {order: 2}]->(g)
+                        MATCH          (r:Risk)-[ufg:USED_FOR_GAME]->(g)
+                        OPTIONAL MATCH (g)<-[:IS_ABOUT_GAME]-(p:Pronostic)-[:CREATED_BY_USER]->(u:User { id: {userId} })
+                        OPTIONAL MATCH (p)-[sa:PREDICT_SCORE]->(ta)
+                        OPTIONAL MATCH (p)-[sb:PREDICT_SCORE]->(tb)
+                        OPTIONAL MATCH (p)-[pr:PREDICT_RISK]->(r:Risk)
+                        RETURN   g.id            AS gameId,
+                                 g.phase         AS phase,
+                                 g.city          AS city,
+                                 g.name          AS gameName,
+                                 g.stadium       AS stadium,
+                                 g.startsAt      AS startsAt,
+                                 ta.id           AS idTeamA,
+                                 ta.countryCode  AS countryCodeTeamA,
+                                 ta.countryName  AS countryNameTeamA,
+                                 ta.group        AS group,
+                                 tb.id           AS idTeamB,
+                                 tb.countryCode  AS countryCodeTeamB,
+                                 tb.countryName  AS countryNameTeamB,
+                                 piga.goals      AS goalsTeamA,
+                                 pigb.goals      AS goalsTeamB,
+                                 r.id            AS riskId,
+                                 r.text          AS riskTitle,
+                                 sa.goals        AS predictionScoreTeamA,
+                                 sb.goals        AS predictionScoreTeamB,
+                                 pr.willHappen   AS predictionRiskAnswer,
+                                 pr.amount       AS predictionRiskAmount,
+                                 p.classicPoints AS classicPoints,
+                                 p.riskPoints    AS riskPoints,
+                                 ufg.happened    AS riskHappened
+                        ORDER BY g.startsAt
                         `,
                         {
                             userId: req.auth.credentials.id,
                         })
-                        .then(function (predictions) {
+                        .then((predictions) => {
 
-                            const predictionsByDay = _(predictions)
+                            const allDates = _(predictions)
+                                .map((game) => moment(game.startsAt).startOf('day').valueOf())
+                                .uniq()
+                                .value()
+
+                            const today = moment().startOf('day').valueOf()
+                            const nextDay = _(allDates).find((day) => day >= today)
+                            const previousDay = _(allDates).slice().reverse().find((day) => day < today)
+
+                            return _(predictions)
+                                .filter((game) => {
+
+                                    const dayOfGame = moment(game.startsAt).startOf('day').valueOf()
+
+                                    if (req.params.period === 'previous-days') {
+                                        return dayOfGame <= previousDay
+                                    }
+
+                                    if (req.params.period === 'next-days') {
+                                        return dayOfGame >= nextDay
+                                    }
+
+                                    return true
+                                })
+                                .thru((allPredictions) => {
+
+                                    if (req.params.period === 'previous-days') {
+                                        return _(allPredictions).slice().reverse().value()
+                                    }
+
+                                    return allPredictions
+                                })
+                                .map((game) => {
+
+                                    // Initialize amount of risked points to the maximum if not defined
+                                    game.predictionRiskAmount = game.predictionRiskAmount || 3
+
+                                    // Calculate the total number of points for a prediction
+                                    if (game.classicPoints != null) {
+                                        game.points = game.classicPoints + (game.riskPoints || 0)
+                                    }
+
+                                    return game
+                                })
                                 .groupBy((game) => {
                                     return moment(game.startsAt).startOf('day')
                                 })
-                                .mapValues((gamesForDay) => {
-                                    return _(gamesForDay)
-                                        .map((gameForDay) => {
-
-                                            // Initialize amount of risked points to the maximum if not defined
-                                            gameForDay.predictionRiskAmount = gameForDay.predictionRiskAmount || 3
-
-                                            // Calculate the total number of points for a prediction
-                                            if (gameForDay.classicPoints != null) {
-                                                gameForDay.points = gameForDay.classicPoints + (gameForDay.riskPoints || 0)
-                                            }
-
-                                            return gameForDay
-                                        })
-                                        .value()
-                                })
-                                .value()
-
-                            reply(predictionsByDay)
                         })
+                        .then(reply)
                         .catch(reply)
                 },
             },

@@ -1,58 +1,61 @@
 <template>
 
-    <card-title v-if="simpleGroups != null && simpleGroups.length > 0">Vous êtes simple membre de {{ simpleGroups.length }} groupe(s)&nbsp;:</card-title>
+    <div class="page--groupList">
 
-    <card v-if="simpleGroups != null && simpleGroups.length > 0">
-        <p>Cliquez sur un groupe pour retrouver le classement de ses joueurs.</p>
-    </card>
+        <card-title v-if="simpleGroups != null && simpleGroups.length > 0">Vous êtes simple membre de {{ simpleGroups.length }} groupe(s)&nbsp;:</card-title>
 
-    <card-list>
-        <group v-for="group in simpleGroups" :group="group" link="groupRanking" track-by="id"></group>
-    </card-list>
-
-    <card-title v-if="adminGroups != null && adminGroups.length > 0">Vous administrez {{ adminGroups.length }} groupe(s)&nbsp;:</card-title>
-
-    <card v-if="adminGroups != null && adminGroups.length > 0">
-        <p>
-            Cliquez sur un groupe pour retrouver le lien d'invitation et la liste des joueurs.
-            Vous pourrez également le modifier et gérer les joueurs.
-        </p>
-    </card>
-
-    <card v-if="groups != null && groups.length === 0">
-        <p>Vous n'êtes membre d'aucun groupe.</p>
-        <p>Si vos amis ont déjà créé un groupe, demandez leur le lien d'invitation pour rejoindre le groupe et pour
-            pronostiquer avec eux !</p>
-        <p>
-            Si vous êtes le premier de vos amis à s'inscrire sur Huit Parfait, utilisez le formulaire ci-dessous pour
-            créer des groupes pour vos amis, famille, collègues...
-            Vous obtiendrez ensuite un lien d'invitation à leur partager pour qu'il rejoigne votre groupe.
-        </p>
-    </card>
-
-    <card-list>
-        <group v-for="group in adminGroups" :group="group" mode="delete" track-by="id"></group>
-    </card-list>
-
-    <card-title>Créer un nouveau groupe&nbsp;:</card-title>
-
-    <form @submit.prevent="createGroup" :class="{ 'createGroup--progress': createGroupInPogress }">
-        <card>
-            <label class="inputLabel">
-                Nom du nouveau groupe&nbsp;:
-                <input v-model="newGroup.name" type="text" class="input" placeholder="Mes collègues">
-            </label>
-            <label class="inputLabel">
-                Image du groupe (HTTPS uniquement)&nbsp;:
-                <input v-model="newGroup.avatarUrl" type="text" class="input"
-                        placeholder="https://les-super-logos.com/monimage.jpg">
-            </label>
-            <div class="btnBar">
-                <btn :disabled="createGroupInPogress">Créer le groupe</btn>
-            </div>
-            <pre>{{ $validation | json }}</pre>
+        <card v-if="simpleGroups != null && simpleGroups.length > 0">
+            <p>Cliquez sur un groupe pour retrouver le classement de ses joueurs.</p>
         </card>
-    </form>
+
+        <card-list>
+            <group v-for="group in simpleGroups" :group="group" link="groupRanking" track-by="id"></group>
+        </card-list>
+
+        <card-title v-if="adminGroups != null && adminGroups.length > 0">Vous administrez {{ adminGroups.length }} groupe(s)&nbsp;:</card-title>
+
+        <card v-if="adminGroups != null && adminGroups.length > 0">
+            <p>
+                Cliquez sur un groupe pour retrouver le lien d'invitation et la liste des joueurs.
+                Vous pourrez également le modifier et gérer les joueurs.
+            </p>
+        </card>
+
+        <card v-if="groups != null && groups.length === 0">
+            <p>Vous n'êtes membre d'aucun groupe.</p>
+            <p>Si vos amis ont déjà créé un groupe, demandez leur le lien d'invitation pour rejoindre le groupe et pour
+                pronostiquer avec eux !</p>
+            <p>
+                Si vous êtes le premier de vos amis à s'inscrire sur Huit Parfait, utilisez le formulaire ci-dessous pour
+                créer des groupes pour vos amis, famille, collègues...
+                Vous obtiendrez ensuite un lien d'invitation à leur partager pour qu'il rejoigne votre groupe.
+            </p>
+        </card>
+
+        <card-list>
+            <group v-for="group in adminGroups" :group="group" mode="delete" track-by="id"></group>
+        </card-list>
+
+        <card-title>Créer un nouveau groupe&nbsp;:</card-title>
+
+        <form @submit.prevent="createGroup" :class="{ 'createGroup--progress': createGroupInPogress }">
+            <card>
+                <label class="inputLabel">
+                    Nom du nouveau groupe&nbsp;:
+                    <input v-model="newGroup.name" type="text" class="input" placeholder="Mes collègues">
+                </label>
+                <label class="inputLabel">
+                    Image du groupe (HTTPS uniquement)&nbsp;:
+                    <input v-model="newGroup.avatarUrl" type="text" class="input"
+                            placeholder="https://les-super-logos.com/monimage.jpg">
+                </label>
+                <div class="btnBar">
+                    <btn :disabled="createGroupInPogress">Créer le groupe</btn>
+                </div>
+                <pre>{{ $validation | json }}</pre>
+            </card>
+        </form>
+    </div>
 
 </template>
 
