@@ -1,8 +1,11 @@
 <template>
 
-    <card-title v-if="group != null">Classement de <em>{{ group.name }}</em>&nbsp;:</card-title>
+    <div class="page--groupRanking">
 
-    <ranked-player v-for="rankedPlayer in groupRanking" :ranked-player="rankedPlayer"></ranked-player>
+        <card-title v-if="group != null">Classement de <em>{{ group.name }}</em>&nbsp;:</card-title>
+
+        <ranked-player v-for="rankedPlayer in groupRanking" :ranked-player="rankedPlayer"></ranked-player>
+    </div>
 
 </template>
 

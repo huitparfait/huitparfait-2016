@@ -1,35 +1,38 @@
 <template>
 
-    <group :group="group" mode="edit"></group>
+    <div class="page--groupUsers">
 
-    <card>
-        <form @submit.prevent="updateGroup" v-if="group != null && groupEdit != null"
-              :class="{ 'updateGroup--progress': updateGroupInPogress }">
-            <label class="inputLabel">
-                Nom du groupe :
-                <input v-model="groupEdit.name" type="text" class="input" placeholder="Mes collègues">
-            </label>
-            <label class="inputLabel">
-                Image du groupe (HTTPS uniquement) :
-                <input v-model="groupEdit.avatarUrl" type="text" class="input"
-                       placeholder="https://les-super-logos.com/monimage.jpg">
-            </label>
-            <div class="btnBar">
-                <btn :disabled="updateGroupInPogress">Mettre à jour le groupe</btn>
-            </div>
-        </form>
-    </card>
+        <group :group="group" mode="edit"></group>
 
-    <card v-if="group != null">
-        Lien d'invitation à partager avec vos amis :
-        <a v-link="{ name: 'groupJoin', params: { groupId: group.id, groupName: group.slug } }">{{ joinUrl }}</a>
-    </card>
+        <card>
+            <form @submit.prevent="updateGroup" v-if="group != null && groupEdit != null"
+                    :class="{ 'updateGroup--progress': updateGroupInPogress }">
+                <label class="inputLabel">
+                    Nom du groupe :
+                    <input v-model="groupEdit.name" type="text" class="input" placeholder="Mes collègues">
+                </label>
+                <label class="inputLabel">
+                    Image du groupe (HTTPS uniquement) :
+                    <input v-model="groupEdit.avatarUrl" type="text" class="input"
+                            placeholder="https://les-super-logos.com/monimage.jpg">
+                </label>
+                <div class="btnBar">
+                    <btn :disabled="updateGroupInPogress">Mettre à jour le groupe</btn>
+                </div>
+            </form>
+        </card>
 
-    <div class="cardLabel">Joueurs du groupe :</div>
+        <card v-if="group != null">
+            Lien d'invitation à partager avec vos amis :
+            <a v-link="{ name: 'groupJoin', params: { groupId: group.id, groupName: group.slug } }">{{ joinUrl }}</a>
+        </card>
 
-    <card-list>
-        <group-player v-for="user in groupUsers" :user="user"></group-player>
-    </card-list>
+        <div class="cardLabel">Joueurs du groupe :</div>
+
+        <card-list>
+            <group-player v-for="user in groupUsers" :user="user"></group-player>
+        </card-list>
+    </div>
 
 </template>
 
