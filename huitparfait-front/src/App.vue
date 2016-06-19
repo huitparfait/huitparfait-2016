@@ -107,6 +107,12 @@
         }
     }
 
+    @media (min-width: 850px) {
+        .view:after {
+            display: none;
+        }
+    }
+
     .menubar {
         border-top-style: solid;
         border-top-width: 2px;

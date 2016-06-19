@@ -1,6 +1,6 @@
 <template>
 
-    <card class="rankedPlayer">
+    <card class="rankedPlayer" :class="{ 'connectedPlayer': rankedPlayer.user.id === user.id }">
         <div class="rankingAvatar">
             <div class="ranking">{{ rankedPlayer.rank | rank }}</div>
             <div class="avatar--wrapper">
@@ -28,6 +28,11 @@
 
     export default {
         props: ['rankedPlayer'],
+        data() {
+            return {
+                user: this.$select('user'),
+            }
+        },
     }
 
 </script>
@@ -39,6 +44,10 @@
         display: flex;
         position: relative;
         overflow: hidden;
+    }
+
+    .rankedPlayer.connectedPlayer {
+        background-color: #FFD:;
     }
 
     @media (min-width: 700px) {
@@ -61,7 +70,7 @@
     }
 
     .ranking {
-        color: #888;
+        color: #49996f;
         font-size: 16px;
         font-weight: bold;
         margin-right: 15px;
