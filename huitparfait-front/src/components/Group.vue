@@ -8,7 +8,7 @@
             </div>
             <div class="infos">
                 <div class="name">{{group.name}}</div>
-                <div class="size"><strong>{{group.userCount}}</strong> joueurs</div>
+                <div class="size"><strong>{{group.userCount}}</strong> {{ group.userCount | frenchPlural 'joueur' }}</div>
             </div>
         </a>
         <div class="btnBar" v-if="mode === 'delete'">
