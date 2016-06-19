@@ -1,10 +1,78 @@
 import { cypher } from '../infra/neo4j'
-import { betterUser } from './userService'
+import _ from 'lodash'
+import { betterUser, fetchUsersWithIds } from './userService'
 import moment from 'moment'
 
-export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
+let commonRankingCache
 
-    const transformAnonymous = (groupId == null)
+fetchCommonRankingByCache({})
+
+export function fetchCommonRankingByCache({ forceUpdate = false }) {
+    if (commonRankingCache && !forceUpdate) {
+        return commonRankingCache
+    }
+    commonRankingCache = calculateCommonRanking()
+    return commonRankingCache
+}
+
+export function calculateCommonRanking() {
+    return cypher(`
+        MATCH (u:User)
+        OPTIONAL MATCH (u)<-[:CREATED_BY_USER]-(p:Pronostic)-[IS_ABOUT_GAME]->(game:Game)
+        WHERE game.startsAt < timestamp()
+        OPTIONAL MATCH (u)<-[:CREATED_BY_USER]-(pp:Pronostic)-[IS_ABOUT_GAME]->(game)
+        WHERE   p.classicPoints IS NOT NULL
+                AND pp.classicPoints = 5
+                AND pp.riskPoints = 3
+        WITH
+          u,
+          p.classicPoints + p.riskPoints AS score,
+          pp AS perfect
+        RETURN
+                u.id           AS userId,
+                SUM(score)     AS totalScore,
+                COUNT(score)   AS nbPredictions,
+                COUNT(perfect) AS nbPerfects
+                ORDER BY totalScore DESC, nbPredictions DESC, nbPerfects DESC`)
+}
+
+export function fetchCommonRankingWithPaginate({ page = 1, pageSize = 50 }) {
+
+    return fetchCommonRankingByCache({})
+        .then(calculateRank)
+        .then(paginate)
+        .then(attachUser)
+        .map(formatRanking({ transformAnonymous: true }))
+
+
+    function attachUser(ranking) {
+        const userIds = _.map(ranking, 'userId')
+
+        return fetchUsersWithIds(userIds).then((users) => {
+            const usersById = _.keyBy(users, 'userId')
+
+            return ranking.map((row) => {
+                return {
+                    ...row,
+                    ...usersById[row.userId],
+                }
+            })
+        })
+    }
+
+
+    function paginate(results = []) {
+        if (page === 0) {
+            page = 1
+        }
+
+        const from = pageSize * (page - 1)
+        return results.slice(from, pageSize + from)
+    }
+}
+
+export function calculateRanking({ groupId, userId }) {
+
     const eightLimit = getEightLimit()
 
     return cypher(`
@@ -35,17 +103,9 @@ export function calculateRanking({ groupId, userId, from = 0, pageSize = 50 }) {
             groupId,
             eightLimit,
         })
-        .map(formatRanking({ transformAnonymous }))
         .then(calculateRank)
-        .then(paginate)
+        .map(formatRanking({ transformAnonymous: false }))
 
-    function paginate(results = []) {
-        if (pageSize == null) {
-            return results
-        }
-
-        return results.slice(from, pageSize + from)
-    }
 
     function getEightLimit() {
         const now = moment()
@@ -64,6 +124,7 @@ function formatRanking({ transformAnonymous }) {
 
     return function formatRanking(rank) {
         return {
+            rank: rank.rank,
             user: betterUser(rank, transformAnonymous),
             stats: {
                 totalScore: rank.totalScore,
@@ -78,7 +139,7 @@ export function calculateRank(ranking = []) {
 
     ranking.forEach((row, idx, rows) => {
 
-        if (idx > 0 && rows[idx - 1].stats.totalScore === row.stats.totalScore) {
+        if (idx > 0 && rows[idx - 1].totalScore === row.totalScore) {
             row.rank = rows[idx - 1].rank
             return
         }
