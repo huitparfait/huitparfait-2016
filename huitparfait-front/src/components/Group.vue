@@ -8,7 +8,8 @@
             </div>
             <div class="infos">
                 <div class="name">{{group.name}}</div>
-                <div class="size"><strong>{{group.userCount}}</strong> {{ group.userCount | frenchPlural 'joueur' }}</div>
+                <div class="size"><strong>{{group.userCount}}</strong> {{ group.userCount | frenchPlural 'joueur' }}
+                </div>
             </div>
         </a>
         <div class="btnBar" v-if="mode === 'delete'">
@@ -27,7 +28,10 @@
         props: ['group', 'mode', 'loader', 'link'],
         methods: {
             deleteGroup() {
-                store.dispatch(deleteGroup(this.group))
+
+                if (window.confirm('Êtes-vous certain de vouloir supprimer ce groupe ?')) {
+                    store.dispatch(deleteGroup(this.group))
+                }
             },
         },
     }
