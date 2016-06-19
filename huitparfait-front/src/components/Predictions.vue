@@ -11,7 +11,11 @@
                         v-for="game in games" track-by="gameId">
 
                     <div class="game-header">
-                        <div class="game-name">Groupe {{* game.group}}</div>
+                        <div class="game-name">
+                            {{* game.gameName}} -
+                            <span v-if="game.phase ==='Groupes'">Groupe {{* game.group}}</span>
+                            <span v-else>{{* game.phase}}</span>
+                        </div>
                         <div class="game-location">{{* game.stadium}} ({{* game.city}})</div>
                     </div>
 
