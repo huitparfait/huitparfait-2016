@@ -128,7 +128,7 @@ exports.register = function (server, options, next) {
                 handler(req, reply) {
                     cypher(`
                         MATCH    (:User { id:{id} })-[imog:IS_MEMBER_OF_GROUP { isActive: true }]->(g:Group)
-                        MATCH    (u:User)-[:IS_MEMBER_OF_GROUP]->(g)
+                        MATCH    (u:User)-[:IS_MEMBER_OF_GROUP { isActive: true }]->(g)
                         RETURN   g.name               AS name,
                                  g.avatarUrl          AS avatarUrl,
                                  g.id                 AS id,
