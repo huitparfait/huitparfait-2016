@@ -38,7 +38,7 @@
                     name: 'Classement général',
                     userCount: '?',
                     id: 'general',
-                    slug: 'general'
+                    slug: 'general',
                 },
                 groups: this.$select('groups'),
             }

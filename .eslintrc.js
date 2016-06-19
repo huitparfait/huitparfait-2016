@@ -134,7 +134,7 @@ module.exports = {
         'max-depth': [2, 3],
         'max-params': [2, 3],
         'max-nested-callbacks': [2, 3],
-        'max-statements': [2, 13],
+        'max-statements': [2, 14],
         'complexity': [2, 8],
     },
 };
