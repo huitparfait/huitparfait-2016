@@ -57,8 +57,8 @@
                 }
 
                 return store.dispatch(hideSubmenu())
-            }
-        }
+            },
+        },
     }
 </script>
 

@@ -47,7 +47,7 @@
     }
 
     .rankedPlayer.connectedPlayer {
-        background-color: #FFD:;
+        background-color: #FFD;
     }
 
     @media (min-width: 700px) {

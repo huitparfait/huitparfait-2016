@@ -29,6 +29,7 @@
         methods: {
             deleteGroup() {
 
+                // eslint-disable-next-line no-alert
                 if (window.confirm('Êtes-vous certain de vouloir supprimer ce groupe ?')) {
                     store.dispatch(deleteGroup(this.group))
                 }
