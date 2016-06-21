@@ -75,6 +75,10 @@ export function savePrediction(game) {
 
         return apiSavePrediction(prediction)
             .then(() => dispatch(savePredictionSuccess()))
-            .catch(() => dispatch(savePredictionFailure()))
+            // fix this with redux
+            .catch((err) => {
+                dispatch(savePredictionFailure())
+                return Promise.reject(err)
+            })
     }
 }
