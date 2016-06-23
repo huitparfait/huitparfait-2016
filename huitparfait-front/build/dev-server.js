@@ -56,6 +56,10 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
+app.get('/sw.js', function (req, res) {
+  res.type('application/javascript').sendFile(path.join(__dirname, '../sw.js'), {cacheControl: false})
+})
+
 module.exports = app.listen(port, function (err) {
   if (err) {
     console.log(err)
