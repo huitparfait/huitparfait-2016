@@ -175,6 +175,8 @@ exports.register = function (server, options, next) {
                                  tb.countryName  AS countryNameTeamB,
                                  piga.goals      AS goalsTeamA,
                                  pigb.goals      AS goalsTeamB,
+                                 piga.penalties  AS penaltiesTeamA,
+                                 pigb.penalties  AS penaltiesTeamB,
                                  r.id            AS riskId,
                                  r.text          AS riskTitle,
                                  sa.goals        AS predictionScoreTeamA,
