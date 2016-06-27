@@ -28,9 +28,13 @@
                             <div class="game-countryName">{{* game.countryNameTeamA}}</div>
                         </div>
                         <div class="game-teams-section">
-                            <span v-if="hasScore(game) && isResultPublishable(game)"
-                                    class="game-score">{{* game.goalsTeamA}} - {{* game.goalsTeamB}}</span>
-                            <span v-if="!hasScore(game) || !isResultPublishable(game)" class="game-time">{{* game.startsAt | time}}</span>
+                            <div v-if="hasScore(game) && isResultPublishable(game)"
+                                 class="game-score">{{* game.goalsTeamA}} - {{* game.goalsTeamB}}
+                            </div>
+                            <div v-if="hasScoreWithPenalties(game) && isResultPublishable(game)"
+                                 class="game-penalties">Tab. {{* game.penaltiesTeamA}} - {{* game.penaltiesTeamB}}
+                            </div>
+                            <div v-if="!hasScore(game) || !isResultPublishable(game)" class="game-time">{{* game.startsAt | time}}</div>
                         </div>
                         <div class="game-teams-section">
                             <img v-if="game.countryCodeTeamB" class="flag"
@@ -202,7 +206,13 @@
         methods: {
             hasScore: function (game) {
                 return game.goalsTeamA != null &&
-                        game.goalsTeamB != null
+                    game.goalsTeamB != null
+            },
+
+            hasScoreWithPenalties: function (game) {
+                return this.hasScore(game) &&
+                    game.penaltiesTeamA != null &&
+                    game.penaltiesTeamB != null
             },
             setPredictionUnsaved: function (game) {
                 Vue.set(game, 'unsaved', true)
@@ -326,12 +336,6 @@
         font-style: italic;
     }
 
-    .game-time {
-        color: #4db788;
-        display: none;
-        font-weight: bold;
-    }
-
     .game-teams {
         background: white;
         border-bottom: 1px dashed #ddd;
@@ -358,22 +362,24 @@
         font-weight: bold;
     }
 
-    .game-time,
-    .game-score {
-        display: inline-block;
-        font-weight: bold;
-        margin-top: 25px;
-        padding: 5px 15px;
-    }
-
     .game-time {
         color: #555;
         font-size: 18px;
+        font-weight: bold;
+        margin-top: 25px;
     }
 
     .game-score {
         color: #49996f;
         font-size: 20px;
+        font-weight: bold;
+        margin-top: 25px;
+    }
+
+    .game-penalties {
+        color: #b50101;
+        font-size: 15px;
+        font-weight: bold;
     }
 
     .game-inputs {
