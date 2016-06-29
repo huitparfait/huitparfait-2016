@@ -5,6 +5,7 @@ services:
     traefik:
         image: containous/traefik:pr-433
         command: --web --docker --docker.domain=huitparfait.fr --logLevel=DEBUG
+        restart: always
         ports:
             - "80:80"
             - "443:443"
@@ -16,6 +17,7 @@ services:
 
     huitparfait-front:
         image: huitparfait/huitparfait-front
+        restart: always
         labels:
             - "traefik.backend=huitparfait-front"
             - "traefik.protocol=http"
@@ -25,6 +27,7 @@ services:
     huitparfait-auth:
         build: ./huitparfait-auth
         image: huitparfait/huitparfait-auth
+        restart: always
         volumes:
             - ./keys:/jwt-keys
         environment:
@@ -49,6 +52,7 @@ services:
     huitparfait-api:
         build: ./huitparfait-api
         image: huitparfait/huitparfait-api
+        restart: always
         volumes:
             - ./keys:/jwt-keys
         environment:
