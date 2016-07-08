@@ -71,7 +71,7 @@ export function fetchCommonRankingWithPaginate({ page = 1, pageSize = 50 }) {
     }
 }
 
-export function calculateRanking({ groupId, userId }) {
+export function calculateRanking({ groupId, userId, page = 1, pageSize = 50 }) {
 
     const eightLimit = getEightLimit()
 
@@ -104,8 +104,17 @@ export function calculateRanking({ groupId, userId }) {
             eightLimit,
         })
         .then(calculateRank)
+        .then(paginate)
         .map(formatRanking({ transformAnonymous: false }))
 
+    function paginate(results = []) {
+        if (page === 0) {
+            page = 1
+        }
+
+        const from = pageSize * (page - 1)
+        return results.slice(from, pageSize + from)
+    }
 
     function getEightLimit() {
         const now = moment()

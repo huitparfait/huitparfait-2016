@@ -8,7 +8,7 @@ exports.register = function (server, options, next) {
     server.route([
         {
             method: 'GET',
-            path: '/api/ranking',
+            path: '/api/ranking/general',
             config: {
                 description: 'Fetch common ranking',
                 tags: ['api'],
@@ -33,7 +33,7 @@ exports.register = function (server, options, next) {
                 tags: ['api'],
                 validate: {
                     query: {
-                        from: Joi.number().integer().min(0),
+                        page: Joi.number().integer().min(0),
                         pageSize: Joi.number().integer().min(0),
                     },
                 },

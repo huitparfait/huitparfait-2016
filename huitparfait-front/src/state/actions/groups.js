@@ -68,6 +68,10 @@ export function fetchGroup(groupId) {
 
         dispatch(fetchGroupAttempt())
 
+        if (groupId === 'general') {
+            return dispatch(fetchGroupSuccess({id: groupId, name: groupId}))
+        }
+
         apiFetchGroup(groupId)
             .then((group) => dispatch(fetchGroupSuccess(group)))
             .catch(() => dispatch(fetchGroupFailure()))

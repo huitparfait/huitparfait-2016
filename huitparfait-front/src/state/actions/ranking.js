@@ -43,9 +43,10 @@ function fetchGroupRankingAttempt() {
 }
 
 export const FETCH_GROUP_RANKING_SUCCESS = 'FETCH_GROUP_RANKING_SUCCESS'
-function fetchGroupRankingSuccess(groupRanking) {
+function fetchGroupRankingSuccess(groupRanking, page) {
     return {
         type: FETCH_GROUP_RANKING_SUCCESS,
+        page,
         groupRanking,
     }
 }
@@ -57,14 +58,14 @@ function fetchGroupRankingFailure() {
     }
 }
 
-export function fetchGroupRanking(groupId) {
+export function fetchGroupRanking(groupId, page) {
 
     return (dispatch) => {
 
         dispatch(fetchGroupRankingAttempt())
 
-        api.fetchGroupRanking(groupId)
-            .then((ranking) => dispatch(fetchGroupRankingSuccess(ranking)))
+        api.fetchGroupRanking(groupId, page)
+            .then((ranking) => dispatch(fetchGroupRankingSuccess(ranking, page)))
             .catch(() => dispatch(fetchGroupRankingFailure()))
     }
 }
