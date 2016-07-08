@@ -43,7 +43,6 @@ module.exports = {
         'no-new-func': 2,
         'no-new-wrappers': 2,
         'no-octal-escape': 2,
-        'no-param-reassign': [2, { 'props': false }],
         'no-proto': 2,
         'no-return-assign': [2, 'always'],
         'no-script-url': 2,

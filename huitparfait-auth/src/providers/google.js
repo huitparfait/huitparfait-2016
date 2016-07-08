@@ -20,6 +20,7 @@ exports.register = function (server, options, next) {
         location: server.info.uri,
         isSecure: cookieConfig.isSecure,
         password: cookieConfig.password,
+        ttl: cookieConfig.ttl,
     })
 
     server.route({

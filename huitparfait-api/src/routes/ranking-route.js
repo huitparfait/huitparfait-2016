@@ -1,10 +1,30 @@
 import Joi from 'joi'
-import { calculateRanking } from '../services/rankingService'
+import { calculateRanking, fetchCommonRankingWithPaginate } from '../services/rankingService'
 import { calculatePronostic } from '../services/pronosticService'
+
 
 exports.register = function (server, options, next) {
 
     server.route([
+        {
+            method: 'GET',
+            path: '/api/ranking/general',
+            config: {
+                description: 'Fetch common ranking',
+                tags: ['api'],
+                validate: {
+                    query: {
+                        page: Joi.number().integer().min(0),
+                        pageSize: Joi.number().integer().min(0).max(100),
+                    },
+                },
+                handler(req, reply) {
+                    fetchCommonRankingWithPaginate(req.query)
+                        .then(reply)
+                        .catch(reply)
+                },
+            },
+        },
         {
             method: 'GET',
             path: '/api/ranking/{groupId}',
@@ -13,7 +33,7 @@ exports.register = function (server, options, next) {
                 tags: ['api'],
                 validate: {
                     query: {
-                        from: Joi.number().integer().min(0),
+                        page: Joi.number().integer().min(0),
                         pageSize: Joi.number().integer().min(0),
                     },
                 },

@@ -2,22 +2,29 @@ import _ from 'lodash'
 import B from 'bluebird'
 import { cypher } from '../infra/neo4j'
 import { calculateClassicPoints, calculateRiskPoints } from './calculatePoints'
+import { fetchCommonRankingByCache } from './rankingService'
 
 export function calculatePronostic() {
     return fetchGames()
         .then((games) => {
-            return fetchPronosticByGames(games)
-                .then((pronostics) => {
-                    return calculateClassicPointsByPronostic(games, pronostics)
-                })
-                .then(savePoints)
+
+            return fetchPronosticByGames(games).then((pronostics) => {
+
+                return calculateClassicPointsByPronostic(games, pronostics)
+            })
+
         })
-        .catch((err) => {
-            console.error('Error calculator ranking', err)
+        .then(savePoints)
+        .then((result) => {
+            return fetchCommonRankingByCache({ forceUpdate: true }).return(result)
         })
-        .finally(() => {
+        .tap(() => {
             console.log('Calculate Points OK')
         })
+        .catch((err) => {
+            console.error('Error calculate ranking', err)
+        })
+
 }
 
 

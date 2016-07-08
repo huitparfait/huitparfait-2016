@@ -48,7 +48,7 @@ exports.register = function (server, options, next) {
                         const url = `${PROXY_CONFIG.apiUrl}${req.path}`
                         const { auth: { token } } = req
 
-                        callback(null, url, { authorization: `Bearer ${token}` })
+                        callback(null, url + (req.url.search || ''), { authorization: `Bearer ${token}` })
                     },
                 },
             },

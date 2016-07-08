@@ -1,4 +1,5 @@
 import { generateSVGDataURIString } from 'identicons'
+import { cypher } from '../infra/neo4j'
 import initAnimalAdj from '../infra/animal-adj/animal-adj'
 
 const animalAdj = initAnimalAdj('fr')
@@ -22,4 +23,18 @@ export function betterUser(user = {}, transformAnonymous = false) {
         name: user.userName,
         avatarUrl: user.avatarUrl,
     }
+}
+
+export function fetchUsersWithIds(userIds = []) {
+    return cypher(`
+        MATCH (u:User)
+        WHERE u.id IN { userIds } 
+        RETURN
+                u.id            AS userId,
+                u.name          AS userName,
+                u.anonymousName AS anonymousName,
+                u.avatarUrl     AS avatarUrl,
+                u.isAnonymous   AS isAnonymous`, {
+        userIds,
+    })
 }

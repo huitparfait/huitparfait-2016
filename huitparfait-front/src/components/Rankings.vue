@@ -2,7 +2,6 @@
 
     <div class="page--rankings">
         <card>
-            <p>Retrouvez bientôt ici le classement général de tous les utilisateurs de <strong>Huit Parfait.</strong></p>
             <p>Les scores et les classements sont mis à jour chaque lendemain de match à <strong>8:08</strong> ;-)</p>
             <p v-if="ranking && ranking.length === 0">
                 Vous n'êtes présent dans aucun groupe.
@@ -16,6 +15,7 @@
         <card-title v-if="ranking && ranking.length > 0">Classements de vos groupe(s) :</card-title>
 
         <card-list>
+            <group :group="generalGroup" :link="'groupRanking'"></group>
             <group v-for="group in groups" :group="group" :link="'groupRanking'"></group>
         </card-list>
     </div>
@@ -36,9 +36,9 @@
             return {
                 generalGroup: {
                     name: 'Classement général',
-                    userCount: '?',
                     id: 'general',
                     slug: 'general',
+                    avatarUrl: '/static/huitparfait-logo.png'
                 },
                 groups: this.$select('groups'),
             }

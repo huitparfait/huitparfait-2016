@@ -23,8 +23,8 @@ export function fetchGroupUsers(groupId) {
     return execute(`/groups/${groupId}/users`)
 }
 
-export function fetchGroupRanking(groupId) {
-    return execute(`/ranking/${groupId}`)
+export function fetchGroupRanking(groupId, page = 1) {
+    return execute(`/ranking/${groupId}?page=${page}`)
 }
 
 export function upsertGroup({ id, name, avatarUrl }) {
