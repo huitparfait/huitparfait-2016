@@ -7,12 +7,12 @@
 
         <ranked-player v-for="rankedPlayer in groupRanking.ranking" :ranked-player="rankedPlayer"></ranked-player>
 
-        <div v-if="groupRanking.ranking.length === 0"
+        <div v-show="loaders === 0 && groupRanking.ranking.length === 0"
             class="noPlayerOnThisPage">
             Pas de joueur sur cette page :(
         </div>
 
-        <div v-if="group" class="pageSelectors">
+        <div v-if="group" class="pageSelectors" v-show="loaders === 0">
             <link-btn
                 class="pageSelector"
                 v-link="{ name: 'groupRanking', params: { groupId:  group.id, groupName: group.name }, query: { page: Math.max(groupRanking.page - 1, 1) } }">
@@ -44,6 +44,7 @@
             return {
                 group: this.$select('group'),
                 groupRanking: this.$select('groupRanking'),
+                loaders: this.$select('loaders'),
             }
         },
         route: {

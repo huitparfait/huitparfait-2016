@@ -32,6 +32,11 @@ import {
     SAVE_PREDICTION_SUCCESS,
     SAVE_PREDICTION_FAILURE,
 } from '../actions/predictions'
+import {
+    FETCH_GROUP_RANKING,
+    FETCH_GROUP_RANKING_SUCCESS,
+    FETCH_GROUP_RANKING_FAILURE,
+} from '../actions/ranking'
 
 const initialState = 0
 
@@ -48,6 +53,7 @@ export default function (state = initialState, action) {
         case DELETE_GROUP:
         case FETCH_PREDICTIONS:
         case SAVE_PREDICTION:
+        case FETCH_GROUP_RANKING:
             return state + 1
 
         case FETCH_CURRENT_USER_SUCCESS:
@@ -68,6 +74,8 @@ export default function (state = initialState, action) {
         case FETCH_PREDICTIONS_FAILURE:
         case SAVE_PREDICTION_SUCCESS:
         case SAVE_PREDICTION_FAILURE:
+        case FETCH_GROUP_RANKING_SUCCESS:
+        case FETCH_GROUP_RANKING_FAILURE:
             return state - 1
 
         default:
