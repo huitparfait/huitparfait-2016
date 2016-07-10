@@ -7,12 +7,22 @@
 
         <ranked-player v-for="rankedPlayer in groupRanking.ranking" :ranked-player="rankedPlayer"></ranked-player>
 
+        <div v-if="groupRanking.ranking.length === 0"
+            class="noPlayerOnThisPage">
+            Pas de joueur sur cette page :(
+        </div>
+
         <div v-if="group" class="pageSelectors">
-            <link-btn class="pageSelector"  v-link="{ name: 'groupRanking', params: { groupId:  group.id, groupName: group.name }, query: { page: groupRanking.page - 1 } }">
+            <link-btn
+                class="pageSelector"
+                v-link="{ name: 'groupRanking', params: { groupId:  group.id, groupName: group.name }, query: { page: Math.max(groupRanking.page - 1, 1) } }">
                 Page précédente
             </link-btn>
 
-            <link-btn class="pageSelector" v-link="{ name: 'groupRanking', params: { groupId: group.id, groupName: group.name }, query: { page: groupRanking.page + 1 } }">
+            <link-btn
+                v-if="groupRanking.ranking.length > 0"
+                class="pageSelector"
+                v-link="{ name: 'groupRanking', params: { groupId: group.id, groupName: group.name }, query: { page: groupRanking.page + 1 } }">
                 Page suivante
             </link-btn>
         </div>
@@ -47,6 +57,13 @@
 </script>
 
 <style scoped>
+
+    .noPlayerOnThisPage {
+        text-align: center;
+        color: #555;
+        font-style: italic;
+        margin: 30px 15px;
+    }
 
     .pageSelectors {
         text-align: center;
