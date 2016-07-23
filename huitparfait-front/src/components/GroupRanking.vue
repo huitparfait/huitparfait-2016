@@ -2,19 +2,30 @@
 
     <div class="page--groupRanking">
 
-        <card-title v-if="group != null">Classement de <em>{{ group.name }}</em>&nbsp;:</card-title>
+        <card-title v-if="group != null && group.id != 'general'">Classement de <em>{{ group.name }}</em>&nbsp;</card-title>
+        <card-title v-else>Classement général</em>&nbsp;</card-title>
 
         <ranked-player v-for="rankedPlayer in groupRanking.ranking" :ranked-player="rankedPlayer"></ranked-player>
-    </div>
 
-    <div v-if="group">
-        <link-btn  v-link="{ name: 'groupRanking', params: { groupId:  group.id, groupName: group.name }, query: { page: groupRanking.page - 1 } }">
-            Page précédente
-        </link-btn>
+        <div v-show="loaders === 0 && groupRanking.ranking.length === 0"
+            class="noPlayerOnThisPage">
+            Pas de joueur sur cette page :(
+        </div>
 
-        <link-btn v-link="{ name: 'groupRanking', params: { groupId: group.id, groupName: group.name }, query: { page: groupRanking.page + 1 } }">
-            Page suivante
-        </link-btn>
+        <div v-if="group" class="pageSelectors" v-show="loaders === 0">
+            <link-btn
+                class="pageSelector"
+                v-link="{ name: 'groupRanking', params: { groupId:  group.id, groupName: group.name }, query: { page: Math.max(groupRanking.page - 1, 1) } }">
+                Page précédente
+            </link-btn>
+
+            <link-btn
+                v-if="groupRanking.ranking.length > 0"
+                class="pageSelector"
+                v-link="{ name: 'groupRanking', params: { groupId: group.id, groupName: group.name }, query: { page: groupRanking.page + 1 } }">
+                Page suivante
+            </link-btn>
+        </div>
     </div>
 
 </template>
@@ -33,6 +44,7 @@
             return {
                 group: this.$select('group'),
                 groupRanking: this.$select('groupRanking'),
+                loaders: this.$select('loaders'),
             }
         },
         route: {
@@ -46,4 +58,20 @@
 </script>
 
 <style scoped>
+
+    .noPlayerOnThisPage {
+        text-align: center;
+        color: #555;
+        font-style: italic;
+        margin: 30px 15px;
+    }
+
+    .pageSelectors {
+        text-align: center;
+    }
+
+    .pageSelector {
+        margin: 15px 1px;
+    }
+
 </style>
