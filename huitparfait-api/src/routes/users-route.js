@@ -16,7 +16,7 @@ exports.register = function (server, options, next) {
                 auth: 'jwt-anonymous',
                 validate: {
                     payload: Joi.object({
-                        email: Joi.string().email().required(),
+                        email: Joi.string().email(),
                         name: Joi.string(),
                         avatarUrl: Joi.string().uri({ scheme: 'https' }),
                         oAuthId: Joi.string(),
@@ -49,7 +49,7 @@ exports.register = function (server, options, next) {
                                       u.isAnonymous   AS isAnonymous`,
                         {
                             userId,
-                            email: req.payload.email,
+                            email: req.payload.email || null,
                             name: req.payload.name,
                             oAuthId: req.payload.oAuthId,
                             oAuthProvider: req.payload.oAuthProvider,
