@@ -1,0 +1,14 @@
+sudo: required
+services:
+  - docker
+
+language: node_js
+node_js:
+  - "6"
+
+script:
+  - node -e "console.log('foo')"
+
+after_success:
+  - chmod ugo+x ./buildOnMaster.sh
+  - ./buildOnMaster.sh
